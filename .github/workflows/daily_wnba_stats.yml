@@ -1,0 +1,74 @@
+name: Update WNBA Stats Data
+
+on:
+  schedule:
+    - cron: '0 8 18-31 10 *'
+    - cron: '0 8 * 11-12 *'
+    - cron: '0 8 * 1-6 *'
+    - cron: '0 8 1-12 7 *'
+  repository_dispatch:
+    types: [daily_wnba_stats_data]
+  workflow_dispatch:
+    inputs:
+      start_year:
+        required: false
+        type: string
+      end_year:
+        required: false
+        type: string
+
+jobs:
+  update_wnba_stats_data:
+    runs-on: ${{ matrix.config.os }}
+    name: Update WNBA Stats Data ${{ inputs.start_year }}-${{ inputs.end_year }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - {os: 'ubuntu-latest',   r: 'release'}
+
+    env:
+      GITHUB_PAT: ${{ secrets.SDV_GH_TOKEN }}
+      R_KEEP_PKG_SOURCE: yes
+      START_YEAR: ${{ inputs.start_year }}
+      END_YEAR: ${{ inputs.end_year }}
+      WNBA_STATS_PROXY_LIST: ${{ secrets.WNBA_STATS_PROXY_LIST }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      - name: Setting up R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: ${{ matrix.config.r }}
+          http-user-agent: ${{ matrix.config.http-user-agent }}
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-pandoc@v2
+      - name: Setting up R dependencies
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          cache-version: 1
+          extra-packages: |
+            sportsdataverse/wehoop
+            sportsdataverse/sportsdataverse-data
+            ropensci/piggyback
+
+      - name: Write proxy list to disk
+        run: |
+          printf '%s\n' "$WNBA_STATS_PROXY_LIST" > ../../proxylist.csv
+
+      - name: Check wehoop_wnba_stats_data_trigger for inputs
+        if: ${{ github.event.client_payload.event_name == 'daily_wnba_stats_data'}}
+        run: |
+          echo START_YEAR=$(echo "${{ github.event.client_payload.commit_message}}" | grep -o -E '[0-9]+' | head -1) >> $GITHUB_ENV
+          echo END_YEAR=$(echo "${{ github.event.client_payload.commit_message}}" | grep -o -E '[0-9]+' | tail -1) >> $GITHUB_ENV
+      - name: Check for empty inputs
+        if: ${{ env.START_YEAR == ''}}
+        run: |
+          echo START_YEAR=$(Rscript -e "cat(wehoop::most_recent_wnba_season())") >> $GITHUB_ENV
+          echo END_YEAR=$(Rscript -e "cat(wehoop::most_recent_wnba_season())") >> $GITHUB_ENV
+      - name: Update WNBA Stats Data ${{ env.START_YEAR }}-${{ env.END_YEAR }}
+        env:
+          GITHUB_PAT: ${{ secrets.SDV_GH_TOKEN }}
+        run: |
+          bash scripts/daily_wnba_stats_R_processor.sh -s ${{ env.START_YEAR }} -e ${{ env.END_YEAR }}
