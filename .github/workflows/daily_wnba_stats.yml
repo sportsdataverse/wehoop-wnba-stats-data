@@ -50,7 +50,7 @@ jobs:
           cache-version: 1
           extra-packages: |
             any::zoo
-            sportsdataverse/sportsdataverse
+            sportsdataverse/sportsdataverse-R
             sportsdataverse/wehoop
             sportsdataverse/sportsdataverse-data
             ropensci/piggyback
