@@ -49,6 +49,8 @@ jobs:
         with:
           cache-version: 1
           extra-packages: |
+            any::zoo
+            any::sportsdataverse
             sportsdataverse/wehoop
             sportsdataverse/sportsdataverse-data
             ropensci/piggyback
