@@ -22,7 +22,7 @@ suppressPackageStartupMessages(suppressMessages(library(furrr, lib.loc=lib_path)
 suppressPackageStartupMessages(suppressMessages(library(stringr, lib.loc=lib_path)))
 suppressPackageStartupMessages(suppressMessages(library(tibble, lib.loc=lib_path)))
 suppressPackageStartupMessages(suppressMessages(library(zoo, lib.loc=lib_path)))
-pacman::p_load("dplyr","purrr","stringr","data.table", "qs","arrow")
+pacman::p_load("dplyr","purrr","stringr","data.table", "qs2","arrow")
 
 options(stringsAsFactors = FALSE)
 options(scipen = 999)
@@ -80,7 +80,7 @@ schedules_df <- purrr::map_dfr(1:length(years_vec), function(x){
   }
   data.table::fwrite(completed_sched, paste0('wnba_stats/schedules/csv/wnba_stats_schedule_',years_vec[[x]],'.csv'))
   saveRDS(completed_sched, paste0('wnba_stats/schedules/rds/wnba_stats_schedule_',years_vec[[x]],'.rds'))
-  qs::qsave(completed_sched, paste0('wnba_stats/schedules/qs/wnba_stats_schedule_',years_vec[[x]],'.qs'))
+  qs2::qs_save(completed_sched, paste0('wnba_stats/schedules/qs/wnba_stats_schedule_',years_vec[[x]],'.qs'))
   arrow::write_parquet(completed_sched, paste0('wnba_stats/schedules/parquet/wnba_stats_schedule_',years_vec[[x]],'.parquet'))
   Sys.sleep(2.5)
   return(completed_sched)
@@ -96,7 +96,7 @@ master_schedules_df <- purrr::map_dfr(sched_list, function(x){
 })
 data.table::fwrite(master_schedules_df,'wnba_stats_schedule_master.csv')
 saveRDS(master_schedules_df,'wnba_stats_schedule_master.rds')
-qs::qsave(master_schedules_df,'wnba_stats_schedule_master.qs')
+qs2::qs_save(master_schedules_df,'wnba_stats_schedule_master.qs')
 arrow::write_parquet(master_schedules_df, 'wnba_stats_schedule_master.parquet')
 
 
@@ -690,7 +690,7 @@ ifelse(!dir.exists(file.path("wnba_stats/lineup_index/csv")), dir.create(file.pa
 data.table::fwrite(all_name_lineups, file=paste0("wnba_stats/lineup_index/csv/lineup_index_",y,".csv"))
 
 ifelse(!dir.exists(file.path("wnba_stats/lineup_index/qs")), dir.create(file.path("wnba_stats/lineup_index/qs")), FALSE)
-qs::qsave(all_name_lineups,glue::glue("wnba_stats/lineup_index/qs/lineup_index_{y}.qs"))
+qs2::qs_save(all_name_lineups,glue::glue("wnba_stats/lineup_index/qs/lineup_index_{y}.qs"))
 
 ifelse(!dir.exists(file.path("wnba_stats/lineup_index/rds")), dir.create(file.path("wnba_stats/lineup_index/rds")), FALSE)
 saveRDS(all_name_lineups,glue::glue("wnba_stats/lineup_index/rds/lineup_index_{y}.rds"))
@@ -706,7 +706,7 @@ ifelse(!dir.exists(file.path("wnba_stats/lineup_stats/csv")), dir.create(file.pa
 data.table::fwrite(lineup_stats, file=paste0("wnba_stats/lineup_stats/csv/lineup_stats_",y,".csv"))
 
 ifelse(!dir.exists(file.path("wnba_stats/lineup_stats/qs")), dir.create(file.path("wnba_stats/lineup_stats/qs")), FALSE)
-qs::qsave(lineup_stats,glue::glue("wnba_stats/lineup_stats/qs/lineup_stats_{y}.qs"))
+qs2::qs_save(lineup_stats,glue::glue("wnba_stats/lineup_stats/qs/lineup_stats_{y}.qs"))
 
 ifelse(!dir.exists(file.path("wnba_stats/lineup_stats/rds")), dir.create(file.path("wnba_stats/lineup_stats/rds")), FALSE)
 saveRDS(lineup_stats,glue::glue("wnba_stats/lineup_stats/rds/lineup_stats_{y}.rds"))
@@ -720,7 +720,7 @@ ifelse(!dir.exists(file.path("wnba_stats/pbp/csv")), dir.create(file.path("wnba_
 data.table::fwrite(pbp_final_gt_with_ids, file=paste0("wnba_stats/pbp/csv/play_by_play_",y,".csv"))
 
 ifelse(!dir.exists(file.path("wnba_stats/pbp/qs")), dir.create(file.path("wnba_stats/pbp/qs")), FALSE)
-qs::qsave(pbp_final_gt_with_ids,glue::glue("wnba_stats/pbp/qs/play_by_play_{y}.qs"))
+qs2::qs_save(pbp_final_gt_with_ids,glue::glue("wnba_stats/pbp/qs/play_by_play_{y}.qs"))
 
 ifelse(!dir.exists(file.path("wnba_stats/pbp/rds")), dir.create(file.path("wnba_stats/pbp/rds")), FALSE)
 saveRDS(pbp_final_gt_with_ids,glue::glue("wnba_stats/pbp/rds/play_by_play_{y}.rds"))
