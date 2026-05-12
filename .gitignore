@@ -65,3 +65,4 @@ proxylist.csv
 # processor), ignore *.log anywhere else.
 *.log
 !logs/*.log
+.positai
