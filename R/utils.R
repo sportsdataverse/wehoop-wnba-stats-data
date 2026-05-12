@@ -75,21 +75,27 @@ load_proxies <- function(csv_path = "../../proxylist.csv") {
   NULL
 }
 
-# Accepts NULL or empty proxies and returns NULL (httr treats that as no
-# proxy). All wnba_stats_*.R scripts call select_proxy(proxies) per request
-# so a per-call NULL just disables rotation for that one call.
+# Accepts NULL or empty proxies and returns NULL (wehoop's request_with_proxy
+# treats NULL as no proxy). All wnba_stats_*.R scripts call select_proxy(proxies)
+# per request so a per-call NULL just disables rotation for that one call.
+#
+# Returns a plain list keyed for httr2::req_proxy(url, port, username, password)
+# -- NOT an httr::use_proxy() request object. wehoop 3.0.0's internal
+# .retry_request does `do.call(httr2::req_proxy, c(list(req=req), proxy))`,
+# splatting the proxy list as named args. An httr::request object's internal
+# slots (method/headers/fields/options/auth_token/output) would be rejected
+# by req_proxy as "unused arguments". This shape side-steps that mismatch.
 select_proxy <- function(proxies = load_proxies()) {
   if (is.null(proxies) || nrow(proxies) == 0) return(NULL)
   proxy <- sample(proxies$ip, 1) # pick a random proxy from the list above
   proxy_selected <- proxies %>%
     dplyr::filter(.data$ip == proxy)
-  my_proxy <- httr::use_proxy(
-    url = proxy_selected$ip,
-    port = proxy_selected$port,
-    username = proxy_selected$login,
-    password = proxy_selected$password
+  list(
+    url      = as.character(proxy_selected$ip),
+    port     = as.integer(proxy_selected$port),
+    username = as.character(proxy_selected$login),
+    password = as.character(proxy_selected$password)
   )
-  return(my_proxy)
 }
 
 
