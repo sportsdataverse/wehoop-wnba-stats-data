@@ -27,17 +27,14 @@ pacman::p_load("dplyr","purrr","stringr","data.table", "qs2","arrow")
 options(stringsAsFactors = FALSE)
 options(scipen = 999)
 years_vec <- 1997:wehoop::most_recent_wnba_season()
-proxies <- data.table::fread("../../proxylist.csv")
-select_proxy <- function(proxies) {
-  proxy <- sample(proxies$ip, 1)          # pick a random proxy from the list above
-  proxy_selected <- proxies %>%
-    dplyr::filter(.data$ip == proxy)
-  my_proxy <- httr::use_proxy(url = proxy_selected$ip,
-                              port = proxy_selected$port,
-                              username = proxy_selected$login,
-                              password = proxy_selected$password)
-  return(my_proxy)
-}
+# --- Proxy pool --------------------------------------------------------------
+# Proxy acquisition centralised in R/utils.R: load_proxies() tries
+# PROXY_KEY+PROXY_PKG env vars first (live API), falls back to a local
+# proxylist.csv (gitignored), then to no-proxy.
+.utils_path <- Find(file.exists, c("R/utils.R", "../R/utils.R", "../../R/utils.R"))
+if (is.null(.utils_path)) stop("Could not locate R/utils.R from cwd: ", getwd())
+source(.utils_path)
+proxies <- load_proxies()
 
 ## --- Create Schedules ----
 ## 

@@ -53,26 +53,13 @@ if (length(args) >= 2) {
 message(glue::glue("[{Sys.time()}] WNBA Stats rosters: seasons {start_year}-{end_year}"))
 
 # --- Proxy pool --------------------------------------------------------------
-# Matches wnba_stats_01_pbp.R: read CSV from ../../proxylist.csv (CI writes
-# this from secrets.WNBA_STATS_PROXY_LIST). Local runs without that file
-# fall back to no-proxy mode (rate-limited).
-proxies <- tryCatch(
-  data.table::fread("../../proxylist.csv"),
-  error = function(e) {
-    message("Could not read ../../proxylist.csv -- proceeding without proxy pool: ", e$message)
-    NULL
-  }
-)
-
-select_proxy <- function(proxies) {
-  if (is.null(proxies) || nrow(proxies) == 0) return(NULL)
-  proxy <- sample(proxies$ip, 1)
-  proxy_selected <- proxies %>% dplyr::filter(.data$ip == proxy)
-  httr::use_proxy(url      = proxy_selected$ip,
-                  port     = proxy_selected$port,
-                  username = proxy_selected$login,
-                  password = proxy_selected$password)
-}
+# Proxy acquisition centralised in R/utils.R: load_proxies() tries
+# PROXY_KEY+PROXY_PKG env vars first (live API), falls back to a local
+# proxylist.csv (gitignored), then to no-proxy.
+.utils_path <- Find(file.exists, c("R/utils.R", "../R/utils.R", "../../R/utils.R"))
+if (is.null(.utils_path)) stop("Could not locate R/utils.R from cwd: ", getwd())
+source(.utils_path)
+proxies <- load_proxies()
 
 # --- Helpers -----------------------------------------------------------------
 list_team_ids <- function(season) {

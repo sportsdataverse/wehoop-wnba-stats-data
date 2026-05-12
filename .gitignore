@@ -53,3 +53,9 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+
+# Proxy pool cached locally for dev runs; refresh weekly via
+# `data.table::fwrite(get_proxy_bonanza_ips(), "proxylist.csv")`.
+# CI fetches fresh proxies from the API via PROXY_KEY / PROXY_PKG secrets.
+proxylist.csv
+**/proxylist.csv
