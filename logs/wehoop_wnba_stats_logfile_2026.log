@@ -1,0 +1,79 @@
+         used (Mb) gc trigger (Mb) max used (Mb)
+Ncells 302745 16.2     711094   38   507042 27.1
+Vcells 525442  4.1    8388608   64  1985972 15.2
+Warning in install.packages("pacman", lib = lib_path, repos = "http://cran.us.r-project.org") :
+  'lib = ""' is not writable
+Error in install.packages("pacman", lib = lib_path, repos = "http://cran.us.r-project.org") : 
+  unable to install packages
+Execution halted
+         used (Mb) gc trigger (Mb) max used (Mb)
+Ncells 302745 16.2     711094   38   507042 27.1
+Vcells 525442  4.1    8388608   64  1985972 15.2
+Warning in install.packages("pacman", lib = Sys.getenv("R_LIBS"), repos = "http://cran.us.r-project.org") :
+  'lib = ""' is not writable
+Error in install.packages("pacman", lib = Sys.getenv("R_LIBS"), repos = "http://cran.us.r-project.org") : 
+  unable to install packages
+Execution halted
+         used (Mb) gc trigger (Mb) max used (Mb)
+Ncells 302745 16.2     711094   38   507042 27.1
+Vcells 525442  4.1    8388608   64  1985972 15.2
+Warning in install.packages("pacman", lib = Sys.getenv("R_LIBS"), repos = "http://cran.us.r-project.org") :
+  'lib = ""' is not writable
+Error in install.packages("pacman", lib = Sys.getenv("R_LIBS"), repos = "http://cran.us.r-project.org") : 
+  unable to install packages
+Execution halted
+         used (Mb) gc trigger (Mb) max used (Mb)
+Ncells 302745 16.2     711094   38   507042 27.1
+Vcells 525442  4.1    8388608   64  1985972 15.2
+Warning in install.packages("pacman", lib = Sys.getenv("R_LIBS"), repos = "http://cran.us.r-project.org") :
+  'lib = ""' is not writable
+Error in install.packages("pacman", lib = Sys.getenv("R_LIBS"), repos = "http://cran.us.r-project.org") : 
+  unable to install packages
+Execution halted
+         used (Mb) gc trigger (Mb) max used (Mb)
+Ncells 302745 16.2     711094   38   507042 27.1
+Vcells 525442  4.1    8388608   64  1985972 15.2
+Warning in install.packages("pacman", lib = Sys.getenv("R_LIBS"), repos = "http://cran.us.r-project.org") :
+  'lib = ""' is not writable
+Error in install.packages("pacman", lib = Sys.getenv("R_LIBS"), repos = "http://cran.us.r-project.org") : 
+  unable to install packages
+Execution halted
+         used (Mb) gc trigger (Mb) max used (Mb)
+Ncells 302745 16.2     711094   38   507042 27.1
+Vcells 525442  4.1    8388608   64  1985972 15.2
+Warning in install.packages("pacman", lib = Sys.getenv("R_LIBS"), repos = "http://cran.us.r-project.org") :
+  'lib = ""' is not writable
+Error in install.packages("pacman", lib = Sys.getenv("R_LIBS"), repos = "http://cran.us.r-project.org") : 
+  unable to install packages
+Execution halted
+         used (Mb) gc trigger (Mb) max used (Mb)
+Ncells 302745 16.2     711094   38   507042 27.1
+Vcells 525442  4.1    8388608   64  1985972 15.2
+Warning in install.packages("pacman", lib = Sys.getenv("R_LIBS"), repos = "http://cran.us.r-project.org") :
+  'lib = ""' is not writable
+Error in install.packages("pacman", lib = Sys.getenv("R_LIBS"), repos = "http://cran.us.r-project.org") : 
+  unable to install packages
+Execution halted
+         used (Mb) gc trigger (Mb) max used (Mb)
+Ncells 302745 16.2     711094   38   507042 27.1
+Vcells 525442  4.1    8388608   64  1985972 15.2
+Warning in install.packages("pacman", lib = Sys.getenv("R_LIBS"), repos = "http://cran.us.r-project.org") :
+  'lib = ""' is not writable
+Error in install.packages("pacman", lib = Sys.getenv("R_LIBS"), repos = "http://cran.us.r-project.org") : 
+  unable to install packages
+Execution halted
+         used (Mb) gc trigger (Mb) max used (Mb)
+Ncells 302745 16.2     711094   38   507042 27.1
+Vcells 525442  4.1    8388608   64  1985972 15.2
+Warning in install.packages("pacman", lib = Sys.getenv("R_LIBS"), repos = "http://cran.us.r-project.org") :
+  'lib = ""' is not writable
+Error in install.packages("pacman", lib = Sys.getenv("R_LIBS"), repos = "http://cran.us.r-project.org") : 
+  unable to install packages
+Execution halted
+fatal: pathspec 'wnba_stats/' did not match any files
+On branch main
+Your branch is up to date with 'origin/main'.
+
+nothing to commit, working tree clean
+No changes to commit
+Everything up-to-date
