@@ -10,12 +10,9 @@
 #   - Proxy acquisition is centralised in R/utils.R load_proxies() so each
 #     R script picks up PROXY_KEY+PROXY_PKG env vars without any setup
 #     work here. No proxylist.csv handling needed in this script.
-#
-# Caveat: wnba_stats_01_pbp.R currently hardcodes
-#   years_vec <- 1997:wehoop::most_recent_wnba_season()
-# and ignores its positional args. Calling it inside the per-year loop is
-# wasteful (it re-pulls the full historical PBP every iteration). Worth a
-# follow-up commit to wire its CLI through commandArgs() like 02-10 do.
+#   - 07_draft.R is annual cadence and lives in
+#     scripts/annual_wnba_stats_draft_R_processor.sh; intentionally
+#     excluded here.
 #
 # Usage: bash scripts/daily_wnba_stats_R_processor.sh -s 2025 -e 2025 [-r false]
 
@@ -40,7 +37,10 @@ do
     Rscript R/wnba_stats_04_lineups.R             $i $i
     Rscript R/wnba_stats_05_team_season_stats.R   $i $i
     Rscript R/wnba_stats_06_standings.R           $i $i
-    Rscript R/wnba_stats_07_draft.R               $i $i
+    # 07_draft.R is intentionally excluded -- it has annual cadence and
+    # lives in scripts/annual_wnba_stats_draft_R_processor.sh. Running
+    # it daily would re-upload identical artifacts to the
+    # wnba_stats_draft release for no benefit.
     Rscript R/wnba_stats_08_shots.R               $i $i
     Rscript R/wnba_stats_09_game_rosters.R        $i $i
     Rscript R/wnba_stats_10_officials.R           $i $i
