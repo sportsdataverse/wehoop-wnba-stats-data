@@ -48,7 +48,11 @@ do
         git pull >> /dev/null
         git config --local user.email "action@github.com"
         git config --local user.name  "Github Action"
-        Rscript R/wnba_stats_01_pbp.R                 $i $i
+        # 01_pbp.R takes a 3rd positional arg controlling whether to
+        # re-fetch every game from the API or read the per-game JSON cache
+        # at wnba_stats/pbp/json/. Default RESCRAPE for the wrapper is
+        # true (full re-fetch), matching the historical behaviour.
+        Rscript R/wnba_stats_01_pbp.R                 "$i" "$i" "$RESCRAPE"
         Rscript R/wnba_stats_02_rosters.R             $i $i
         Rscript R/wnba_stats_03_player_season_stats.R $i $i
         Rscript R/wnba_stats_04_lineups.R             $i $i
