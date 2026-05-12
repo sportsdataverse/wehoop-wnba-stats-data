@@ -1,13 +1,9 @@
-name: Update WNBA Stats Data
+name: Update WNBA Data
 
 on:
   schedule:
-    - cron: '0 8 18-31 10 *'
-    - cron: '0 8 * 11-12 *'
-    - cron: '0 8 * 1-6 *'
-    - cron: '0 8 1-12 7 *'
-  repository_dispatch:
-    types: [daily_wnba_stats_data]
+    - cron: '0 7 * 5-9 *'
+    - cron: '0 7 1-20 10 *'
   workflow_dispatch:
     inputs:
       start_year:
@@ -16,27 +12,34 @@ on:
       end_year:
         required: false
         type: string
+      rescrape:
+        required: false
+        default: true
+        type: boolean
 
 jobs:
-  update_wnba_stats_data:
+  update_wnba_data:
     runs-on: ${{ matrix.config.os }}
-    name: Update WNBA Stats Data ${{ inputs.start_year }}-${{ inputs.end_year }}
+    name: Update WNBA Stats Data ${{ inputs.start_year }}-${{ inputs.end_year }} (Rescrape? ${{ inputs.rescrape }})
     strategy:
       fail-fast: false
       matrix:
         config:
-          - {os: 'ubuntu-latest',   r: 'release'}
+          - {os: ubuntu-latest,   r: 'release'}
 
     env:
-      GITHUB_PAT: ${{ secrets.SDV_GH_TOKEN }}
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      PROXY_KEY: ${{ secrets.PROXY_KEY }}
+      PROXY_PKG: ${{ secrets.PROXY_PKG }}
+      PROXY_ENDPOINT: ${{ secrets.PROXY_ENDPOINT }}
       R_KEEP_PKG_SOURCE: yes
       START_YEAR: ${{ inputs.start_year }}
       END_YEAR: ${{ inputs.end_year }}
-      WNBA_STATS_PROXY_LIST: ${{ secrets.WNBA_STATS_PROXY_LIST }}
+      RESCRAPE: ${{ inputs.rescrape }}
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
       - name: Setting up R
         uses: r-lib/actions/setup-r@v2
         with:
@@ -49,39 +52,41 @@ jobs:
         with:
           cache-version: 1
           extra-packages: |
-            any::zoo
-            sportsdataverse/sportsdataverse-R
             sportsdataverse/wehoop
             sportsdataverse/sportsdataverse-data
             ropensci/piggyback
 
-      - name: Write proxy list to disk
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.10'
+      - name: Install Python dependencies
         run: |
-          printf '%s\n' "$WNBA_STATS_PROXY_LIST" > ../../proxylist.csv
-
-      - name: Check wehoop_wnba_stats_data_trigger for inputs
-        if: ${{ github.event.client_payload.event_name == 'daily_wnba_stats_data'}}
-        run: |
-          echo START_YEAR=$(echo "${{ github.event.client_payload.commit_message}}" | grep -o -E '[0-9]+' | head -1) >> $GITHUB_ENV
-          echo END_YEAR=$(echo "${{ github.event.client_payload.commit_message}}" | grep -o -E '[0-9]+' | tail -1) >> $GITHUB_ENV
-      - name: Check for empty inputs
+          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install -r requirements.txt
+      - name: Check for Inputs
         if: ${{ env.START_YEAR == ''}}
         run: |
-          echo START_YEAR=$(Rscript -e "cat(wehoop::most_recent_wnba_season())") >> $GITHUB_ENV
-          echo END_YEAR=$(Rscript -e "cat(wehoop::most_recent_wnba_season())") >> $GITHUB_ENV
-      # The legacy R scripts (and several of the newer ones) read
-      # `Sys.getenv("R_LIBS")` to set lib.loc and to pass `lib=` to
-      # `install.packages("pacman")`. The GH Actions runner only sets
-      # `R_LIBS_USER`, leaving `R_LIBS` empty, which makes
-      # `install.packages(..., lib = "")` fail with "lib = '' is not
-      # writable". Mirror R_LIBS_USER -> R_LIBS for the rest of the job
-      # so the scripts find a writable user library without per-script
-      # patching.
-      - name: Mirror R_LIBS_USER -> R_LIBS for legacy scripts
-        run: echo "R_LIBS=$R_LIBS_USER" >> $GITHUB_ENV
+            echo START_YEAR=$(Rscript -e "wehoop::most_recent_wnba_season()") >> $GITHUB_ENV
+            echo END_YEAR=$(Rscript -e "wehoop::most_recent_wnba_season()") >> $GITHUB_ENV
 
-      - name: Update WNBA Stats Data ${{ env.START_YEAR }}-${{ env.END_YEAR }}
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.10'
+      # Tells Github to run the file `scraper.py` from your repository
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install -r requirements.txt
+
+      - name: Check for Inputs
+        if: ${{ env.START_YEAR == ''}}
+        run: |
+          echo START_YEAR=$(Rscript -e "wehoop::most_recent_wnba_season()") >> $GITHUB_ENV
+          echo END_YEAR=$(Rscript -e "wehoop::most_recent_wnba_season()") >> $GITHUB_ENV
+      - name: Run Python and R Process scripts
         env:
           GITHUB_PAT: ${{ secrets.SDV_GH_TOKEN }}
         run: |
-          bash scripts/daily_wnba_stats_R_processor.sh -s ${{ env.START_YEAR }} -e ${{ env.END_YEAR }}
+          bash scripts/daily_wnba_stats_R_processor.sh -s ${{ env.START_YEAR }} -e ${{ env.END_YEAR }} -r ${{ env.RESCRAPE }}
