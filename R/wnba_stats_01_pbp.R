@@ -26,7 +26,24 @@ pacman::p_load("dplyr","purrr","stringr","data.table", "qs2","arrow")
 
 options(stringsAsFactors = FALSE)
 options(scipen = 999)
-years_vec <- 1997:wehoop::most_recent_wnba_season()
+
+# --- CLI parsing (positional <START> <END>) ----------------------------------
+# Matches the convention used by wnba_stats_02..10. Bare invocation falls
+# back to the current season so manual runs stay one-line.
+args <- commandArgs(trailingOnly = TRUE)
+if (length(args) >= 2) {
+  start_year <- as.integer(args[[1]])
+  end_year   <- as.integer(args[[2]])
+} else if (length(args) == 1) {
+  start_year <- as.integer(args[[1]])
+  end_year   <- as.integer(args[[1]])
+} else {
+  start_year <- wehoop::most_recent_wnba_season()
+  end_year   <- wehoop::most_recent_wnba_season()
+}
+years_vec <- start_year:end_year
+
+message(glue::glue("[{Sys.time()}] WNBA Stats pbp: seasons {start_year}-{end_year}"))
 # --- Proxy pool --------------------------------------------------------------
 # Proxy acquisition centralised in R/utils.R: load_proxies() tries
 # PROXY_KEY+PROXY_PKG env vars first (live API), falls back to a local
