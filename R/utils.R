@@ -90,9 +90,18 @@ select_proxy <- function(proxies = load_proxies()) {
   proxy <- sample(proxies$ip, 1) # pick a random proxy from the list above
   proxy_selected <- proxies %>%
     dplyr::filter(.data$ip == proxy)
+  # CSV format from get_proxy_bonanza_ips() ships the port column as
+  # `port_http`. Earlier code read `port` and silently produced NA, which
+  # made every WNBA Stats request fall through to direct (rate-limited)
+  # access. Prefer `port_http`, fall back to `port` for legacy CSVs.
+  port_val <- if (!is.null(proxy_selected$port_http)) {
+    proxy_selected$port_http
+  } else {
+    proxy_selected$port
+  }
   list(
     url      = as.character(proxy_selected$ip),
-    port     = as.integer(proxy_selected$port),
+    port     = as.integer(port_val),
     username = as.character(proxy_selected$login),
     password = as.character(proxy_selected$password)
   )
