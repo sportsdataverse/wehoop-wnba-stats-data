@@ -53,3 +53,4 @@ create_release("wnba_stats_shots",               "WNBA Shots Data (from stats.wn
 create_release("wnba_stats_game_rosters",        "WNBA Game Rosters Data (from stats.wnba.com)")
 create_release("wnba_stats_officials",           "WNBA Officials Data (from stats.wnba.com)")
 create_release("wnba_stats_coaches",             "WNBA Coaches Data (from stats.wnba.com)")
+create_release("wnba_stats_player_game_logs",    "WNBA Player Game Logs Data (from stats.wnba.com)")
