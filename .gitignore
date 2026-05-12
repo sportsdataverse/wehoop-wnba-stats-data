@@ -59,3 +59,9 @@ vignettes/*.pdf
 # CI fetches fresh proxies from the API via PROXY_KEY / PROXY_PKG secrets.
 proxylist.csv
 **/proxylist.csv
+
+# Scraper / processor run logs: keep tracked under logs/ (committed by
+# scripts/daily_wnba_stats_R_processor.sh and the annual draft
+# processor), ignore *.log anywhere else.
+*.log
+!logs/*.log
