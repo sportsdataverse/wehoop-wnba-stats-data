@@ -2,3 +2,10 @@
 ^\.Rproj\.user$
 ^\.positai$
 ^\.claude$
+^\.github$
+^\.gitignore$
+^\.git$
+^CLAUDE\.md$
+^\.Rhistory$
+^logs$
+^wnba_stats$
