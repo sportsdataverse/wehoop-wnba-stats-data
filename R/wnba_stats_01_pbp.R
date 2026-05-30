@@ -48,12 +48,10 @@ suppressPackageStartupMessages(suppressMessages({
   library(glue)
   library(stringr)
   library(tibble)
-  library(zoo)
   library(cli)
   library(future)
   library(furrr)
   library(wehoop)
-  library(sportsdataverse)
   library(sportsdataversedata)
 }))
 

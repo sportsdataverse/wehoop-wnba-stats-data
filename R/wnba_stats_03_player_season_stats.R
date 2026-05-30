@@ -27,7 +27,6 @@ suppressPackageStartupMessages(suppressMessages(library(glue)))
 suppressPackageStartupMessages(suppressMessages(library(wehoop)))
 suppressPackageStartupMessages(suppressMessages(library(stringr)))
 suppressPackageStartupMessages(suppressMessages(library(tibble)))
-suppressPackageStartupMessages(suppressMessages(library(sportsdataverse)))
 suppressPackageStartupMessages(suppressMessages(library(sportsdataversedata)))
 
 options(stringsAsFactors = FALSE)
