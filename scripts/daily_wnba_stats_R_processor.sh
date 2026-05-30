@@ -37,6 +37,23 @@ RESCRAPE=${RESCRAPE:-true}
 echo "Rescrape set to: $RESCRAPE"
 mkdir -p logs
 
+# run_and_commit <commit-season> <Rscript> [args...]
+# Run one creation script, then commit + push its output on its own. Each
+# script persists independently so a later slow/hung script (notably the heavy
+# per-game pbp scrape) can no longer block earlier scripts' output from landing
+# -- the previous all-in-one-block commit lost everything if any script stalled.
+# The "(Start: Y End: Y)" subject is load-bearing for downstream year parsing.
+run_and_commit() {
+    local season="$1"; shift
+    Rscript "$@"
+    git pull >> /dev/null 2>&1 || true
+    git add wnba_stats/ . >> /dev/null 2>&1 || true
+    git commit -m "WNBA Stats Data Update (Start: ${season} End: ${season})" >> /dev/null 2>&1 \
+        || echo "No changes to commit for $2"
+    git pull --rebase >> /dev/null 2>&1 || true
+    git push >> /dev/null 2>&1 || true
+}
+
 for i in $(seq "${START_YEAR}" "${END_YEAR}")
 do
     LOGFILE="logs/wehoop_wnba_stats_logfile_${i}.log"
@@ -45,33 +62,25 @@ do
     # Tee inside the block writes to /tmp (untracked) so the `git pull` calls
     # don't trip over their own log output being written to a tracked file.
     {
-        git pull >> /dev/null
         git config --local user.email "action@github.com"
         git config --local user.name  "Github Action"
-        # 01_pbp.R takes a 3rd positional arg controlling whether to
-        # re-fetch every game from the API or read the per-game JSON cache
-        # at wnba_stats/pbp/json/. Default RESCRAPE for the wrapper is
-        # true (full re-fetch), matching the historical behaviour.
-        Rscript R/wnba_stats_01_pbp.R                 "$i" "$i" "$RESCRAPE"
-        Rscript R/wnba_stats_02_rosters.R             $i $i
-        Rscript R/wnba_stats_03_player_season_stats.R $i $i
-        Rscript R/wnba_stats_04_lineups.R             $i $i
-        Rscript R/wnba_stats_05_team_season_stats.R   $i $i
-        Rscript R/wnba_stats_06_standings.R           $i $i
-        # 07_draft.R is intentionally excluded -- it has annual cadence and
-        # lives in scripts/annual_wnba_stats_draft_R_processor.sh. Running
-        # it daily would re-upload identical artifacts to the
-        # wnba_stats_draft release for no benefit.
-        Rscript R/wnba_stats_08_shots.R               $i $i
-        Rscript R/wnba_stats_09_game_rosters.R        $i $i
-        Rscript R/wnba_stats_10_officials.R           $i $i
-        git pull >> /dev/null
-        git add wnba_stats/ >> /dev/null
-        git pull >> /dev/null
-        git add . >> /dev/null
-        git commit -m "WNBA Stats Data Update (Start: $i End: $i)" || echo "No changes to commit"
-        git pull >> /dev/null
-        git push >> /dev/null
+        # Light, independent scripts FIRST -- each commits its own output via
+        # run_and_commit so a later stall cannot lose them. 07_draft.R is
+        # intentionally excluded (annual cadence; runs via
+        # annual_wnba_stats_draft_R_processor.sh).
+        run_and_commit "$i" R/wnba_stats_02_rosters.R             $i $i
+        run_and_commit "$i" R/wnba_stats_03_player_season_stats.R $i $i
+        run_and_commit "$i" R/wnba_stats_04_lineups.R             $i $i
+        run_and_commit "$i" R/wnba_stats_05_team_season_stats.R   $i $i
+        run_and_commit "$i" R/wnba_stats_06_standings.R           $i $i
+        run_and_commit "$i" R/wnba_stats_08_shots.R               $i $i
+        run_and_commit "$i" R/wnba_stats_09_game_rosters.R        $i $i
+        run_and_commit "$i" R/wnba_stats_10_officials.R           $i $i
+        # Heavy per-game pbp LAST. Its 3rd arg controls re-fetch vs the
+        # per-game JSON cache at wnba_stats/pbp/json/. Running it last means a
+        # slow / empty-cache pbp pass can no longer block the scripts above
+        # from committing their output.
+        run_and_commit "$i" R/wnba_stats_01_pbp.R                 "$i" "$i" "$RESCRAPE"
     } 2>&1 | tee "$TMPLOG"
 
     # Block is finished and pushed; tee has closed $TMPLOG. Now copy the
