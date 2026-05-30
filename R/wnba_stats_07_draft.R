@@ -58,6 +58,67 @@ source(.utils_path)
 proxies <- load_proxies()
 
 # --- Helpers -----------------------------------------------------------------
+# Map a wnba_draftboard() `picks` tibble onto the drafthistory clean-name
+# schema so a current-season fill is shape-compatible with prior, drafthistory-
+# sourced seasons. The live board lacks team_city / team_abbreviation and the
+# player_profile_flag, so those are NA; round_pick / overall_pick are derived
+# from draft order (the board lists picks in order).
+.map_board_to_history <- function(picks, season) {
+  picks %>%
+    dplyr::mutate(overall_pick_tmp = dplyr::row_number()) %>%
+    dplyr::group_by(.data$round) %>%
+    dplyr::mutate(round_pick_tmp = dplyr::row_number()) %>%
+    dplyr::ungroup() %>%
+    dplyr::transmute(
+      person_id           = as.character(.data$prospect_id),
+      player_name         = stringr::str_squish(paste(
+        dplyr::coalesce(.data$first_name, ""),
+        dplyr::coalesce(.data$last_name, "")
+      )),
+      season              = as.integer(season),
+      round_number        = as.character(.data$round),
+      round_pick          = as.character(.data$round_pick_tmp),
+      overall_pick        = as.character(.data$overall_pick_tmp),
+      draft_type          = "Draft",
+      team_id             = as.character(.data$team_external_id),
+      team_city           = NA_character_,
+      team_name           = as.character(.data$team_name),
+      team_abbreviation   = NA_character_,
+      organization        = as.character(.data$college),
+      organization_type   = dplyr::if_else(
+        !is.na(.data$college) & nzchar(.data$college), "College", NA_character_
+      ),
+      player_profile_flag = NA_character_,
+      season_2            = as.integer(season)
+    )
+}
+
+# Current-season fallback: stats.wnba.com/drafthistory only serves prior
+# *completed* drafts, so for the current (or a future) season pull the live
+# content-api draft board instead and reshape it to the history schema.
+fetch_draft_board <- function(season) {
+  # wnba_draftboard() does not accept a per-call proxy (it calls
+  # .retry_request() without ...), so route proxy rotation through the
+  # getOption("wehoop.proxy") path it honours.
+  proxy <- select_proxy(proxies)
+  if (!is.null(proxy)) {
+    old <- options(wehoop.proxy = proxy)
+    on.exit(options(old), add = TRUE)
+  }
+  res <- tryCatch(
+    wehoop::wnba_draftboard(season = as.character(season)),
+    error = function(e) {
+      cli::cli_alert_warning("draftboard season={season}: {e$message}")
+      NULL
+    }
+  )
+  picks <- res$picks
+  if (is.null(picks) || nrow(picks) == 0) return(NULL)
+  out <- .map_board_to_history(picks, season)
+  attr(out, "draft_source") <- "content-api-prod.nba.com/draft/board"
+  out
+}
+
 fetch_draft <- function(season) {
   proxy <- select_proxy(proxies)
   res <- tryCatch(
@@ -78,11 +139,25 @@ fetch_draft <- function(season) {
       NULL
     }
   )
-  if (is.null(res) || is.null(res$DraftHistory) || nrow(res$DraftHistory) == 0) {
-    return(NULL)
+  if (!is.null(res) && !is.null(res$DraftHistory) && nrow(res$DraftHistory) > 0) {
+    out <- res$DraftHistory %>%
+      dplyr::mutate(season = season)
+    attr(out, "draft_source") <- "stats.wnba.com/drafthistory"
+    return(out)
   }
-  res$DraftHistory %>%
-    dplyr::mutate(season = season)
+  # Only fall back to the live board for the current/future season -- never for
+  # a historical season, where an empty drafthistory result is a transient API
+  # blip and the board (NA team_city/abbrev) would degrade good data.
+  if (season >= wehoop::most_recent_wnba_season()) {
+    cli::cli_alert_info(
+      "[{Sys.time()}] season {season}: drafthistory empty -- falling back to wnba_draftboard()"
+    )
+    return(fetch_draft_board(season))
+  }
+  cli::cli_alert_warning(
+    "[{Sys.time()}] season {season}: drafthistory empty and not current season -- no board fallback"
+  )
+  NULL
 }
 
 # --- Output dirs -------------------------------------------------------------
@@ -97,12 +172,13 @@ insistent_save <- purrr::insistently(sportsdataversedata::sportsdataverse_save,
 
 # --- Manifest helper ---------------------------------------------------------
 manifest_path <- "wnba_stats/wnba_stats_draft_in_data_repo.csv"
-append_manifest <- function(season, row_count) {
+append_manifest <- function(season, row_count,
+                             source_endpoint = "stats.wnba.com/drafthistory") {
   row <- data.frame(
     season           = as.integer(season),
     row_count        = as.integer(row_count),
     generated_at_utc = format(Sys.time(), tz = "UTC", "%Y-%m-%dT%H:%M:%SZ"),
-    source_endpoint  = "stats.wnba.com/drafthistory",
+    source_endpoint  = source_endpoint,
     stringsAsFactors = FALSE
   )
   if (file.exists(manifest_path)) {
@@ -125,6 +201,11 @@ for (y in start_year:end_year) {
       next
     }
 
+    # Capture provenance before the clean_names/make_wehoop_data pipeline,
+    # which does not preserve the custom attribute.
+    draft_source <- attr(draft, "draft_source")
+    if (is.null(draft_source)) draft_source <- "stats.wnba.com/drafthistory"
+
     draft <- draft %>%
       janitor::clean_names() %>%
       wehoop:::make_wehoop_data("WNBA Stats Draft History from wehoop data repository", Sys.time())
@@ -144,8 +225,8 @@ for (y in start_year:end_year) {
       .token               = Sys.getenv("GITHUB_PAT")
     )
 
-    append_manifest(y, nrow(draft))
-    cli::cli_alert_success("[{Sys.time()}] season {y}: uploaded {nrow(draft)} rows")
+    append_manifest(y, nrow(draft), draft_source)
+    cli::cli_alert_success("[{Sys.time()}] season {y}: uploaded {nrow(draft)} rows (source: {draft_source})")
   },
   error = function(e) {
     cli::cli_alert_danger("[{Sys.time()}] season {y}: aborted ({e$message}) -- continuing")
