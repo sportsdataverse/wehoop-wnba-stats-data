@@ -149,11 +149,14 @@ not as a CRAN-bound package definition.
   `Rscript R/wnba_stats_NN_*.R <START> <END>` (and `<RESCRAPE>` for
   `01_pbp.R`). The sibling ESPN repos use `-s`/`-e` flags; do not port
   that style here without also updating the shell processors.
-- **Library loading** uses explicit `lib.loc = Sys.getenv("R_LIBS")`
-  inside `suppressPackageStartupMessages(suppressMessages(...))`. CI
-  installs into a project-local library and exports `R_LIBS`; every
-  script must respect that path so it doesn't pick up a stale system
-  library.
+- **Library loading** uses plain `library(pkg)` inside
+  `suppressPackageStartupMessages(suppressMessages(...))`, resolving
+  against the full `.libPaths()`. (Earlier scripts pinned
+  `lib.loc = Sys.getenv("R_LIBS")`, but the workflow installs deps via
+  `setup-r-dependencies` into the default user library and never exports
+  `R_LIBS`, so the pinned `lib.loc` resolved to `""` and every script
+  halted -- matching the sibling `wehoop-wnba-data` espn parsers, which
+  load plainly.)
 - **Proxy acquisition** is centralised in `R/utils.R::load_proxies()`.
   Order of precedence:
   1. `PROXY_KEY` + `PROXY_PKG` env vars (CI default) -> fresh

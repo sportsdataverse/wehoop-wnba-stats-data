@@ -1,10 +1,9 @@
-lib_path <- Sys.getenv("R_LIBS")
 
-suppressPackageStartupMessages(suppressMessages(library(dplyr, lib.loc = lib_path)))
-suppressPackageStartupMessages(suppressMessages(library(httr, lib.loc = lib_path)))
-suppressPackageStartupMessages(suppressMessages(library(jsonlite, lib.loc = lib_path)))
-suppressPackageStartupMessages(suppressMessages(library(glue, lib.loc = lib_path)))
-suppressPackageStartupMessages(suppressMessages(library(purrr, lib.loc = lib_path)))
+suppressPackageStartupMessages(suppressMessages(library(dplyr)))
+suppressPackageStartupMessages(suppressMessages(library(httr)))
+suppressPackageStartupMessages(suppressMessages(library(jsonlite)))
+suppressPackageStartupMessages(suppressMessages(library(glue)))
+suppressPackageStartupMessages(suppressMessages(library(purrr)))
 get_proxy_bonanza_ips <- function(api_key = Sys.getenv("PROXY_KEY"),
                                   user_package = Sys.getenv("PROXY_PKG")) {
   res <- httr::RETRY(
