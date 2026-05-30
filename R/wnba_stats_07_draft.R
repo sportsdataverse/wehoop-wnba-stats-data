@@ -82,7 +82,11 @@ proxies <- load_proxies()
       draft_type          = "Draft",
       team_id             = as.character(.data$team_external_id),
       team_city           = NA_character_,
-      team_name           = as.character(.data$team_name),
+      # The board labels teams with the draft year ("Dallas Wings 2026");
+      # strip the trailing season to match the drafthistory team_name format.
+      team_name           = stringr::str_squish(stringr::str_remove(
+        as.character(.data$team_name), paste0("\\s*", season, "\\s*$")
+      )),
       team_abbreviation   = NA_character_,
       organization        = as.character(.data$college),
       organization_type   = dplyr::if_else(
