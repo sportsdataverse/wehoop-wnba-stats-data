@@ -127,3 +127,67 @@ rejoin_schedules <- function(df) {
     dplyr::left_join(home_df, by = c("GAME_ID", "SEASON_ID", "GAME_DATE"))
   return(sched_df)
 }
+
+
+# ----------------------------------------------------------------------------
+# Rate limiter + round-robin proxy rotation for the WNBA Stats endpoints.
+#
+# stats.wnba.com shares a request budget (empirically ~200-300 requests of any
+# type per ~10 minutes). Each wnba_pbp() call hits several endpoints, so we
+# budget at the request level and treat one game as `n_hits` requests. This is
+# a trailing-window token bucket: drop timestamps older than the window, sleep
+# until a request would fit, then record it. Defaults are conservative and
+# overridable via env vars so the cap can be tuned once the true limit is known.
+#
+# NOTE: do NOT wrap the pbp fetch loop in furrr/future_map -- parallel workers
+# fire simultaneous requests that blow the shared budget (and the limiter state
+# below lives in the main process only). Keep the fetch loop sequential.
+# ----------------------------------------------------------------------------
+.rate_state <- new.env(parent = emptyenv())
+.rate_state$ts <- numeric(0)
+
+rate_limit <- function(n_hits   = as.integer(Sys.getenv("STATS_RATE_HITS", "3")),
+                       max_calls = as.integer(Sys.getenv("STATS_RATE_MAX", "250")),
+                       window_s  = as.numeric(Sys.getenv("STATS_RATE_WINDOW", "600"))) {
+  n_hits <- max(1L, as.integer(n_hits))
+  now <- as.numeric(Sys.time())
+  .rate_state$ts <- .rate_state$ts[.rate_state$ts > now - window_s]
+  while (length(.rate_state$ts) + n_hits > max_calls && length(.rate_state$ts) > 0) {
+    wait <- (.rate_state$ts[1] + window_s) - now + 0.05
+    Sys.sleep(max(0.05, wait))
+    now <- as.numeric(Sys.time())
+    .rate_state$ts <- .rate_state$ts[.rate_state$ts > now - window_s]
+  }
+  .rate_state$ts <- c(.rate_state$ts, rep(now, n_hits))
+  invisible(length(.rate_state$ts))
+}
+
+# Round-robin proxy selection with a random starting permutation ("rotating
+# proxies initialized at random"). Shuffles the pool once, then hands out
+# proxies in order so load is spread evenly across IPs instead of the
+# sampling-with-replacement select_proxy() does (which can hammer one IP by
+# chance). Same return shape as select_proxy(). `bad_ips` lets the caller skip
+# blacklisted IPs.
+.proxy_rr <- new.env(parent = emptyenv())
+.proxy_rr$order <- NULL
+.proxy_rr$pos <- 0L
+
+next_proxy <- function(proxies = load_proxies(), bad_ips = character(0)) {
+  if (is.null(proxies) || nrow(proxies) == 0) return(NULL)
+  ok <- proxies
+  if (length(bad_ips) > 0) ok <- proxies %>% dplyr::filter(!.data$ip %in% bad_ips)
+  if (nrow(ok) == 0) ok <- proxies          # all blacklisted -> reset, use full pool
+  if (is.null(.proxy_rr$order) || length(.proxy_rr$order) != nrow(ok)) {
+    .proxy_rr$order <- sample(seq_len(nrow(ok)))   # random initialisation
+    .proxy_rr$pos <- 0L
+  }
+  .proxy_rr$pos <- (.proxy_rr$pos %% length(.proxy_rr$order)) + 1L
+  ps <- ok[.proxy_rr$order[.proxy_rr$pos], , drop = FALSE]
+  port_val <- if (!is.null(ps$port_http)) ps$port_http else ps$port
+  list(
+    url      = as.character(ps$ip),
+    port     = as.integer(port_val),
+    username = as.character(ps$login),
+    password = as.character(ps$password)
+  )
+}

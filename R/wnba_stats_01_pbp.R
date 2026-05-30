@@ -49,8 +49,6 @@ suppressPackageStartupMessages(suppressMessages({
   library(stringr)
   library(tibble)
   library(cli)
-  library(future)
-  library(furrr)
   library(wehoop)
   library(sportsdataversedata)
 }))
@@ -879,13 +877,6 @@ for (y in start_year:end_year) {
       .log("no games to fetch", level = "WARN",
            phase = "pbp", season = y)
     } else {
-      # Parallel under interactive R sessions (RStudio, R console);
-      # sequential when invoked via Rscript (CI / shell wrapper). The
-      # parallel path uses furrr::future_map across multisession workers,
-      # capped at 8 to stay well under the 50-proxy pool capacity. Per-game
-      # .log() calls degrade to no-op inside workers (the file connection
-      # doesn't survive serialisation), so the visible feedback is the
-      # furrr progress bar plus the season-level summary log line below.
       # A failure-case return from fetch_pbp_one is a single-row, single-col
       # tibble with just `game_id`. The success-case has many cols incl.
       # event_num. Identifies which games fell through the first pass so
@@ -896,34 +887,26 @@ for (y in start_year:end_year) {
           (nrow(df) == 1 && ncol(df) == 1 && "game_id" %in% names(df))
       }
 
-      if (interactive()) {
-        n_workers <- max(1L, min(8L, parallel::detectCores() - 1L))
-        future::plan(future::multisession, workers = n_workers)
-        on.exit(future::plan(future::sequential), add = TRUE)
-        .log(glue::glue("pbp parallel: workers={n_workers}"),
-             phase = "pbp", season = y, n_workers = n_workers)
-        parts <- furrr::future_map(
-          games,
-          function(g) fetch_pbp_one(g, rescrape = rescrape),
-          .progress = TRUE,
-          .options  = furrr::furrr_options(seed = TRUE)
+      # Sequential ONLY -- never furrr/future_map. Parallel workers fire
+      # simultaneous stats.wnba.com requests that blow the shared rate budget,
+      # and the rate_limit()/proxy-rotation state lives in the main process
+      # only. rate_limit() (R/utils.R) throttles to the shared budget before
+      # each game; one game counts as several endpoint hits.
+      cli::cli_progress_bar(
+        name   = glue::glue("season {y} pbp"),
+        total  = length(games),
+        format = paste0(
+          "{cli::pb_bar} {cli::pb_current}/{cli::pb_total} ",
+          "({cli::pb_percent}) | rate {cli::pb_rate} | ETA {cli::pb_eta}"
         )
-      } else {
-        cli::cli_progress_bar(
-          name   = glue::glue("season {y} pbp"),
-          total  = length(games),
-          format = paste0(
-            "{cli::pb_bar} {cli::pb_current}/{cli::pb_total} ",
-            "({cli::pb_percent}) | rate {cli::pb_rate} | ETA {cli::pb_eta}"
-          )
-        )
-        parts <- vector("list", length(games))
-        for (i in seq_along(games)) {
-          parts[[i]] <- fetch_pbp_one(games[[i]], rescrape = rescrape)
-          cli::cli_progress_update()
-        }
-        cli::cli_progress_done()
+      )
+      parts <- vector("list", length(games))
+      for (i in seq_along(games)) {
+        rate_limit()
+        parts[[i]] <- fetch_pbp_one(games[[i]], rescrape = rescrape)
+        cli::cli_progress_update()
       }
+      cli::cli_progress_done()
 
       # --- Cool-off retry pass for failed games --------------------------
       # The first pass uses attempts=1 in fetch_pbp_one (wehoop's internal
@@ -950,6 +933,7 @@ for (y in start_year:end_year) {
           status = "..."
         )
         for (idx in failed_idx) {
+          rate_limit()
           parts[[idx]] <- fetch_pbp_one(games[[idx]], rescrape = rescrape)
           cli::cli_progress_update(
             status = if (.is_failed_pbp(parts[[idx]])) "still failing" else "recovered"
