@@ -1,0 +1,17 @@
+         used (Mb) gc trigger (Mb) max used (Mb)
+Ncells 302745 16.2     711094   38   507042 27.1
+Vcells 525442  4.1    8388608   64  1985972 15.2
+ℹ [2026-05-30 17:14:00.114588] WNBA Stats draft: seasons 2026-2026
+[1] FALSE
+[1] TRUE
+[1] TRUE
+[1] TRUE
+ℹ [2026-05-30 17:14:00.571846] season 2026: pulling draft history
+! [2026-05-30 17:14:06.268941] season 2026: 0 draft rows -- skipping upload
+✔ [2026-05-30 17:14:06.286557] WNBA Stats draft: done
+On branch main
+Your branch is up to date with 'origin/main'.
+
+nothing to commit, working tree clean
+No changes to commit
+Everything up-to-date
