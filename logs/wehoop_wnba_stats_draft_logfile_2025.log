@@ -1,0 +1,30 @@
+         used (Mb) gc trigger (Mb) max used (Mb)
+Ncells 302745 16.2     711094   38   507042 27.1
+Vcells 525442  4.1    8388608   64  1985972 15.2
+ℹ [2026-05-30 17:18:14.149285] WNBA Stats draft: seasons 2025-2025
+[1] FALSE
+[1] TRUE
+[1] TRUE
+[1] TRUE
+ℹ [2026-05-30 17:18:14.614542] season 2025: pulling draft history
+→ Uploading 3 files!
+ℹ Start upload of 7 files to
+<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
+wnba_stats_draft
+✔ Upload successfully completed.
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_draft on 2026-05-30 17:18:20.517543
+✔ [2026-05-30 17:18:20.523415] season 2025: uploaded 38 rows
+→ Uploading 1 files!
+ℹ Start upload of 5 files to
+<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
+wnba_stats_draft
+✔ Upload successfully completed.
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_draft on 2026-05-30 17:18:21.904332
+✔ [2026-05-30 17:18:21.910105] WNBA Stats draft: done
+[main b2e2171] WNBA Stats Draft Update (Start: 2025 End: 2025)
+ 3 files changed, 2 insertions(+)
+ create mode 100644 wnba_stats/draft/parquet/draft_2025.parquet
+ create mode 100644 wnba_stats/draft/rds/draft_2025.rds
+ create mode 100644 wnba_stats/wnba_stats_draft_in_data_repo.csv
+To https://github.com/sportsdataverse/wehoop-wnba-stats-data
+   aa674ae..b2e2171  main -> main
