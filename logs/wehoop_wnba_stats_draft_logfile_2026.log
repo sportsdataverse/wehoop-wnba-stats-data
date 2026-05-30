@@ -1,30 +1,28 @@
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302745 16.2     711094   38   507042 27.1
 Vcells 525442  4.1    8388608   64  1985972 15.2
-ℹ [2026-05-30 17:59:48.175724] WNBA Stats draft: seasons 2026-2026
+ℹ [2026-05-30 18:09:29.080273] WNBA Stats draft: seasons 2026-2026
 [1] FALSE
 [1] FALSE
 [1] FALSE
 [1] FALSE
-ℹ [2026-05-30 17:59:48.608756] season 2026: pulling draft history
-ℹ [2026-05-30 17:59:52.000305] season 2026: drafthistory empty -- falling back to wnba_draftboard()
+ℹ [2026-05-30 18:09:29.515577] season 2026: pulling draft history
+ℹ [2026-05-30 18:09:33.258477] season 2026: drafthistory empty -- falling back to wnba_draftboard()
 → Uploading 3 files!
 ℹ Start upload of 7 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_draft
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_draft on 2026-05-30 17:59:56.865885
-✔ [2026-05-30 17:59:56.871601] season 2026: uploaded 45 rows (source: content-api-prod.nba.com/draft/board)
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_draft on 2026-05-30 18:09:37.841977
+✔ [2026-05-30 18:09:37.847704] season 2026: uploaded 45 rows (source: content-api-prod.nba.com/draft/board)
 → Uploading 1 files!
 ℹ Start upload of 5 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_draft
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_draft on 2026-05-30 17:59:58.193269
-✔ [2026-05-30 17:59:58.199259] WNBA Stats draft: done
-[main c3c6681] WNBA Stats Draft Update (Start: 2026 End: 2026)
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_draft on 2026-05-30 18:09:39.202515
+✔ [2026-05-30 18:09:39.208581] WNBA Stats draft: done
+[main 0369df9] WNBA Stats Draft Update (Start: 2026 End: 2026)
  3 files changed, 1 insertion(+)
- create mode 100644 wnba_stats/draft/parquet/draft_2026.parquet
- create mode 100644 wnba_stats/draft/rds/draft_2026.rds
 To https://github.com/sportsdataverse/wehoop-wnba-stats-data
-   18b35a8..c3c6681  main -> main
+   735e8de..0369df9  main -> main
