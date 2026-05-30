@@ -1,74 +1,65 @@
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302745 16.2     711094   38   507042 27.1
 Vcells 525442  4.1    8388608   64  1985972 15.2
-Warning in install.packages("pacman", lib = lib_path, repos = "http://cran.us.r-project.org") :
-  'lib = ""' is not writable
-Error in install.packages("pacman", lib = lib_path, repos = "http://cran.us.r-project.org") : 
-  unable to install packages
+Error in library(zoo, lib.loc = lib_path) : 
+  there is no package called ‘zoo’
+Calls: suppressPackageStartupMessages ... withCallingHandlers -> suppressMessages -> withCallingHandlers -> library
 Execution halted
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302745 16.2     711094   38   507042 27.1
 Vcells 525442  4.1    8388608   64  1985972 15.2
-Warning in install.packages("pacman", lib = Sys.getenv("R_LIBS"), repos = "http://cran.us.r-project.org") :
-  'lib = ""' is not writable
-Error in install.packages("pacman", lib = Sys.getenv("R_LIBS"), repos = "http://cran.us.r-project.org") : 
-  unable to install packages
+Error in library(sportsdataverse, lib.loc = lib_path) : 
+  there is no package called ‘sportsdataverse’
+Calls: suppressPackageStartupMessages ... withCallingHandlers -> suppressMessages -> withCallingHandlers -> library
 Execution halted
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302745 16.2     711094   38   507042 27.1
 Vcells 525442  4.1    8388608   64  1985972 15.2
-Warning in install.packages("pacman", lib = Sys.getenv("R_LIBS"), repos = "http://cran.us.r-project.org") :
-  'lib = ""' is not writable
-Error in install.packages("pacman", lib = Sys.getenv("R_LIBS"), repos = "http://cran.us.r-project.org") : 
-  unable to install packages
+Error in library(sportsdataverse, lib.loc = lib_path) : 
+  there is no package called ‘sportsdataverse’
+Calls: suppressPackageStartupMessages ... withCallingHandlers -> suppressMessages -> withCallingHandlers -> library
 Execution halted
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302745 16.2     711094   38   507042 27.1
 Vcells 525442  4.1    8388608   64  1985972 15.2
-Warning in install.packages("pacman", lib = Sys.getenv("R_LIBS"), repos = "http://cran.us.r-project.org") :
-  'lib = ""' is not writable
-Error in install.packages("pacman", lib = Sys.getenv("R_LIBS"), repos = "http://cran.us.r-project.org") : 
-  unable to install packages
+Error in library(sportsdataverse, lib.loc = lib_path) : 
+  there is no package called ‘sportsdataverse’
+Calls: suppressPackageStartupMessages ... withCallingHandlers -> suppressMessages -> withCallingHandlers -> library
 Execution halted
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302745 16.2     711094   38   507042 27.1
 Vcells 525442  4.1    8388608   64  1985972 15.2
-Warning in install.packages("pacman", lib = Sys.getenv("R_LIBS"), repos = "http://cran.us.r-project.org") :
-  'lib = ""' is not writable
-Error in install.packages("pacman", lib = Sys.getenv("R_LIBS"), repos = "http://cran.us.r-project.org") : 
-  unable to install packages
+Error in library(sportsdataverse, lib.loc = lib_path) : 
+  there is no package called ‘sportsdataverse’
+Calls: suppressPackageStartupMessages ... withCallingHandlers -> suppressMessages -> withCallingHandlers -> library
 Execution halted
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302745 16.2     711094   38   507042 27.1
 Vcells 525442  4.1    8388608   64  1985972 15.2
-Warning in install.packages("pacman", lib = Sys.getenv("R_LIBS"), repos = "http://cran.us.r-project.org") :
-  'lib = ""' is not writable
-Error in install.packages("pacman", lib = Sys.getenv("R_LIBS"), repos = "http://cran.us.r-project.org") : 
-  unable to install packages
+Error in library(sportsdataverse, lib.loc = lib_path) : 
+  there is no package called ‘sportsdataverse’
+Calls: suppressPackageStartupMessages ... withCallingHandlers -> suppressMessages -> withCallingHandlers -> library
 Execution halted
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302745 16.2     711094   38   507042 27.1
 Vcells 525442  4.1    8388608   64  1985972 15.2
-Warning in install.packages("pacman", lib = Sys.getenv("R_LIBS"), repos = "http://cran.us.r-project.org") :
-  'lib = ""' is not writable
-Error in install.packages("pacman", lib = Sys.getenv("R_LIBS"), repos = "http://cran.us.r-project.org") : 
-  unable to install packages
+Error in library(sportsdataverse, lib.loc = lib_path) : 
+  there is no package called ‘sportsdataverse’
+Calls: suppressPackageStartupMessages ... withCallingHandlers -> suppressMessages -> withCallingHandlers -> library
 Execution halted
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302745 16.2     711094   38   507042 27.1
 Vcells 525442  4.1    8388608   64  1985972 15.2
-Warning in install.packages("pacman", lib = Sys.getenv("R_LIBS"), repos = "http://cran.us.r-project.org") :
-  'lib = ""' is not writable
-Error in install.packages("pacman", lib = Sys.getenv("R_LIBS"), repos = "http://cran.us.r-project.org") : 
-  unable to install packages
+Error in library(sportsdataverse, lib.loc = lib_path) : 
+  there is no package called ‘sportsdataverse’
+Calls: suppressPackageStartupMessages ... withCallingHandlers -> suppressMessages -> withCallingHandlers -> library
 Execution halted
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302745 16.2     711094   38   507042 27.1
 Vcells 525442  4.1    8388608   64  1985972 15.2
-Warning in install.packages("pacman", lib = Sys.getenv("R_LIBS"), repos = "http://cran.us.r-project.org") :
-  'lib = ""' is not writable
-Error in install.packages("pacman", lib = Sys.getenv("R_LIBS"), repos = "http://cran.us.r-project.org") : 
-  unable to install packages
+Error in library(sportsdataverse, lib.loc = lib_path) : 
+  there is no package called ‘sportsdataverse’
+Calls: suppressPackageStartupMessages ... withCallingHandlers -> suppressMessages -> withCallingHandlers -> library
 Execution halted
 fatal: pathspec 'wnba_stats/' did not match any files
 On branch main
