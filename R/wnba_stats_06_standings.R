@@ -13,10 +13,7 @@ rm(list = ls())
 gc()
 
 lib_path <- Sys.getenv("R_LIBS")
-
-if (!requireNamespace('pacman', quietly = TRUE)){
-  install.packages('pacman', lib = Sys.getenv("R_LIBS"), repos = 'http://cran.us.r-project.org')
-}
+if (lib_path == "") lib_path <- .libPaths()[1]
 
 suppressPackageStartupMessages(suppressMessages(library(dplyr,             lib.loc = lib_path)))
 suppressPackageStartupMessages(suppressMessages(library(tidyr,             lib.loc = lib_path)))
