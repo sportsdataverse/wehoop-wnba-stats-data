@@ -1,69 +1,80 @@
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302745 16.2     711094   38   507042 27.1
 Vcells 525442  4.1    8388608   64  1985972 15.2
-Error in library(zoo) : there is no package called ‘zoo’
-Calls: suppressPackageStartupMessages ... withCallingHandlers -> suppressMessages -> withCallingHandlers -> library
+
+── WNBA Stats PBP pipeline ─────────────────────────────────────────────────────
+ℹ WNBA Stats pbp: seasons 2026-2026 | rescrape=TRUE
+Error in library(httr, lib.loc = lib_path) : 
+  no library trees found in 'lib.loc'
+Calls: source ... withCallingHandlers -> suppressMessages -> withCallingHandlers -> library
 Execution halted
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302745 16.2     711094   38   507042 27.1
 Vcells 525442  4.1    8388608   64  1985972 15.2
-Error in library(sportsdataverse) : 
-  there is no package called ‘sportsdataverse’
-Calls: suppressPackageStartupMessages ... withCallingHandlers -> suppressMessages -> withCallingHandlers -> library
+[2026-05-30 06:51:30.877676] WNBA Stats rosters: seasons 2026-2026
+Error in library(httr, lib.loc = lib_path) : 
+  no library trees found in 'lib.loc'
+Calls: source ... withCallingHandlers -> suppressMessages -> withCallingHandlers -> library
 Execution halted
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302745 16.2     711094   38   507042 27.1
 Vcells 525442  4.1    8388608   64  1985972 15.2
-Error in library(sportsdataverse) : 
-  there is no package called ‘sportsdataverse’
-Calls: suppressPackageStartupMessages ... withCallingHandlers -> suppressMessages -> withCallingHandlers -> library
+[2026-05-30 06:51:32.067077] WNBA Stats player season stats: seasons 2026-2026
+Error in library(httr, lib.loc = lib_path) : 
+  no library trees found in 'lib.loc'
+Calls: source ... withCallingHandlers -> suppressMessages -> withCallingHandlers -> library
 Execution halted
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302745 16.2     711094   38   507042 27.1
 Vcells 525442  4.1    8388608   64  1985972 15.2
-Error in library(sportsdataverse) : 
-  there is no package called ‘sportsdataverse’
-Calls: suppressPackageStartupMessages ... withCallingHandlers -> suppressMessages -> withCallingHandlers -> library
+[2026-05-30 06:51:33.2551] WNBA Stats lineups: seasons 2026-2026
+Error in library(httr, lib.loc = lib_path) : 
+  no library trees found in 'lib.loc'
+Calls: source ... withCallingHandlers -> suppressMessages -> withCallingHandlers -> library
 Execution halted
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302745 16.2     711094   38   507042 27.1
 Vcells 525442  4.1    8388608   64  1985972 15.2
-Error in library(sportsdataverse) : 
-  there is no package called ‘sportsdataverse’
-Calls: suppressPackageStartupMessages ... withCallingHandlers -> suppressMessages -> withCallingHandlers -> library
+ℹ [2026-05-30 06:51:34.459965] WNBA Stats team season stats: seasons 2026-2026
+Error in library(httr, lib.loc = lib_path) : 
+  no library trees found in 'lib.loc'
+Calls: source ... withCallingHandlers -> suppressMessages -> withCallingHandlers -> library
 Execution halted
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302745 16.2     711094   38   507042 27.1
 Vcells 525442  4.1    8388608   64  1985972 15.2
-Error in library(sportsdataverse) : 
-  there is no package called ‘sportsdataverse’
-Calls: suppressPackageStartupMessages ... withCallingHandlers -> suppressMessages -> withCallingHandlers -> library
+ℹ [2026-05-30 06:51:35.673682] WNBA Stats standings: seasons 2026-2026
+Error in library(httr, lib.loc = lib_path) : 
+  no library trees found in 'lib.loc'
+Calls: source ... withCallingHandlers -> suppressMessages -> withCallingHandlers -> library
 Execution halted
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302745 16.2     711094   38   507042 27.1
 Vcells 525442  4.1    8388608   64  1985972 15.2
-Error in library(sportsdataverse) : 
-  there is no package called ‘sportsdataverse’
-Calls: suppressPackageStartupMessages ... withCallingHandlers -> suppressMessages -> withCallingHandlers -> library
+ℹ [2026-05-30 06:51:36.898831] WNBA Stats shots: seasons 2026-2026
+Error in library(httr, lib.loc = lib_path) : 
+  no library trees found in 'lib.loc'
+Calls: source ... withCallingHandlers -> suppressMessages -> withCallingHandlers -> library
 Execution halted
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302745 16.2     711094   38   507042 27.1
 Vcells 525442  4.1    8388608   64  1985972 15.2
-Error in library(sportsdataverse) : 
-  there is no package called ‘sportsdataverse’
-Calls: suppressPackageStartupMessages ... withCallingHandlers -> suppressMessages -> withCallingHandlers -> library
+ℹ [2026-05-30 06:51:38.119648] WNBA Stats game rosters (inactive players): seasons 2026-2026
+Error in library(httr, lib.loc = lib_path) : 
+  no library trees found in 'lib.loc'
+Calls: source ... withCallingHandlers -> suppressMessages -> withCallingHandlers -> library
 Execution halted
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302745 16.2     711094   38   507042 27.1
 Vcells 525442  4.1    8388608   64  1985972 15.2
-Error in library(sportsdataverse) : 
-  there is no package called ‘sportsdataverse’
-Calls: suppressPackageStartupMessages ... withCallingHandlers -> suppressMessages -> withCallingHandlers -> library
+ℹ [2026-05-30 06:51:39.339647] WNBA Stats officials: seasons 2026-2026
+Error in library(httr, lib.loc = lib_path) : 
+  no library trees found in 'lib.loc'
+Calls: source ... withCallingHandlers -> suppressMessages -> withCallingHandlers -> library
 Execution halted
 fatal: pathspec 'wnba_stats/' did not match any files
-On branch main
-Your branch is up to date with 'origin/main'.
-
-nothing to commit, working tree clean
-No changes to commit
-Everything up-to-date
+[main 6fbe205] WNBA Stats Data Update (Start: 2026 End: 2026)
+ 1 file changed, 1 insertion(+)
+ create mode 100644 logs/wnba_stats_01_pbp_2026_2026_20260530T065129Z.log
+To https://github.com/sportsdataverse/wehoop-wnba-stats-data
+   ca00195..6fbe205  main -> main
