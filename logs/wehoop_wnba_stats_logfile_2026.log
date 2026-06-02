@@ -1,7 +1,7 @@
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302745 16.2     711094   38   507042 27.1
 Vcells 525442  4.1    8388608   64  1985972 15.2
-[2026-06-01 12:40:51.11841] WNBA Stats rosters: seasons 2026-2026
+[2026-06-02 11:21:29.627303] WNBA Stats rosters: seasons 2026-2026
 [1] FALSE
 [1] FALSE
 [1] FALSE
@@ -9,201 +9,257 @@ Vcells 525442  4.1    8388608   64  1985972 15.2
 [1] FALSE
 [1] FALSE
 [1] FALSE
-[2026-06-01 12:40:51.617832] season 2026: discovering team_ids
-[2026-06-01 12:40:53.862973] season 2026: 15 teams
+[2026-06-02 11:21:29.901536] season 2026: discovering team_ids
+[2026-06-02 11:21:34.082925] season 2026: 15 teams
 → Uploading 3 files!
 ℹ Start upload of 7 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_rosters
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_rosters on 2026-06-01 12:41:54.857914
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_rosters on 2026-06-02 11:22:29.499757
 → Uploading 3 files!
 ℹ Start upload of 7 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_coaches
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_coaches on 2026-06-01 12:41:57.767076
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_coaches on 2026-06-02 11:22:37.026568
 → Uploading 1 files!
 ℹ Start upload of 5 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_rosters
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_rosters on 2026-06-01 12:41:59.566459
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_rosters on 2026-06-02 11:22:38.447173
 → Uploading 1 files!
 ℹ Start upload of 5 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_coaches
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_coaches on 2026-06-01 12:42:01.420542
-[2026-06-01 12:42:01.424961] WNBA Stats rosters: done
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_coaches on 2026-06-02 11:22:39.80617
+[2026-06-02 11:22:39.810563] WNBA Stats rosters: done
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302745 16.2     711094   38   507042 27.1
 Vcells 525442  4.1    8388608   64  1985972 15.2
-[2026-06-01 12:42:04.592159] WNBA Stats player season stats: seasons 2026-2026
+[2026-06-02 11:22:42.446002] WNBA Stats player season stats: seasons 2026-2026
 [1] FALSE
 [1] FALSE
 [1] FALSE
 [1] FALSE
-[2026-06-01 12:42:05.059894] season 2026: pulling 7 measure_types x 2 season_types
+[2026-06-02 11:22:42.764934] season 2026: pulling 7 measure_types x 2 season_types
+✖ 2026-06-02 11:26:54.308195: Invalid arguments or no league dashboard player stats data for 2026 available!
+✖ Args: college = "", conference = "", country = "", date_from = "", date_to = "", division = "", draft_pick = "", draft_year = "", game_scope = "", game_segment = "", height = "", last_n_games = 0, league_id = "10", location = "", measure_type = "Advanced", month = 0, opponent_team_id = 0, outcome = "", pace_adjust = "N", po_round = "", per_mode = "PerGame", period = 0, player_experience = "", player_position = "", plus_minus = "N", rank = "N", season = "2026", season_segment = "", season_type = "Playoffs", shot_clock_range = "", starter_bench = "", team_id = "", two_way = "", vs_conference = "", vs_division = "", weight = ""
+✖ Error: Failed to perform HTTP request. Caused by error in `curl::curl_fetch_memory()`: ! Timeout was reached [stats.wnba.com]: Operation timed out after 60002 milliseconds with 0 bytes received
+✖ 2026-06-02 11:27:57.344867: Invalid arguments or no league dashboard player stats data for 2026 available!
+✖ Args: college = "", conference = "", country = "", date_from = "", date_to = "", division = "", draft_pick = "", draft_year = "", game_scope = "", game_segment = "", height = "", last_n_games = 0, league_id = "10", location = "", measure_type = "Misc", month = 0, opponent_team_id = 0, outcome = "", pace_adjust = "N", po_round = "", per_mode = "PerGame", period = 0, player_experience = "", player_position = "", plus_minus = "N", rank = "N", season = "2026", season_segment = "", season_type = "Regular Season", shot_clock_range = "", starter_bench = "", team_id = "", two_way = "", vs_conference = "", vs_division = "", weight = ""
+✖ Error: Failed to perform HTTP request. Caused by error in `curl::curl_fetch_memory()`: ! Timeout was reached [stats.wnba.com]: Operation timed out after 60002 milliseconds with 0 bytes received
+✖ 2026-06-02 11:30:03.170788: Invalid arguments or no league dashboard player stats data for 2026 available!
+✖ Args: college = "", conference = "", country = "", date_from = "", date_to = "", division = "", draft_pick = "", draft_year = "", game_scope = "", game_segment = "", height = "", last_n_games = 0, league_id = "10", location = "", measure_type = "Scoring", month = 0, opponent_team_id = 0, outcome = "", pace_adjust = "N", po_round = "", per_mode = "PerGame", period = 0, player_experience = "", player_position = "", plus_minus = "N", rank = "N", season = "2026", season_segment = "", season_type = "Regular Season", shot_clock_range = "", starter_bench = "", team_id = "", two_way = "", vs_conference = "", vs_division = "", weight = ""
+✖ Error: Failed to perform HTTP request. Caused by error in `curl::curl_fetch_memory()`: ! Timeout was reached [stats.wnba.com]: Operation timed out after 60002 milliseconds with 0 bytes received
+✖ 2026-06-02 11:31:06.208169: Invalid arguments or no league dashboard player stats data for 2026 available!
+✖ Args: college = "", conference = "", country = "", date_from = "", date_to = "", division = "", draft_pick = "", draft_year = "", game_scope = "", game_segment = "", height = "", last_n_games = 0, league_id = "10", location = "", measure_type = "Scoring", month = 0, opponent_team_id = 0, outcome = "", pace_adjust = "N", po_round = "", per_mode = "PerGame", period = 0, player_experience = "", player_position = "", plus_minus = "N", rank = "N", season = "2026", season_segment = "", season_type = "Playoffs", shot_clock_range = "", starter_bench = "", team_id = "", two_way = "", vs_conference = "", vs_division = "", weight = ""
+✖ Error: Failed to perform HTTP request. Caused by error in `curl::curl_fetch_memory()`: ! Timeout was reached [stats.wnba.com]: Operation timed out after 60002 milliseconds with 0 bytes received
+✖ 2026-06-02 11:32:09.251181: Invalid arguments or no league dashboard player stats data for 2026 available!
+✖ Args: college = "", conference = "", country = "", date_from = "", date_to = "", division = "", draft_pick = "", draft_year = "", game_scope = "", game_segment = "", height = "", last_n_games = 0, league_id = "10", location = "", measure_type = "Usage", month = 0, opponent_team_id = 0, outcome = "", pace_adjust = "N", po_round = "", per_mode = "PerGame", period = 0, player_experience = "", player_position = "", plus_minus = "N", rank = "N", season = "2026", season_segment = "", season_type = "Regular Season", shot_clock_range = "", starter_bench = "", team_id = "", two_way = "", vs_conference = "", vs_division = "", weight = ""
+✖ Error: Failed to perform HTTP request. Caused by error in `curl::curl_fetch_memory()`: ! Timeout was reached [stats.wnba.com]: Operation timed out after 60002 milliseconds with 0 bytes received
+✖ 2026-06-02 11:34:15.179474: Invalid arguments or no league dashboard player stats data for 2026 available!
+✖ Args: college = "", conference = "", country = "", date_from = "", date_to = "", division = "", draft_pick = "", draft_year = "", game_scope = "", game_segment = "", height = "", last_n_games = 0, league_id = "10", location = "", measure_type = "Defense", month = 0, opponent_team_id = 0, outcome = "", pace_adjust = "N", po_round = "", per_mode = "PerGame", period = 0, player_experience = "", player_position = "", plus_minus = "N", rank = "N", season = "2026", season_segment = "", season_type = "Regular Season", shot_clock_range = "", starter_bench = "", team_id = "", two_way = "", vs_conference = "", vs_division = "", weight = ""
+✖ Error: Failed to perform HTTP request. Caused by error in `curl::curl_fetch_memory()`: ! Timeout was reached [stats.wnba.com]: Operation timed out after 60002 milliseconds with 0 bytes received
+✖ 2026-06-02 11:35:18.226129: Invalid arguments or no league dashboard player stats data for 2026 available!
+✖ Args: college = "", conference = "", country = "", date_from = "", date_to = "", division = "", draft_pick = "", draft_year = "", game_scope = "", game_segment = "", height = "", last_n_games = 0, league_id = "10", location = "", measure_type = "Defense", month = 0, opponent_team_id = 0, outcome = "", pace_adjust = "N", po_round = "", per_mode = "PerGame", period = 0, player_experience = "", player_position = "", plus_minus = "N", rank = "N", season = "2026", season_segment = "", season_type = "Playoffs", shot_clock_range = "", starter_bench = "", team_id = "", two_way = "", vs_conference = "", vs_division = "", weight = ""
+✖ Error: Failed to perform HTTP request. Caused by error in `curl::curl_fetch_memory()`: ! Timeout was reached [stats.wnba.com]: Operation timed out after 60002 milliseconds with 0 bytes received
 → Uploading 3 files!
 ℹ Start upload of 7 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_player_season_stats
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_player_season_stats on 2026-06-01 12:43:19.37857
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_player_season_stats on 2026-06-02 11:35:27.714774
 → Uploading 1 files!
 ℹ Start upload of 5 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_player_season_stats
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_player_season_stats on 2026-06-01 12:43:21.223862
-[2026-06-01 12:43:21.228236] WNBA Stats player season stats: done
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_player_season_stats on 2026-06-02 11:35:29.147785
+[2026-06-02 11:35:29.157509] WNBA Stats player season stats: done
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302745 16.2     711094   38   507042 27.1
 Vcells 525442  4.1    8388608   64  1985972 15.2
-[2026-06-01 12:43:24.548039] WNBA Stats lineups: seasons 2026-2026
+[2026-06-02 11:35:31.622609] WNBA Stats lineups: seasons 2026-2026
 [1] FALSE
 [1] FALSE
 [1] FALSE
 [1] FALSE
-[2026-06-01 12:43:25.029755] season 2026: pulling 3 measure_types x 2 season_types
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_lineups
-✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_lineups on 2026-06-01 12:43:54.963653
+[2026-06-02 11:35:31.874654] season 2026: pulling 3 measure_types x 2 season_types
+✖ 2026-06-02 11:36:34.956473: Invalid arguments or no league dashboard lineups data for 2026 available!
+✖ Args: conference = "", date_from = "", date_to = "", division = "", game_segment = "", group_quantity = 5, last_n_games = 0, league_id = "10", location = "", measure_type = "Base", month = 0, opponent_team_id = 0, outcome = "", po_round = "", pace_adjust = "N", per_mode = "PerGame", period = 0, plus_minus = "N", rank = "N", season = "2026", season_segment = "", season_type = "Regular Season", shot_clock_range = "", team_id = "", vs_conference = "", vs_division = ""
+✖ Error: Failed to perform HTTP request. Caused by error in `curl::curl_fetch_memory()`: ! Timeout was reached [stats.wnba.com]: Operation timed out after 60002 milliseconds with 0 bytes received
+✖ 2026-06-02 11:37:38.004451: Invalid arguments or no league dashboard lineups data for 2026 available!
+✖ Args: conference = "", date_from = "", date_to = "", division = "", game_segment = "", group_quantity = 5, last_n_games = 0, league_id = "10", location = "", measure_type = "Base", month = 0, opponent_team_id = 0, outcome = "", po_round = "", pace_adjust = "N", per_mode = "PerGame", period = 0, plus_minus = "N", rank = "N", season = "2026", season_segment = "", season_type = "Playoffs", shot_clock_range = "", team_id = "", vs_conference = "", vs_division = ""
+✖ Error: Failed to perform HTTP request. Caused by error in `curl::curl_fetch_memory()`: ! Timeout was reached [stats.wnba.com]: Operation timed out after 60002 milliseconds with 0 bytes received
+✖ 2026-06-02 11:38:41.081925: Invalid arguments or no league dashboard lineups data for 2026 available!
+✖ Args: conference = "", date_from = "", date_to = "", division = "", game_segment = "", group_quantity = 5, last_n_games = 0, league_id = "10", location = "", measure_type = "Advanced", month = 0, opponent_team_id = 0, outcome = "", po_round = "", pace_adjust = "N", per_mode = "PerGame", period = 0, plus_minus = "N", rank = "N", season = "2026", season_segment = "", season_type = "Regular Season", shot_clock_range = "", team_id = "", vs_conference = "", vs_division = ""
+✖ Error: Failed to perform HTTP request. Caused by error in `curl::curl_fetch_memory()`: ! Timeout was reached [stats.wnba.com]: Operation timed out after 60002 milliseconds with 0 bytes received
+✖ 2026-06-02 11:39:44.2029: Invalid arguments or no league dashboard lineups data for 2026 available!
+✖ Args: conference = "", date_from = "", date_to = "", division = "", game_segment = "", group_quantity = 5, last_n_games = 0, league_id = "10", location = "", measure_type = "Advanced", month = 0, opponent_team_id = 0, outcome = "", po_round = "", pace_adjust = "N", per_mode = "PerGame", period = 0, plus_minus = "N", rank = "N", season = "2026", season_segment = "", season_type = "Playoffs", shot_clock_range = "", team_id = "", vs_conference = "", vs_division = ""
+✖ Error: Failed to perform HTTP request. Caused by error in `curl::curl_fetch_memory()`: ! Timeout was reached [stats.wnba.com]: Operation timed out after 60002 milliseconds with 0 bytes received
+[2026-06-02 11:39:51.13723] season 2026: 0 lineups rows -- skipping upload
 → Uploading 1 files!
 ℹ Start upload of 5 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_lineups
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_lineups on 2026-06-01 12:43:56.684643
-[2026-06-01 12:43:56.689275] WNBA Stats lineups: done
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_lineups on 2026-06-02 11:39:52.672538
+[2026-06-02 11:39:52.676875] WNBA Stats lineups: done
+No changes to commit for 2026
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302745 16.2     711094   38   507042 27.1
 Vcells 525442  4.1    8388608   64  1985972 15.2
-ℹ [2026-06-01 12:43:59.595779] WNBA Stats team season stats: seasons 2026-2026
+ℹ [2026-06-02 11:39:54.382518] WNBA Stats team season stats: seasons 2026-2026
 [1] FALSE
 [1] FALSE
 [1] FALSE
 [1] FALSE
-ℹ [2026-06-01 12:44:00.068901] season 2026: pulling 7 measure_types x 2 season_types
-✖ 2026-06-01 12:44:41.210157: Invalid arguments or no league dashboard team stats data for 2026 available!
+ℹ [2026-06-02 11:39:54.681792] season 2026: pulling 7 measure_types x 2 season_types
+✖ 2026-06-02 11:40:57.743512: Invalid arguments or no league dashboard team stats data for 2026 available!
+✖ Args: conference = "", date_from = "", date_to = "", division = "", game_scope = "", game_segment = "", last_n_games = 0, league_id = "10", location = "", measure_type = "Base", month = 0, opponent_team_id = 0, outcome = "", po_round = "", pace_adjust = "N", per_mode = "PerGame", period = 0, plus_minus = "N", rank = "N", season = "2026", season_segment = "", season_type = "Regular Season", shot_clock_range = "", starter_bench = "", team_id = "", two_way = "", vs_conference = "", vs_division = ""
+✖ Error: Failed to perform HTTP request. Caused by error in `curl::curl_fetch_memory()`: ! Timeout was reached [stats.wnba.com]: Operation timed out after 60001 milliseconds with 0 bytes received
+✖ 2026-06-02 11:42:00.836367: Invalid arguments or no league dashboard team stats data for 2026 available!
+✖ Args: conference = "", date_from = "", date_to = "", division = "", game_scope = "", game_segment = "", last_n_games = 0, league_id = "10", location = "", measure_type = "Base", month = 0, opponent_team_id = 0, outcome = "", po_round = "", pace_adjust = "N", per_mode = "PerGame", period = 0, plus_minus = "N", rank = "N", season = "2026", season_segment = "", season_type = "Playoffs", shot_clock_range = "", starter_bench = "", team_id = "", two_way = "", vs_conference = "", vs_division = ""
+✖ Error: Failed to perform HTTP request. Caused by error in `curl::curl_fetch_memory()`: ! Timeout was reached [stats.wnba.com]: Operation timed out after 60001 milliseconds with 0 bytes received
+✖ 2026-06-02 11:43:03.871012: Invalid arguments or no league dashboard team stats data for 2026 available!
+✖ Args: conference = "", date_from = "", date_to = "", division = "", game_scope = "", game_segment = "", last_n_games = 0, league_id = "10", location = "", measure_type = "Advanced", month = 0, opponent_team_id = 0, outcome = "", po_round = "", pace_adjust = "N", per_mode = "PerGame", period = 0, plus_minus = "N", rank = "N", season = "2026", season_segment = "", season_type = "Regular Season", shot_clock_range = "", starter_bench = "", team_id = "", two_way = "", vs_conference = "", vs_division = ""
+✖ Error: Failed to perform HTTP request. Caused by error in `curl::curl_fetch_memory()`: ! Timeout was reached [stats.wnba.com]: Operation timed out after 60001 milliseconds with 0 bytes received
+✖ 2026-06-02 11:44:06.996719: Invalid arguments or no league dashboard team stats data for 2026 available!
+✖ Args: conference = "", date_from = "", date_to = "", division = "", game_scope = "", game_segment = "", last_n_games = 0, league_id = "10", location = "", measure_type = "Advanced", month = 0, opponent_team_id = 0, outcome = "", po_round = "", pace_adjust = "N", per_mode = "PerGame", period = 0, plus_minus = "N", rank = "N", season = "2026", season_segment = "", season_type = "Playoffs", shot_clock_range = "", starter_bench = "", team_id = "", two_way = "", vs_conference = "", vs_division = ""
+✖ Error: Failed to perform HTTP request. Caused by error in `curl::curl_fetch_memory()`: ! Timeout was reached [stats.wnba.com]: Operation timed out after 60002 milliseconds with 0 bytes received
+✖ 2026-06-02 11:45:10.031951: Invalid arguments or no league dashboard team stats data for 2026 available!
+✖ Args: conference = "", date_from = "", date_to = "", division = "", game_scope = "", game_segment = "", last_n_games = 0, league_id = "10", location = "", measure_type = "Misc", month = 0, opponent_team_id = 0, outcome = "", po_round = "", pace_adjust = "N", per_mode = "PerGame", period = 0, plus_minus = "N", rank = "N", season = "2026", season_segment = "", season_type = "Regular Season", shot_clock_range = "", starter_bench = "", team_id = "", two_way = "", vs_conference = "", vs_division = ""
+✖ Error: Failed to perform HTTP request. Caused by error in `curl::curl_fetch_memory()`: ! Timeout was reached [stats.wnba.com]: Operation timed out after 60002 milliseconds with 0 bytes received
+✖ 2026-06-02 11:46:13.073926: Invalid arguments or no league dashboard team stats data for 2026 available!
+✖ Args: conference = "", date_from = "", date_to = "", division = "", game_scope = "", game_segment = "", last_n_games = 0, league_id = "10", location = "", measure_type = "Misc", month = 0, opponent_team_id = 0, outcome = "", po_round = "", pace_adjust = "N", per_mode = "PerGame", period = 0, plus_minus = "N", rank = "N", season = "2026", season_segment = "", season_type = "Playoffs", shot_clock_range = "", starter_bench = "", team_id = "", two_way = "", vs_conference = "", vs_division = ""
+✖ Error: Failed to perform HTTP request. Caused by error in `curl::curl_fetch_memory()`: ! Timeout was reached [stats.wnba.com]: Operation timed out after 60002 milliseconds with 0 bytes received
+✖ 2026-06-02 11:47:16.119278: Invalid arguments or no league dashboard team stats data for 2026 available!
+✖ Args: conference = "", date_from = "", date_to = "", division = "", game_scope = "", game_segment = "", last_n_games = 0, league_id = "10", location = "", measure_type = "Scoring", month = 0, opponent_team_id = 0, outcome = "", po_round = "", pace_adjust = "N", per_mode = "PerGame", period = 0, plus_minus = "N", rank = "N", season = "2026", season_segment = "", season_type = "Regular Season", shot_clock_range = "", starter_bench = "", team_id = "", two_way = "", vs_conference = "", vs_division = ""
+✖ Error: Failed to perform HTTP request. Caused by error in `curl::curl_fetch_memory()`: ! Timeout was reached [stats.wnba.com]: Operation timed out after 60001 milliseconds with 0 bytes received
+✖ 2026-06-02 11:48:19.168029: Invalid arguments or no league dashboard team stats data for 2026 available!
+✖ Args: conference = "", date_from = "", date_to = "", division = "", game_scope = "", game_segment = "", last_n_games = 0, league_id = "10", location = "", measure_type = "Scoring", month = 0, opponent_team_id = 0, outcome = "", po_round = "", pace_adjust = "N", per_mode = "PerGame", period = 0, plus_minus = "N", rank = "N", season = "2026", season_segment = "", season_type = "Playoffs", shot_clock_range = "", starter_bench = "", team_id = "", two_way = "", vs_conference = "", vs_division = ""
+✖ Error: Failed to perform HTTP request. Caused by error in `curl::curl_fetch_memory()`: ! Timeout was reached [stats.wnba.com]: Operation timed out after 60002 milliseconds with 0 bytes received
+✖ 2026-06-02 11:48:22.740144: Invalid arguments or no league dashboard team stats data for 2026 available!
 ✖ Args: conference = "", date_from = "", date_to = "", division = "", game_scope = "", game_segment = "", last_n_games = 0, league_id = "10", location = "", measure_type = "Usage", month = 0, opponent_team_id = 0, outcome = "", po_round = "", pace_adjust = "N", per_mode = "PerGame", period = 0, plus_minus = "N", rank = "N", season = "2026", season_segment = "", season_type = "Regular Season", shot_clock_range = "", starter_bench = "", team_id = "", two_way = "", vs_conference = "", vs_division = ""
 ✖ Error: Can't retrieve empty body.
-✖ 2026-06-01 12:44:45.611395: Invalid arguments or no league dashboard team stats data for 2026 available!
+✖ 2026-06-02 11:48:29.147213: Invalid arguments or no league dashboard team stats data for 2026 available!
 ✖ Args: conference = "", date_from = "", date_to = "", division = "", game_scope = "", game_segment = "", last_n_games = 0, league_id = "10", location = "", measure_type = "Usage", month = 0, opponent_team_id = 0, outcome = "", po_round = "", pace_adjust = "N", per_mode = "PerGame", period = 0, plus_minus = "N", rank = "N", season = "2026", season_segment = "", season_type = "Playoffs", shot_clock_range = "", starter_bench = "", team_id = "", two_way = "", vs_conference = "", vs_division = ""
 ✖ Error: Can't retrieve empty body.
+✖ 2026-06-02 11:52:41.156984: Invalid arguments or no league dashboard team stats data for 2026 available!
+✖ Args: conference = "", date_from = "", date_to = "", division = "", game_scope = "", game_segment = "", last_n_games = 0, league_id = "10", location = "", measure_type = "Opponent", month = 0, opponent_team_id = 0, outcome = "", po_round = "", pace_adjust = "N", per_mode = "PerGame", period = 0, plus_minus = "N", rank = "N", season = "2026", season_segment = "", season_type = "Playoffs", shot_clock_range = "", starter_bench = "", team_id = "", two_way = "", vs_conference = "", vs_division = ""
+✖ Error: Failed to perform HTTP request. Caused by error in `curl::curl_fetch_memory()`: ! Timeout was reached [stats.wnba.com]: Operation timed out after 60002 milliseconds with 0 bytes received
 → Uploading 3 files!
 ℹ Start upload of 7 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_team_season_stats
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_team_season_stats on 2026-06-01 12:45:06.961346
-✔ [2026-06-01 12:45:06.967001] season 2026: uploaded 90 rows
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_team_season_stats on 2026-06-02 11:52:44.213616
+✔ [2026-06-02 11:52:44.219134] season 2026: uploaded 30 rows
 → Uploading 1 files!
 ℹ Start upload of 5 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_team_season_stats
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_team_season_stats on 2026-06-01 12:45:08.945261
-✔ [2026-06-01 12:45:08.950071] WNBA Stats team season stats: done
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_team_season_stats on 2026-06-02 11:52:46.673545
+✔ [2026-06-02 11:52:46.678022] WNBA Stats team season stats: done
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302745 16.2     711094   38   507042 27.1
 Vcells 525442  4.1    8388608   64  1985972 15.2
-ℹ [2026-06-01 12:45:11.874585] WNBA Stats standings: seasons 2026-2026
+ℹ [2026-06-02 11:52:49.03816] WNBA Stats standings: seasons 2026-2026
 [1] FALSE
 [1] FALSE
 [1] FALSE
 [1] FALSE
-ℹ [2026-06-01 12:45:12.360139] season 2026: pulling standings
+ℹ [2026-06-02 11:52:49.395984] season 2026: pulling standings
 → Uploading 3 files!
 ℹ Start upload of 7 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_standings
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_standings on 2026-06-01 12:45:19.523819
-✔ [2026-06-01 12:45:19.529662] season 2026: uploaded 15 rows
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_standings on 2026-06-02 11:52:55.531843
+✔ [2026-06-02 11:52:55.537503] season 2026: uploaded 15 rows
 → Uploading 1 files!
 ℹ Start upload of 5 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_standings
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_standings on 2026-06-01 12:45:21.432187
-✔ [2026-06-01 12:45:21.43807] WNBA Stats standings: done
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_standings on 2026-06-02 11:52:57.059136
+✔ [2026-06-02 11:52:57.065137] WNBA Stats standings: done
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302745 16.2     711094   38   507042 27.1
 Vcells 525442  4.1    8388608   64  1985972 15.2
-ℹ [2026-06-01 12:45:24.24034] WNBA Stats shots: seasons 2026-2026
+ℹ [2026-06-02 11:52:59.581194] WNBA Stats shots: seasons 2026-2026
 [1] FALSE
 [1] FALSE
 [1] FALSE
 [1] FALSE
-ℹ [2026-06-01 12:45:24.722527] season 2026: discovering games
-ℹ [2026-06-01 12:45:24.971541] season 2026: using local PBP cache (7944 shot rows)
+ℹ [2026-06-02 11:52:59.878647] season 2026: discovering games
+ℹ [2026-06-02 11:53:00.148059] season 2026: using local PBP cache (7944 shot rows)
 → Uploading 3 files!
 ℹ Start upload of 7 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_shots
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_shots on 2026-06-01 12:45:28.532779
-✔ [2026-06-01 12:45:28.538433] season 2026: uploaded 7944 shot rows
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_shots on 2026-06-02 11:53:02.726183
+✔ [2026-06-02 11:53:02.731823] season 2026: uploaded 7944 shot rows
 → Uploading 1 files!
 ℹ Start upload of 5 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_shots
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_shots on 2026-06-01 12:45:30.385535
-✔ [2026-06-01 12:45:30.390081] WNBA Stats shots: done
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_shots on 2026-06-02 11:53:04.336171
+✔ [2026-06-02 11:53:04.340775] WNBA Stats shots: done
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302745 16.2     711094   38   507042 27.1
 Vcells 525442  4.1    8388608   64  1985972 15.2
-ℹ [2026-06-01 12:45:33.236846] WNBA Stats game rosters (inactive players): seasons 2026-2026
+ℹ [2026-06-02 11:53:06.797392] WNBA Stats game rosters (inactive players): seasons 2026-2026
 [1] FALSE
 [1] FALSE
 [1] FALSE
 [1] FALSE
-ℹ [2026-06-01 12:45:33.71267] season 2026: discovering games
-ℹ [2026-06-01 12:45:39.333938] season 2026: 63 games
+ℹ [2026-06-02 11:53:07.112999] season 2026: discovering games
+ℹ [2026-06-02 11:53:12.228339] season 2026: 65 games
 → Uploading 3 files!
 ℹ Start upload of 7 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_game_rosters
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_game_rosters on 2026-06-01 12:49:39.452163
-✔ [2026-06-01 12:49:39.457658] season 2026: uploaded 208 rows
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_game_rosters on 2026-06-02 11:57:07.244437
+✔ [2026-06-02 11:57:07.249878] season 2026: uploaded 217 rows
 → Uploading 1 files!
 ℹ Start upload of 5 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_game_rosters
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_game_rosters on 2026-06-01 12:49:41.252318
-✔ [2026-06-01 12:49:41.256737] WNBA Stats game rosters: done
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_game_rosters on 2026-06-02 11:57:08.749606
+✔ [2026-06-02 11:57:08.753874] WNBA Stats game rosters: done
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302745 16.2     711094   38   507042 27.1
 Vcells 525442  4.1    8388608   64  1985972 15.2
-ℹ [2026-06-01 12:49:43.90262] WNBA Stats officials: seasons 2026-2026
+ℹ [2026-06-02 11:57:11.152712] WNBA Stats officials: seasons 2026-2026
 [1] FALSE
 [1] FALSE
 [1] FALSE
 [1] FALSE
-ℹ [2026-06-01 12:49:44.368038] season 2026: discovering games
-ℹ [2026-06-01 12:49:48.466288] season 2026: 63 games
+ℹ [2026-06-02 11:57:11.434751] season 2026: discovering games
+ℹ [2026-06-02 11:57:14.855132] season 2026: 65 games
 → Uploading 3 files!
 ℹ Start upload of 7 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_officials
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_officials on 2026-06-01 12:53:45.883113
-✔ [2026-06-01 12:53:45.888499] season 2026: uploaded 189 rows
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_officials on 2026-06-02 12:00:59.322923
+✔ [2026-06-02 12:00:59.328573] season 2026: uploaded 195 rows
 → Uploading 1 files!
 ℹ Start upload of 5 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_officials
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_officials on 2026-06-01 12:53:48.489769
-✔ [2026-06-01 12:53:48.494197] WNBA Stats officials: done
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_officials on 2026-06-02 12:01:01.230996
+✔ [2026-06-02 12:01:01.235458] WNBA Stats officials: done
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302745 16.2     711094   38   507042 27.1
 Vcells 525442  4.1    8388608   64  1985972 15.2
@@ -220,7 +276,7 @@ Vcells 525442  4.1    8388608   64  1985972 15.2
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_schedules
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_schedules on 2026-06-01 12:53:58.021563
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_schedules on 2026-06-02 12:01:13.529068
 ℹ schedule ok
 ℹ phase end: season 2026: schedule
 
@@ -232,7 +288,7 @@ wnba_stats_schedules
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_player_game_logs
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_player_game_logs on 2026-06-01 12:54:05.578243
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_player_game_logs on 2026-06-02 12:01:19.016105
 ℹ player_game_logs ok
 ℹ phase end: season 2026: player_game_logs
 
@@ -240,31 +296,39 @@ wnba_stats_player_game_logs
 
 ℹ phase start: season 2026: pbp
 ! pbp empty after retries
-■                                1/63 (  2%) | rate 0.0038/s | ETA  4h
+■                                1/65 (  2%) | rate 0.0038/s | ETA  5h
 ! pbp empty after retries
-■                                1/63 (  2%) | rate 0.0038/s | ETA  4h■■                               2/63 (  3%) | rate 0.0038/s | ETA  4h
+■                                1/65 (  2%) | rate 0.0038/s | ETA  5h■■                               2/65 (  3%) | rate 0.0038/s | ETA  5h
 ! pbp empty after retries
-■■                               2/63 (  3%) | rate 0.0038/s | ETA  4h■■                               3/63 (  5%) | rate 0.0038/s | ETA  4h
+■■                               2/65 (  3%) | rate 0.0038/s | ETA  5h■■                               3/65 (  5%) | rate 0.0038/s | ETA  4h
 ! pbp empty after retries
-■■                               3/63 (  5%) | rate 0.0038/s | ETA  4h■■■                              4/63 (  6%) | rate 0.0038/s | ETA  4h
-■■■■■■■                          13/63 ( 21%) | rate 0.012/s | ETA  1h
-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  63/63 (100%) | rate 0.06/s | ETA  0s
+■■                               3/65 (  5%) | rate 0.0038/s | ETA  4h■■■                              4/65 (  6%) | rate 0.0038/s | ETA  4h
+! pbp empty after retries
+■■■                              4/65 (  6%) | rate 0.0038/s | ETA  4h■■■                              5/65 (  8%) | rate 0.0038/s | ETA  4h
+! pbp empty after retries
+■■■                              5/65 (  8%) | rate 0.0038/s | ETA  4h■■■■                             6/65 (  9%) | rate 0.0038/s | ETA  4h
+■■■■■■■■■■■■■■■■■■■■■■■          48/65 ( 74%) | rate 0.031/s | ETA  9m
+■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  65/65 (100%) | rate 0.042/s | ETA  0s
 ℹ 
 ! pbp empty after retries
-■■■■■■■■■                        1/4 ( 25%) | retry: still failing 
+■■■■■■                           1/6 ( 17%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■                        1/4 ( 25%) | retry: still failing ■■■■■■■■■■■■■■■■                 2/4 ( 50%) | retry: still failing 
+■■■■■■                           1/6 ( 17%) | retry: still failing ■■■■■■■■■■■                      2/6 ( 33%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■■■■■■                 2/4 ( 50%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■          3/4 ( 75%) | retry: still failing 
+■■■■■■■■■■■                      2/6 ( 33%) | retry: still failing ■■■■■■■■■■■■■■■■                 3/6 ( 50%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■■■■■■■■■■■■■          3/4 ( 75%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  4/4 (100%) | retry: still failing 
+■■■■■■■■■■■■■■■■                 3/6 ( 50%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■            4/6 ( 67%) | retry: still failing 
+! pbp empty after retries
+■■■■■■■■■■■■■■■■■■■■■            4/6 ( 67%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■■■■       5/6 ( 83%) | retry: still failing 
+! pbp empty after retries
+■■■■■■■■■■■■■■■■■■■■■■■■■■       5/6 ( 83%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  6/6 (100%) | retry: still failing 
 ℹ pbp cool-off pass complete
 → Uploading 3 files!
 ℹ Start upload of 7 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_pbp
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_pbp on 2026-06-01 13:29:25.931459
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_pbp on 2026-06-02 12:53:59.334477
 ℹ pbp ok
 ℹ phase end: season 2026: pbp
 
@@ -276,10 +340,10 @@ wnba_stats_pbp
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_schedules
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_schedules on 2026-06-01 13:29:29.721656
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_schedules on 2026-06-02 12:54:01.832835
 ℹ master schedule ok
 ℹ phase end: master schedule
-[1] "cli-213-604"
+[1] "cli-213-862"
 
 ── manifest upload ──
 
@@ -289,19 +353,19 @@ wnba_stats_schedules
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_schedules
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_schedules on 2026-06-01 13:29:31.990176
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_schedules on 2026-06-02 12:54:03.488441
 → Uploading 1 files!
 ℹ Start upload of 5 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_player_game_logs
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_player_game_logs on 2026-06-01 13:29:33.997719
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_player_game_logs on 2026-06-02 12:54:04.967865
 → Uploading 1 files!
 ℹ Start upload of 5 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_pbp
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_pbp on 2026-06-01 13:29:37.094657
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_pbp on 2026-06-02 12:54:06.692094
 ℹ phase end: manifest upload
 # A tibble: 1 × 4
   season row_count generated_at_utc    source_endpoint            
