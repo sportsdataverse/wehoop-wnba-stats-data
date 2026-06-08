@@ -1,7 +1,7 @@
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302745 16.2     711094   38   507042 27.1
 Vcells 525442  4.1    8388608   64  1985972 15.2
-[2026-06-07 10:08:05.380335] WNBA Stats rosters: seasons 2026-2026
+[2026-06-08 12:01:11.462892] WNBA Stats rosters: seasons 2026-2026
 [1] FALSE
 [1] FALSE
 [1] FALSE
@@ -9,90 +9,90 @@ Vcells 525442  4.1    8388608   64  1985972 15.2
 [1] FALSE
 [1] FALSE
 [1] FALSE
-[2026-06-07 10:08:05.838664] season 2026: discovering team_ids
-[2026-06-07 10:08:06.832106] season 2026: 15 teams
+[2026-06-08 12:01:11.918194] season 2026: discovering team_ids
+[2026-06-08 12:01:12.669392] season 2026: 15 teams
 → Uploading 3 files!
 ℹ Start upload of 7 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_rosters
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_rosters on 2026-06-07 10:09:03.636625
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_rosters on 2026-06-08 12:02:09.899738
 → Uploading 3 files!
 ℹ Start upload of 7 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_coaches
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_coaches on 2026-06-07 10:09:05.884652
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_coaches on 2026-06-08 12:02:12.591432
 → Uploading 1 files!
 ℹ Start upload of 5 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_rosters
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_rosters on 2026-06-07 10:09:07.436725
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_rosters on 2026-06-08 12:02:15.053615
 → Uploading 1 files!
 ℹ Start upload of 5 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_coaches
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_coaches on 2026-06-07 10:09:09.131679
-[2026-06-07 10:09:09.13604] WNBA Stats rosters: done
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_coaches on 2026-06-08 12:02:17.051569
+[2026-06-08 12:02:17.056029] WNBA Stats rosters: done
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302745 16.2     711094   38   507042 27.1
 Vcells 525442  4.1    8388608   64  1985972 15.2
-[2026-06-07 10:09:12.273539] WNBA Stats player season stats: seasons 2026-2026
+[2026-06-08 12:02:20.535622] WNBA Stats player season stats: seasons 2026-2026
 [1] FALSE
 [1] FALSE
 [1] FALSE
 [1] FALSE
-[2026-06-07 10:09:12.696842] season 2026: pulling 7 measure_types x 2 season_types
+[2026-06-08 12:02:20.980946] season 2026: pulling 7 measure_types x 2 season_types
 → Uploading 3 files!
 ℹ Start upload of 7 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_player_season_stats
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_player_season_stats on 2026-06-07 10:10:15.541906
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_player_season_stats on 2026-06-08 12:04:34.489829
 → Uploading 1 files!
 ℹ Start upload of 5 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_player_season_stats
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_player_season_stats on 2026-06-07 10:10:17.064962
-[2026-06-07 10:10:17.069442] WNBA Stats player season stats: done
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_player_season_stats on 2026-06-08 12:04:36.266733
+[2026-06-08 12:04:36.271169] WNBA Stats player season stats: done
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302745 16.2     711094   38   507042 27.1
 Vcells 525442  4.1    8388608   64  1985972 15.2
-[2026-06-07 10:10:19.89911] WNBA Stats lineups: seasons 2026-2026
+[2026-06-08 12:04:39.441449] WNBA Stats lineups: seasons 2026-2026
 [1] FALSE
 [1] FALSE
 [1] FALSE
 [1] FALSE
-[2026-06-07 10:10:20.33956] season 2026: pulling 3 measure_types x 2 season_types
+[2026-06-08 12:04:39.89307] season 2026: pulling 3 measure_types x 2 season_types
 → Uploading 3 files!
 ℹ Start upload of 7 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_lineups
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_lineups on 2026-06-07 10:11:01.407464
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_lineups on 2026-06-08 12:05:09.80249
 → Uploading 1 files!
 ℹ Start upload of 5 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_lineups
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_lineups on 2026-06-07 10:11:02.884012
-[2026-06-07 10:11:02.888505] WNBA Stats lineups: done
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_lineups on 2026-06-08 12:05:11.689184
+[2026-06-08 12:05:11.693832] WNBA Stats lineups: done
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302745 16.2     711094   38   507042 27.1
 Vcells 525442  4.1    8388608   64  1985972 15.2
-ℹ [2026-06-07 10:11:05.768058] WNBA Stats team season stats: seasons 2026-2026
+ℹ [2026-06-08 12:05:14.898332] WNBA Stats team season stats: seasons 2026-2026
 [1] FALSE
 [1] FALSE
 [1] FALSE
 [1] FALSE
-ℹ [2026-06-07 10:11:06.230782] season 2026: pulling 7 measure_types x 2 season_types
-✖ 2026-06-07 10:11:43.344031: Invalid arguments or no league dashboard team stats data for 2026 available!
+ℹ [2026-06-08 12:05:15.368945] season 2026: pulling 7 measure_types x 2 season_types
+✖ 2026-06-08 12:05:53.284026: Invalid arguments or no league dashboard team stats data for 2026 available!
 ✖ Args: conference = "", date_from = "", date_to = "", division = "", game_scope = "", game_segment = "", last_n_games = 0, league_id = "10", location = "", measure_type = "Usage", month = 0, opponent_team_id = 0, outcome = "", po_round = "", pace_adjust = "N", per_mode = "PerGame", period = 0, plus_minus = "N", rank = "N", season = "2026", season_segment = "", season_type = "Regular Season", shot_clock_range = "", starter_bench = "", team_id = "", two_way = "", vs_conference = "", vs_division = ""
 ✖ Error: Can't retrieve empty body.
-✖ 2026-06-07 10:11:47.152861: Invalid arguments or no league dashboard team stats data for 2026 available!
+✖ 2026-06-08 12:05:57.00757: Invalid arguments or no league dashboard team stats data for 2026 available!
 ✖ Args: conference = "", date_from = "", date_to = "", division = "", game_scope = "", game_segment = "", last_n_games = 0, league_id = "10", location = "", measure_type = "Usage", month = 0, opponent_team_id = 0, outcome = "", po_round = "", pace_adjust = "N", per_mode = "PerGame", period = 0, plus_minus = "N", rank = "N", season = "2026", season_segment = "", season_type = "Playoffs", shot_clock_range = "", starter_bench = "", team_id = "", two_way = "", vs_conference = "", vs_division = ""
 ✖ Error: Can't retrieve empty body.
 → Uploading 3 files!
@@ -100,110 +100,110 @@ Vcells 525442  4.1    8388608   64  1985972 15.2
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_team_season_stats
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_team_season_stats on 2026-06-07 10:12:05.52694
-✔ [2026-06-07 10:12:05.532102] season 2026: uploaded 90 rows
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_team_season_stats on 2026-06-08 12:06:15.772369
+✔ [2026-06-08 12:06:15.778094] season 2026: uploaded 90 rows
 → Uploading 1 files!
 ℹ Start upload of 5 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_team_season_stats
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_team_season_stats on 2026-06-07 10:12:06.939281
-✔ [2026-06-07 10:12:06.943836] WNBA Stats team season stats: done
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_team_season_stats on 2026-06-08 12:06:17.575523
+✔ [2026-06-08 12:06:17.58023] WNBA Stats team season stats: done
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302745 16.2     711094   38   507042 27.1
 Vcells 525442  4.1    8388608   64  1985972 15.2
-ℹ [2026-06-07 10:12:09.782598] WNBA Stats standings: seasons 2026-2026
+ℹ [2026-06-08 12:06:20.60317] WNBA Stats standings: seasons 2026-2026
 [1] FALSE
 [1] FALSE
 [1] FALSE
 [1] FALSE
-ℹ [2026-06-07 10:12:10.236359] season 2026: pulling standings
+ℹ [2026-06-08 12:06:21.084234] season 2026: pulling standings
 → Uploading 3 files!
 ℹ Start upload of 7 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_standings
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_standings on 2026-06-07 10:12:16.183299
-✔ [2026-06-07 10:12:16.188936] season 2026: uploaded 15 rows
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_standings on 2026-06-08 12:06:28.023279
+✔ [2026-06-08 12:06:28.029086] season 2026: uploaded 15 rows
 → Uploading 1 files!
 ℹ Start upload of 5 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_standings
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_standings on 2026-06-07 10:12:17.833362
-✔ [2026-06-07 10:12:17.838548] WNBA Stats standings: done
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_standings on 2026-06-08 12:06:29.971558
+✔ [2026-06-08 12:06:29.977439] WNBA Stats standings: done
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302745 16.2     711094   38   507042 27.1
 Vcells 525442  4.1    8388608   64  1985972 15.2
-ℹ [2026-06-07 10:12:20.565689] WNBA Stats shots: seasons 2026-2026
+ℹ [2026-06-08 12:06:32.853054] WNBA Stats shots: seasons 2026-2026
 [1] FALSE
 [1] FALSE
 [1] FALSE
 [1] FALSE
-ℹ [2026-06-07 10:12:21.015247] season 2026: discovering games
-ℹ [2026-06-07 10:12:21.25942] season 2026: using local PBP cache (7944 shot rows)
+ℹ [2026-06-08 12:06:33.337095] season 2026: discovering games
+ℹ [2026-06-08 12:06:33.626769] season 2026: using local PBP cache (10777 shot rows)
 → Uploading 3 files!
 ℹ Start upload of 7 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_shots
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_shots on 2026-06-07 10:12:23.657018
-✔ [2026-06-07 10:12:23.662816] season 2026: uploaded 7944 shot rows
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_shots on 2026-06-08 12:06:36.746198
+✔ [2026-06-08 12:06:36.751706] season 2026: uploaded 10777 shot rows
 → Uploading 1 files!
 ℹ Start upload of 5 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_shots
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_shots on 2026-06-07 10:12:25.104345
-✔ [2026-06-07 10:12:25.109183] WNBA Stats shots: done
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_shots on 2026-06-08 12:06:38.701592
+✔ [2026-06-08 12:06:38.706226] WNBA Stats shots: done
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302745 16.2     711094   38   507042 27.1
 Vcells 525442  4.1    8388608   64  1985972 15.2
-ℹ [2026-06-07 10:12:27.909482] WNBA Stats game rosters (inactive players): seasons 2026-2026
+ℹ [2026-06-08 12:06:41.795205] WNBA Stats game rosters (inactive players): seasons 2026-2026
 [1] FALSE
 [1] FALSE
 [1] FALSE
 [1] FALSE
-ℹ [2026-06-07 10:12:28.376478] season 2026: discovering games
-ℹ [2026-06-07 10:12:33.270621] season 2026: 80 games
+ℹ [2026-06-08 12:06:42.22642] season 2026: discovering games
+ℹ [2026-06-08 12:06:47.622078] season 2026: 82 games
 → Uploading 3 files!
 ℹ Start upload of 7 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_game_rosters
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_game_rosters on 2026-06-07 10:17:26.468271
-✔ [2026-06-07 10:17:26.473771] season 2026: uploaded 265 rows
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_game_rosters on 2026-06-08 12:11:50.602979
+✔ [2026-06-08 12:11:50.608335] season 2026: uploaded 268 rows
 → Uploading 1 files!
 ℹ Start upload of 5 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_game_rosters
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_game_rosters on 2026-06-07 10:17:27.902062
-✔ [2026-06-07 10:17:27.906355] WNBA Stats game rosters: done
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_game_rosters on 2026-06-08 12:11:52.48631
+✔ [2026-06-08 12:11:52.490645] WNBA Stats game rosters: done
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302745 16.2     711094   38   507042 27.1
 Vcells 525442  4.1    8388608   64  1985972 15.2
-ℹ [2026-06-07 10:17:30.660168] WNBA Stats officials: seasons 2026-2026
+ℹ [2026-06-08 12:11:55.397307] WNBA Stats officials: seasons 2026-2026
 [1] FALSE
 [1] FALSE
 [1] FALSE
 [1] FALSE
-ℹ [2026-06-07 10:17:31.146142] season 2026: discovering games
-ℹ [2026-06-07 10:17:34.922599] season 2026: 80 games
+ℹ [2026-06-08 12:11:55.860176] season 2026: discovering games
+ℹ [2026-06-08 12:11:59.295274] season 2026: 82 games
 → Uploading 3 files!
 ℹ Start upload of 7 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_officials
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_officials on 2026-06-07 10:22:18.159797
-✔ [2026-06-07 10:22:18.165108] season 2026: uploaded 240 rows
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_officials on 2026-06-08 12:16:49.830289
+✔ [2026-06-08 12:16:49.835878] season 2026: uploaded 246 rows
 → Uploading 1 files!
 ℹ Start upload of 5 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_officials
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_officials on 2026-06-07 10:22:19.768031
-✔ [2026-06-07 10:22:19.772624] WNBA Stats officials: done
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_officials on 2026-06-08 12:16:51.486737
+✔ [2026-06-08 12:16:51.491203] WNBA Stats officials: done
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302745 16.2     711094   38   507042 27.1
 Vcells 525442  4.1    8388608   64  1985972 15.2
@@ -220,7 +220,7 @@ Vcells 525442  4.1    8388608   64  1985972 15.2
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_schedules
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_schedules on 2026-06-07 10:22:26.670113
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_schedules on 2026-06-08 12:16:59.359582
 ℹ schedule ok
 ℹ phase end: season 2026: schedule
 
@@ -232,42 +232,31 @@ wnba_stats_schedules
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_player_game_logs
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_player_game_logs on 2026-06-07 10:22:31.55254
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_player_game_logs on 2026-06-08 12:17:05.177437
 ℹ player_game_logs ok
 ℹ phase end: season 2026: player_game_logs
 
 ── season 2026: pbp ──
 
 ℹ phase start: season 2026: pbp
-■                                1/80 (  1%) | rate 0.12/s | ETA 11m
-■■                               2/80 (  2%) | rate 0.12/s | ETA 11m
-■■                               3/80 (  4%) | rate 0.12/s | ETA 11m
-■■■                              4/80 (  5%) | rate 0.11/s | ETA 12m
-■■■                              5/80 (  6%) | rate 0.1/s | ETA 12m
-■■■                              6/80 (  8%) | rate 0.1/s | ETA 12m
-■■■■                             7/80 (  9%) | rate 0.1/s | ETA 12m
-■■■■                             8/80 ( 10%) | rate 0.1/s | ETA 12m
-■■■■                             9/80 ( 11%) | rate 0.1/s | ETA 12m
-■■■■■                            10/80 ( 12%) | rate 0.095/s | ETA 12m
-■■■■■                            11/80 ( 14%) | rate 0.095/s | ETA 12m
-■■■■■                            12/80 ( 15%) | rate 0.095/s | ETA 12m
-■■■■■■                           13/80 ( 16%) | rate 0.093/s | ETA 12m
-■■■■■■                           14/80 ( 18%) | rate 0.094/s | ETA 12m
-■■■■■■■                          15/80 ( 19%) | rate 0.094/s | ETA 12m
-■■■■■■■                          16/80 ( 20%) | rate 0.094/s | ETA 11m
-■■■■■■■                          17/80 ( 21%) | rate 0.095/s | ETA 11m
-■■■■■■■■                         18/80 ( 22%) | rate 0.094/s | ETA 11m
-■■■■■■■■                         19/80 ( 24%) | rate 0.094/s | ETA 11m
-■■■■■■■■■                        20/80 ( 25%) | rate 0.095/s | ETA 11m
-■■■■■■■■■                        21/80 ( 26%) | rate 0.094/s | ETA 10m
-■■■■■■■■■■■■■■■■■■■■■■■          60/80 ( 75%) | rate 0.27/s | ETA  1m
-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  80/80 (100%) | rate 0.36/s | ETA  0s
+! pbp empty after retries
+■                                1/82 (  1%) | rate 0.0038/s | ETA  6h
+! pbp empty after retries
+■                                1/82 (  1%) | rate 0.0038/s | ETA  6h■■                               2/82 (  2%) | rate 0.0038/s | ETA  6h
+■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■   80/82 ( 98%) | rate 0.15/s | ETA 13s
+■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  82/82 (100%) | rate 0.16/s | ETA  0s
+ℹ 
+! pbp empty after retries
+■■■■■■■■■■■■■■■■                 1/2 ( 50%) | retry: still failing 
+! pbp empty after retries
+■■■■■■■■■■■■■■■■                 1/2 ( 50%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  2/2 (100%) | retry: still failing 
+ℹ pbp cool-off pass complete
 → Uploading 3 files!
 ℹ Start upload of 7 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_pbp
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_pbp on 2026-06-07 10:26:23.642442
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_pbp on 2026-06-08 12:35:05.778383
 ℹ pbp ok
 ℹ phase end: season 2026: pbp
 
@@ -279,10 +268,10 @@ wnba_stats_pbp
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_schedules
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_schedules on 2026-06-07 10:26:25.677206
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_schedules on 2026-06-08 12:35:08.482967
 ℹ master schedule ok
 ℹ phase end: master schedule
-[1] "cli-213-210"
+[1] "cli-213-346"
 
 ── manifest upload ──
 
@@ -292,19 +281,19 @@ wnba_stats_schedules
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_schedules
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_schedules on 2026-06-07 10:26:27.142955
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_schedules on 2026-06-08 12:35:10.162118
 → Uploading 1 files!
 ℹ Start upload of 5 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_player_game_logs
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_player_game_logs on 2026-06-07 10:26:28.47415
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_player_game_logs on 2026-06-08 12:35:11.717757
 → Uploading 1 files!
 ℹ Start upload of 5 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_pbp
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_pbp on 2026-06-07 10:26:29.810252
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_pbp on 2026-06-08 12:35:13.411756
 ℹ phase end: manifest upload
 # A tibble: 1 × 4
   season row_count generated_at_utc    source_endpoint            
