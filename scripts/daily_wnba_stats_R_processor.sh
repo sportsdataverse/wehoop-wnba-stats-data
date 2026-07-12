@@ -68,11 +68,19 @@ do
         # run_and_commit so a later stall cannot lose them. 07_draft.R is
         # intentionally excluded (annual cadence; runs via
         # annual_wnba_stats_draft_R_processor.sh).
+        #
+        # 03_player_season_stats / 04_lineups / 05_team_season_stats /
+        # 06_standings RETIRED (superseded by the python/wnba_data_build
+        # leaguedash parameter cube -> wnba_stats_leaguedash release tag).
+        # Their release tags (wnba_stats_{player_season_stats,lineups,
+        # team_season_stats,standings}) stay live but stop receiving new
+        # seasons; wehoop's load_wnba_stats_{player_stats,lineups,team_stats,
+        # standings}() now read the cube instead (deprecation shims).
+        # NOTE: the leaguedash cube itself has NO scheduled refresh yet on
+        # either the NBA or WNBA side -- `python -m wnba_data_build.
+        # leaguedash_cli --seasons <year> --publish` must be run manually
+        # (or a CI step added deliberately) to keep it current.
         run_and_commit "$i" R/wnba_stats_02_rosters.R             $i $i
-        run_and_commit "$i" R/wnba_stats_03_player_season_stats.R $i $i
-        run_and_commit "$i" R/wnba_stats_04_lineups.R             $i $i
-        run_and_commit "$i" R/wnba_stats_05_team_season_stats.R   $i $i
-        run_and_commit "$i" R/wnba_stats_06_standings.R           $i $i
         run_and_commit "$i" R/wnba_stats_08_shots.R               $i $i
         run_and_commit "$i" R/wnba_stats_09_game_rosters.R        $i $i
         run_and_commit "$i" R/wnba_stats_10_officials.R           $i $i
