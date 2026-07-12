@@ -8,8 +8,9 @@ from __future__ import annotations
 
 import re
 import subprocess
+import sys
 from pathlib import Path
-from typing import Callable, Optional
+from typing import Callable, Iterable, Optional
 
 _GH_TIMEOUT = 600
 _SEASON_RE = re.compile(r"_(\d{4})\.parquet$")
@@ -41,9 +42,22 @@ def _gh_release_exists(tag: str, repo: str) -> bool:
         return False
 
 
-def plan_uploads(artifacts_dir: Path) -> list[Path]:
-    """Return the *.parquet files under *artifacts_dir* (sorted)."""
-    return sorted(Path(artifacts_dir).glob("*.parquet"))
+def plan_uploads(
+    artifacts_dir: Path, seasons: Optional[Iterable[int]] = None
+) -> list[Path]:
+    """Return the *.parquet files under *artifacts_dir* (sorted).
+
+    ``seasons``, when given, scopes this to only files ending in
+    ``_{season}.parquet`` for one of the given seasons -- otherwise every
+    prior season's files sitting in the same directory get globbed in too,
+    which turns a single-season publish call into an ever-growing re-upload
+    of the whole backfill-to-date (O(n^2) across a multi-season backfill).
+    """
+    files = sorted(Path(artifacts_dir).glob("*.parquet"))
+    if seasons is None:
+        return files
+    suffixes = tuple(f"_{s}.parquet" for s in seasons)
+    return [f for f in files if f.name.endswith(suffixes)]
 
 
 def published_seasons(
@@ -88,24 +102,31 @@ def upload_artifacts(
     tag: str,
     repo: str,
     *,
+    seasons: Optional[Iterable[int]] = None,
     dry_run: bool = False,
     runner: Optional[Runner] = None,
     exists_check: Optional[ExistsCheck] = None,
 ) -> dict[str, object]:
     """Upload each parquet under *artifacts_dir* to release *tag* on *repo* (creating it if needed).
 
+    ``seasons`` scopes the upload set (see :func:`plan_uploads`) -- pass the
+    seasons this invocation actually built, not the whole directory. Each
+    file uploads best-effort: one failed ``gh release upload`` is logged and
+    skipped rather than aborting every file still queued behind it.
+
     ``runner`` (default: real `gh` subprocess) and ``exists_check`` are injectable for tests.
 
     Returns:
         dict with keys:
             ``uploaded``: int count of files uploaded (0 if *dry_run* is True).
+            ``failed``: list of asset filenames whose upload raised.
             ``files``: list of asset filenames that were (or would be) uploaded.
     """
     run = runner or _gh_runner
     exists = exists_check or _gh_release_exists
-    files = plan_uploads(artifacts_dir)
+    files = plan_uploads(artifacts_dir, seasons)
     if dry_run:
-        return {"uploaded": 0, "files": [f.name for f in files]}
+        return {"uploaded": 0, "failed": [], "files": [f.name for f in files]}
     if not exists(tag, repo):
         run(
             [
@@ -120,6 +141,17 @@ def upload_artifacts(
                 f"{tag} datasets (WNBA model zoo)",
             ]
         )
+    uploaded: list[str] = []
+    failed: list[str] = []
     for f in files:
-        run(["release", "upload", tag, str(f), "--repo", repo, "--clobber"])
-    return {"uploaded": len(files), "files": [f.name for f in files]}
+        try:
+            run(["release", "upload", tag, str(f), "--repo", repo, "--clobber"])
+            uploaded.append(f.name)
+        except subprocess.CalledProcessError as exc:
+            print(f"WARNING: upload failed for {f.name}: {exc}", file=sys.stderr)
+            failed.append(f.name)
+    return {
+        "uploaded": len(uploaded),
+        "failed": failed,
+        "files": [f.name for f in files],
+    }
