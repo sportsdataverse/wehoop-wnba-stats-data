@@ -1,7 +1,7 @@
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302776 16.2     711068   38   507139 27.1
 Vcells 525462  4.1    8388608   64  1986039 15.2
-[2026-07-12 09:04:20.503941] WNBA Stats rosters: seasons 2026-2026
+[2026-07-13 10:30:17.335074] WNBA Stats rosters: seasons 2026-2026
 [1] FALSE
 [1] FALSE
 [1] FALSE
@@ -9,674 +9,105 @@ Vcells 525462  4.1    8388608   64  1986039 15.2
 [1] FALSE
 [1] FALSE
 [1] FALSE
-[2026-07-12 09:04:20.845337] season 2026: discovering team_ids
-[2026-07-12 09:04:22.163483] season 2026: 15 teams
+[2026-07-13 10:30:17.785258] season 2026: discovering team_ids
+[2026-07-13 10:30:20.352841] season 2026: 15 teams
 → Uploading 3 files!
 ℹ Start upload of 7 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_rosters
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_rosters on 2026-07-12 09:05:17.787388
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7011:811ED:2D9E70E:95365B5:6A5358CE and timestamp 2026-07-12 09:05:18 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365559)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-release not found
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-release not found
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700F:15EF8C:2B3895A:8DCB8AE:6A5358D2 and timestamp 2026-07-12 09:05:22 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365598)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7009:252D10:27DA73B:82BB068:6A5358D3 and timestamp 2026-07-12 09:05:23 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365598)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700A:1669D0:2A17AFD:8B0F210:6A5358D4 and timestamp 2026-07-12 09:05:24 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365559)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700E:18C4A7:2B09426:8E561DA:6A5358D6 and timestamp 2026-07-12 09:05:26 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365554)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700A:1669D0:2A1A227:8B173ED:6A5358DB and timestamp 2026-07-12 09:05:31 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365559)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700A:1669D0:2A1EBBF:8B268E9:6A5358E7 and timestamp 2026-07-12 09:05:43 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365554)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7012:2B04A6:299FB86:8958981:6A5358E8 and timestamp 2026-07-12 09:05:44 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365554)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7008:23C4AE:198D08:546621:6A53590A and timestamp 2026-07-12 09:06:18 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365598)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7008:23C4AE:1A5FD1:572668:6A535930 and timestamp 2026-07-12 09:06:56 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365554)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700A:1669D0:2A49F72:8BB83D3:6A53595D and timestamp 2026-07-12 09:07:41 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365559)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700A:1669D0:2A4FF7A:8BCC96A:6A53596E and timestamp 2026-07-12 09:07:58 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365598)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700A:1669D0:2A5C1E7:8BF6B9A:6A535991 and timestamp 2026-07-12 09:08:33 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365598)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700A:6710B:1B8A48:5C19DD:6A53599E and timestamp 2026-07-12 09:08:46 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365598)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7008:23C4AE:1DA26C:623CAB:6A5359D4 and timestamp 2026-07-12 09:09:40 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365559)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700A:1669D0:2A85E4E:8C866AD:6A535A0F and timestamp 2026-07-12 09:10:39 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365598)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7008:23C4AE:1FCA34:69A449:6A535A40 and timestamp 2026-07-12 09:11:28 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365559)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7009:375130:1EC146:66255F:6A535A46 and timestamp 2026-07-12 09:11:34 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365559)
-Error: Request failed after 20 attempts.
-Retrying in 60 seconds.
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700A:6710B:201043:6BAEB2:6A535A82 and timestamp 2026-07-12 09:12:34 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365598)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700B:393FA2:1E3499:65D492:6A535A83 and timestamp 2026-07-12 09:12:35 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365559)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700D:1F447D:223844:7186C1:6A535A84 and timestamp 2026-07-12 09:12:36 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365554)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700F:23326E:20F93D:6D823D:6A535A86 and timestamp 2026-07-12 09:12:38 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365554)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7010:246E63:20E208:6D4DA7:6A535A87 and timestamp 2026-07-12 09:12:39 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365554)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7008:23C4AE:214132:6EA707:6A535A88 and timestamp 2026-07-12 09:12:40 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365554)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700B:393FA2:1E564F:664822:6A535A8A and timestamp 2026-07-12 09:12:42 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365559)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700D:1F447D:225BC8:7200D7:6A535A8B and timestamp 2026-07-12 09:12:43 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365559)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7009:375130:202561:6AE0B7:6A535A90 and timestamp 2026-07-12 09:12:48 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365554)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700A:6710B:20A789:6DB458:6A535AA0 and timestamp 2026-07-12 09:13:04 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365554)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7008:23C4AE:21F176:7104D6:6A535AAB and timestamp 2026-07-12 09:13:15 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365559)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7008:274CCC:33A160:AF0FF6:6A535AD2 and timestamp 2026-07-12 09:13:54 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365554)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700A:6710B:222D49:72D971:6A535AF1 and timestamp 2026-07-12 09:14:25 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365554)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7008:23C4AE:23D482:776712:6A535B0E and timestamp 2026-07-12 09:14:54 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365598)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700A:6710B:22DCAD:752B31:6A535B16 and timestamp 2026-07-12 09:15:02 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365559)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700A:1669D0:2AE99BA:8DDBA61:6A535B31 and timestamp 2026-07-12 09:15:29 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365554)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700B:3A744B:2BD8FEA:90ABE5F:6A535B35 and timestamp 2026-07-12 09:15:33 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365554)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700A:6710B:246063:7A5696:6A535B60 and timestamp 2026-07-12 09:16:16 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365598)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700A:1669D0:2AFD018:8E1E1BB:6A535B6A and timestamp 2026-07-12 09:16:26 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365554)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7008:274CCC:378E44:BC8A49:6A535B83 and timestamp 2026-07-12 09:16:51 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365554)
-Error: Request failed after 20 attempts.
-Retrying in 60 seconds.
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7008:274CCC:38D9FA:C0EBBB:6A535BC0 and timestamp 2026-07-12 09:17:52 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365554)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7009:2DCDCF:2CBCC37:9396B36:6A535BC1 and timestamp 2026-07-12 09:17:53 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365598)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700D:811ED:2EB5719:98E48BF:6A535BC3 and timestamp 2026-07-12 09:17:55 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365559)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700F:15EF8C:2C46DD8:915691F:6A535BC4 and timestamp 2026-07-12 09:17:56 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365559)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7011:811ED:2EB6699:98E7C5E:6A535BC5 and timestamp 2026-07-12 09:17:57 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365559)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7008:274CCC:38FE7C:C16642:6A535BC7 and timestamp 2026-07-12 09:17:59 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365554)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700B:113AD7:2D637A7:9542647:6A535BC8 and timestamp 2026-07-12 09:18:00 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365559)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700F:15EF8C:2C496FC:915F4A5:6A535BCB and timestamp 2026-07-12 09:18:03 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365598)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7008:274CCC:391E7C:C1D2FF:6A535BCC and timestamp 2026-07-12 09:18:04 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365554)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7008:274CCC:39537C:C28771:6A535BD5 and timestamp 2026-07-12 09:18:13 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365554)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7009:2DCDCF:2CC6802:93B8334:6A535BDA and timestamp 2026-07-12 09:18:18 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365598)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700A:1669D0:2B31AA4:8ED39E6:6A535C05 and timestamp 2026-07-12 09:19:01 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365598)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7008:274CCC:3B978F:CA2607:6A535C3F and timestamp 2026-07-12 09:19:59 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365598)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7008:274CCC:3C72B7:CD05A7:6A535C66 and timestamp 2026-07-12 09:20:38 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365598)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7008:274CCC:3DB911:D14CD7:6A535C9F and timestamp 2026-07-12 09:21:35 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365559)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7008:274CCC:3E91B7:D4239F:6A535CC7 and timestamp 2026-07-12 09:22:15 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365554)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7008:1D4C77:3812A90:B8B4F8D:6A535D03 and timestamp 2026-07-12 09:23:15 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365559)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700A:1669D0:2B8A2B2:90005D9:6A535D09 and timestamp 2026-07-12 09:23:21 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365559)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700A:1669D0:2B929C4:901D37E:6A535D22 and timestamp 2026-07-12 09:23:46 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365559)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700B:3A744B:2C7E3BE:92DEA8B:6A535D26 and timestamp 2026-07-12 09:23:50 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365598)
-Error: Request failed after 20 attempts.
-Retrying in 60 seconds.
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7008:274CCC:420703:DFC8CD:6A535D62 and timestamp 2026-07-12 09:24:50 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365598)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700B:113AD7:2DFA15D:973F4E9:6A535D64 and timestamp 2026-07-12 09:24:52 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365598)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700D:811ED:2F54599:9AFDF12:6A535D65 and timestamp 2026-07-12 09:24:53 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365598)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700E:2D560C:370686A:B2AD36B:6A535D66 and timestamp 2026-07-12 09:24:54 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365554)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7011:811ED:2F554AD:9B01255:6A535D67 and timestamp 2026-07-12 09:24:55 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365554)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7008:274CCC:422BD5:E0420C:6A535D69 and timestamp 2026-07-12 09:24:57 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365598)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700D:811ED:2F56A3E:9B05ACE:6A535D6B and timestamp 2026-07-12 09:24:59 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365598)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700A:34AEED:2C8AF9D:91FD408:6A535D71 and timestamp 2026-07-12 09:25:05 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365554)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7009:2DCDCF:2D6167C:95C2CC2:6A535D76 and timestamp 2026-07-12 09:25:10 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365559)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7008:274CCC:42B1A9:E20891:6A535D7F and timestamp 2026-07-12 09:25:19 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365554)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700B:113AD7:2E06A97:976A49D:6A535D84 and timestamp 2026-07-12 09:25:24 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365559)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700A:6710B:309BAC:A3F5F2:6A535DBE and timestamp 2026-07-12 09:26:22 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365554)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700A:1669D0:2BCCD8A:90E3530:6A535DCA and timestamp 2026-07-12 09:26:34 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365559)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700A:1669D0:2BD8949:910B087:6A535DEE and timestamp 2026-07-12 09:27:10 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365598)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700B:3A744B:2CC33FC:93CAC3E:6A535DEF and timestamp 2026-07-12 09:27:11 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365554)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7008:274CCC:463EE5:EE0ED2:6A535E1B and timestamp 2026-07-12 09:27:55 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365554)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700A:34AEED:2CD7865:92FE735:6A535E47 and timestamp 2026-07-12 09:28:39 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365559)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7008:240B93:2F128:A2324:6A535E5F and timestamp 2026-07-12 09:29:03 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365559)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7008:240B93:3F110:D8AE1:6A535E92 and timestamp 2026-07-12 09:29:54 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365598)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7008:274CCC:49C347:F9EC07:6A535EB5 and timestamp 2026-07-12 09:30:30 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365598)
-Error: Request failed after 20 attempts.
-Retrying in 60 seconds.
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700A:1669D0:2C31574:9239801:6A535EF2 and timestamp 2026-07-12 09:31:30 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365554)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7009:252D10:29ED999:89CE011:6A535EF3 and timestamp 2026-07-12 09:31:31 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365559)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700D:176B1E:2AFCB8B:8D2DE3E:6A535EF4 and timestamp 2026-07-12 09:31:32 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365554)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700E:18C4A7:2D1E5EC:9575E98:6A535EF6 and timestamp 2026-07-12 09:31:34 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365554)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7009:379694:6B275:16B430:6A535EF7 and timestamp 2026-07-12 09:31:35 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365554)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700A:6B72A:5FBD5:1458A9:6A535EF8 and timestamp 2026-07-12 09:31:36 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365559)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 700D:1F8A1C:6657F:15C01D:6A535EFB and timestamp 2026-07-12 09:31:39 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365559)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7008:240B93:6402F:1567AD:6A535EFD and timestamp 2026-07-12 09:31:41 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365554)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7009:379694:6D6FB:172CE7:6A535EFE and timestamp 2026-07-12 09:31:42 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365598)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7008:240B93:6C160:171898:6A535F14 and timestamp 2026-07-12 09:32:04 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365559)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7008:240B93:72A69:187C3D:6A535F27 and timestamp 2026-07-12 09:32:23 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365598)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7008:274CCC:4D323D:1052C61:6A535F42 and timestamp 2026-07-12 09:32:50 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365559)
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_coaches
-HTTP 403: API rate limit exceeded for user ID 25425933. If you reach out to GitHub Support for help, please include the request ID 7008:274CCC:4E2563:1083F99:6A535F69 and timestamp 2026-07-12 09:33:29 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/assets/473365554)
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_rosters on 2026-07-13 10:31:16.773612
 → Uploading 3 files!
 ℹ Start upload of 7 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_coaches
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_coaches on 2026-07-12 09:34:18.440041
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_coaches on 2026-07-13 10:31:18.86266
 → Uploading 1 files!
 ℹ Start upload of 5 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_rosters
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_rosters on 2026-07-12 09:34:19.529938
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_rosters on 2026-07-13 10:31:20.3387
 → Uploading 1 files!
 ℹ Start upload of 5 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_coaches
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_coaches on 2026-07-12 09:34:20.494864
-[2026-07-12 09:34:20.499314] WNBA Stats rosters: done
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_coaches on 2026-07-13 10:31:21.693959
+[2026-07-13 10:31:21.698546] WNBA Stats rosters: done
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302776 16.2     711068   38   507139 27.1
 Vcells 525462  4.1    8388608   64  1986039 15.2
-[2026-07-12 09:34:23.336754] WNBA Stats player season stats: seasons 2026-2026
+ℹ [2026-07-13 10:31:34.800965] WNBA Stats shots: seasons 2026-2026
 [1] FALSE
 [1] FALSE
 [1] FALSE
 [1] FALSE
-[2026-07-12 09:34:23.636889] season 2026: pulling 7 measure_types x 2 season_types
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_player_season_stats
-✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_player_season_stats on 2026-07-12 09:35:31.123658
-→ Uploading 1 files!
-ℹ Start upload of 5 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_player_season_stats
-✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_player_season_stats on 2026-07-12 09:35:32.228456
-[2026-07-12 09:35:32.232898] WNBA Stats player season stats: done
-         used (Mb) gc trigger (Mb) max used (Mb)
-Ncells 302776 16.2     711068   38   507139 27.1
-Vcells 525462  4.1    8388608   64  1986039 15.2
-[2026-07-12 09:35:34.641234] WNBA Stats lineups: seasons 2026-2026
-[1] FALSE
-[1] FALSE
-[1] FALSE
-[1] FALSE
-[2026-07-12 09:35:34.942436] season 2026: pulling 3 measure_types x 2 season_types
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_lineups
-✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_lineups on 2026-07-12 09:36:09.422174
-→ Uploading 1 files!
-ℹ Start upload of 5 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_lineups
-✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_lineups on 2026-07-12 09:36:10.515177
-[2026-07-12 09:36:10.51996] WNBA Stats lineups: done
-         used (Mb) gc trigger (Mb) max used (Mb)
-Ncells 302776 16.2     711068   38   507139 27.1
-Vcells 525462  4.1    8388608   64  1986039 15.2
-ℹ [2026-07-12 09:36:13.025964] WNBA Stats team season stats: seasons 2026-2026
-[1] FALSE
-[1] FALSE
-[1] FALSE
-[1] FALSE
-ℹ [2026-07-12 09:36:13.388737] season 2026: pulling 7 measure_types x 2 season_types
-✖ 2026-07-12 09:36:48.495812: Invalid arguments or no league dashboard team stats data for 2026 available!
-✖ Args: conference = "", date_from = "", date_to = "", division = "", game_scope = "", game_segment = "", last_n_games = 0, league_id = "10", location = "", measure_type = "Usage", month = 0, opponent_team_id = 0, outcome = "", po_round = "", pace_adjust = "N", per_mode = "PerGame", period = 0, plus_minus = "N", rank = "N", season = "2026", season_segment = "", season_type = "Regular Season", shot_clock_range = "", starter_bench = "", team_id = "", two_way = "", vs_conference = "", vs_division = ""
-✖ Error: Can't retrieve empty body.
-✖ 2026-07-12 09:36:52.234951: Invalid arguments or no league dashboard team stats data for 2026 available!
-✖ Args: conference = "", date_from = "", date_to = "", division = "", game_scope = "", game_segment = "", last_n_games = 0, league_id = "10", location = "", measure_type = "Usage", month = 0, opponent_team_id = 0, outcome = "", po_round = "", pace_adjust = "N", per_mode = "PerGame", period = 0, plus_minus = "N", rank = "N", season = "2026", season_segment = "", season_type = "Playoffs", shot_clock_range = "", starter_bench = "", team_id = "", two_way = "", vs_conference = "", vs_division = ""
-✖ Error: Can't retrieve empty body.
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_team_season_stats
-✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_team_season_stats on 2026-07-12 09:37:09.22387
-✔ [2026-07-12 09:37:09.229482] season 2026: uploaded 90 rows
-→ Uploading 1 files!
-ℹ Start upload of 5 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_team_season_stats
-✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_team_season_stats on 2026-07-12 09:37:10.271167
-✔ [2026-07-12 09:37:10.275932] WNBA Stats team season stats: done
-         used (Mb) gc trigger (Mb) max used (Mb)
-Ncells 302776 16.2     711068   38   507139 27.1
-Vcells 525462  4.1    8388608   64  1986039 15.2
-ℹ [2026-07-12 09:37:12.513859] WNBA Stats standings: seasons 2026-2026
-[1] FALSE
-[1] FALSE
-[1] FALSE
-[1] FALSE
-ℹ [2026-07-12 09:37:12.81367] season 2026: pulling standings
-→ Uploading 3 files!
-ℹ Start upload of 7 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_standings
-✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_standings on 2026-07-12 09:37:18.03535
-✔ [2026-07-12 09:37:18.041238] season 2026: uploaded 15 rows
-→ Uploading 1 files!
-ℹ Start upload of 5 files to
-<https://github.com/sportsdataverse/sportsdataverse-data/releases> @
-wnba_stats_standings
-✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_standings on 2026-07-12 09:37:19.319737
-✔ [2026-07-12 09:37:19.325654] WNBA Stats standings: done
-         used (Mb) gc trigger (Mb) max used (Mb)
-Ncells 302776 16.2     711068   38   507139 27.1
-Vcells 525462  4.1    8388608   64  1986039 15.2
-ℹ [2026-07-12 09:37:21.508501] WNBA Stats shots: seasons 2026-2026
-[1] FALSE
-[1] FALSE
-[1] FALSE
-[1] FALSE
-ℹ [2026-07-12 09:37:21.802794] season 2026: discovering games
-ℹ [2026-07-12 09:37:22.133852] season 2026: using local PBP cache (19636 shot rows)
+ℹ [2026-07-13 10:31:35.279639] season 2026: discovering games
+ℹ [2026-07-13 10:31:35.608052] season 2026: using local PBP cache (19636 shot rows)
 → Uploading 3 files!
 ℹ Start upload of 7 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_shots
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_shots on 2026-07-12 09:37:24.278531
-✔ [2026-07-12 09:37:24.284233] season 2026: uploaded 19636 shot rows
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_shots on 2026-07-13 10:31:38.464802
+✔ [2026-07-13 10:31:38.470585] season 2026: uploaded 19636 shot rows
 → Uploading 1 files!
 ℹ Start upload of 5 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_shots
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_shots on 2026-07-12 09:37:25.753058
-✔ [2026-07-12 09:37:25.757818] WNBA Stats shots: done
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_shots on 2026-07-13 10:31:40.018084
+✔ [2026-07-13 10:31:40.023069] WNBA Stats shots: done
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302776 16.2     711068   38   507139 27.1
 Vcells 525462  4.1    8388608   64  1986039 15.2
-ℹ [2026-07-12 09:37:28.057189] WNBA Stats game rosters (inactive players): seasons 2026-2026
+ℹ [2026-07-13 10:31:43.109365] WNBA Stats game rosters (inactive players): seasons 2026-2026
 [1] FALSE
 [1] FALSE
 [1] FALSE
 [1] FALSE
-ℹ [2026-07-12 09:37:28.326089] season 2026: discovering games
-ℹ [2026-07-12 09:37:32.716922] season 2026: 170 games
+ℹ [2026-07-13 10:31:43.561168] season 2026: discovering games
+ℹ [2026-07-13 10:31:48.144218] season 2026: 174 games
 → Uploading 3 files!
 ℹ Start upload of 7 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_game_rosters
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_game_rosters on 2026-07-12 09:47:26.92628
-✔ [2026-07-12 09:47:26.931914] season 2026: uploaded 516 rows
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_game_rosters on 2026-07-13 10:42:33.933844
+✔ [2026-07-13 10:42:33.939401] season 2026: uploaded 526 rows
 → Uploading 1 files!
 ℹ Start upload of 5 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_game_rosters
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_game_rosters on 2026-07-12 09:47:28.033934
-✔ [2026-07-12 09:47:28.038418] WNBA Stats game rosters: done
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_game_rosters on 2026-07-13 10:42:35.423756
+✔ [2026-07-13 10:42:35.428365] WNBA Stats game rosters: done
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302776 16.2     711068   38   507139 27.1
 Vcells 525462  4.1    8388608   64  1986039 15.2
-ℹ [2026-07-12 09:47:30.315601] WNBA Stats officials: seasons 2026-2026
+ℹ [2026-07-13 10:42:38.392221] WNBA Stats officials: seasons 2026-2026
 [1] FALSE
 [1] FALSE
 [1] FALSE
 [1] FALSE
-ℹ [2026-07-12 09:47:30.663908] season 2026: discovering games
-ℹ [2026-07-12 09:47:34.104291] season 2026: 170 games
+ℹ [2026-07-13 10:42:38.856715] season 2026: discovering games
+ℹ [2026-07-13 10:42:42.551492] season 2026: 174 games
 → Uploading 3 files!
 ℹ Start upload of 7 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_officials
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_officials on 2026-07-12 09:57:03.439303
-✔ [2026-07-12 09:57:03.444978] season 2026: uploaded 510 rows
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_officials on 2026-07-13 10:53:06.786621
+✔ [2026-07-13 10:53:06.792027] season 2026: uploaded 522 rows
 → Uploading 1 files!
 ℹ Start upload of 5 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_officials
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_officials on 2026-07-12 09:57:04.566095
-✔ [2026-07-12 09:57:04.570582] WNBA Stats officials: done
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_officials on 2026-07-13 10:53:08.371772
+✔ [2026-07-13 10:53:08.376313] WNBA Stats officials: done
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302776 16.2     711068   38   507139 27.1
 Vcells 525462  4.1    8388608   64  1986039 15.2
@@ -693,7 +124,7 @@ Vcells 525462  4.1    8388608   64  1986039 15.2
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_schedules
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_schedules on 2026-07-12 09:57:11.271731
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_schedules on 2026-07-13 10:53:16.720043
 ℹ schedule ok
 ℹ phase end: season 2026: schedule
 
@@ -705,7 +136,7 @@ wnba_stats_schedules
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_player_game_logs
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_player_game_logs on 2026-07-12 09:57:15.909392
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_player_game_logs on 2026-07-13 10:53:21.554183
 ℹ player_game_logs ok
 ℹ phase end: season 2026: player_game_logs
 
@@ -713,121 +144,138 @@ wnba_stats_player_game_logs
 
 ℹ phase start: season 2026: pbp
 ! pbp empty after retries
-■                                1/170 (  1%) | rate 0.0038/s | ETA 12h
+■                                1/174 (  1%) | rate 0.0038/s | ETA 13h
 ! pbp empty after retries
-■                                1/170 (  1%) | rate 0.0038/s | ETA 12h■                                2/170 (  1%) | rate 0.0038/s | ETA 12h
+■                                1/174 (  1%) | rate 0.0038/s | ETA 13h■                                2/174 (  1%) | rate 0.0038/s | ETA 12h
 ! pbp empty after retries
-■                                2/170 (  1%) | rate 0.0038/s | ETA 12h■■                               3/170 (  2%) | rate 0.0038/s | ETA 12h
+■                                2/174 (  1%) | rate 0.0038/s | ETA 12h■■                               3/174 (  2%) | rate 0.0038/s | ETA 12h
 ! pbp empty after retries
-■■                               3/170 (  2%) | rate 0.0038/s | ETA 12h■■                               4/170 (  2%) | rate 0.0038/s | ETA 12h
+■■                               3/174 (  2%) | rate 0.0038/s | ETA 12h■■                               4/174 (  2%) | rate 0.0038/s | ETA 12h
 ! pbp empty after retries
-■■                               4/170 (  2%) | rate 0.0038/s | ETA 12h■■                               5/170 (  3%) | rate 0.0038/s | ETA 12h
+■■                               4/174 (  2%) | rate 0.0038/s | ETA 12h■■                               5/174 (  3%) | rate 0.0038/s | ETA 12h
 ! pbp empty after retries
-■■                               5/170 (  3%) | rate 0.0038/s | ETA 12h■■                               6/170 (  4%) | rate 0.0038/s | ETA 12h
+■■                               5/174 (  3%) | rate 0.0038/s | ETA 12h■■                               6/174 (  3%) | rate 0.0038/s | ETA 12h
 ! pbp empty after retries
-■■                               6/170 (  4%) | rate 0.0038/s | ETA 12h■■                               7/170 (  4%) | rate 0.0038/s | ETA 12h
+■■                               6/174 (  3%) | rate 0.0038/s | ETA 12h■■                               7/174 (  4%) | rate 0.0038/s | ETA 12h
 ! pbp empty after retries
-■■                               7/170 (  4%) | rate 0.0038/s | ETA 12h■■                               8/170 (  5%) | rate 0.0038/s | ETA 12h
+■■                               7/174 (  4%) | rate 0.0038/s | ETA 12h■■                               8/174 (  5%) | rate 0.0038/s | ETA 12h
 ! pbp empty after retries
-■■                               8/170 (  5%) | rate 0.0038/s | ETA 12h■■■                              9/170 (  5%) | rate 0.0038/s | ETA 12h
+■■                               8/174 (  5%) | rate 0.0038/s | ETA 12h■■■                              9/174 (  5%) | rate 0.0038/s | ETA 12h
 ! pbp empty after retries
-■■■                              9/170 (  5%) | rate 0.0038/s | ETA 12h■■■                              10/170 (  6%) | rate 0.0038/s | ETA 12h
+■■■                              9/174 (  5%) | rate 0.0038/s | ETA 12h■■■                              10/174 (  6%) | rate 0.0038/s | ETA 12h
 ! pbp empty after retries
-■■■                              10/170 (  6%) | rate 0.0038/s | ETA 12h■■■                              11/170 (  6%) | rate 0.0038/s | ETA 11h
+■■■                              10/174 (  6%) | rate 0.0038/s | ETA 12h■■■                              11/174 (  6%) | rate 0.0038/s | ETA 12h
 ! pbp empty after retries
-■■■                              11/170 (  6%) | rate 0.0038/s | ETA 11h■■■                              12/170 (  7%) | rate 0.0038/s | ETA 11h
+■■■                              11/174 (  6%) | rate 0.0038/s | ETA 12h■■■                              12/174 (  7%) | rate 0.0038/s | ETA 12h
 ! pbp empty after retries
-■■■                              12/170 (  7%) | rate 0.0038/s | ETA 11h■■■                              13/170 (  8%) | rate 0.0038/s | ETA 11h
+■■■                              12/174 (  7%) | rate 0.0038/s | ETA 12h■■■                              13/174 (  7%) | rate 0.0038/s | ETA 12h
 ! pbp empty after retries
-■■■                              13/170 (  8%) | rate 0.0038/s | ETA 11h■■■                              14/170 (  8%) | rate 0.0038/s | ETA 11h
+■■■                              13/174 (  7%) | rate 0.0038/s | ETA 12h■■■                              14/174 (  8%) | rate 0.0038/s | ETA 12h
 ! pbp empty after retries
-■■■                              14/170 (  8%) | rate 0.0038/s | ETA 11h■■■■                             15/170 (  9%) | rate 0.0038/s | ETA 11h
+■■■                              14/174 (  8%) | rate 0.0038/s | ETA 12h■■■■                             15/174 (  9%) | rate 0.0038/s | ETA 11h
 ! pbp empty after retries
-■■■■                             15/170 (  9%) | rate 0.0038/s | ETA 11h■■■■                             16/170 (  9%) | rate 0.0038/s | ETA 11h
+■■■■                             15/174 (  9%) | rate 0.0038/s | ETA 11h■■■■                             16/174 (  9%) | rate 0.0038/s | ETA 11h
 ! pbp empty after retries
-■■■■                             16/170 (  9%) | rate 0.0038/s | ETA 11h■■■■                             17/170 ( 10%) | rate 0.0038/s | ETA 11h
+■■■■                             16/174 (  9%) | rate 0.0038/s | ETA 11h■■■■                             17/174 ( 10%) | rate 0.0038/s | ETA 11h
 ! pbp empty after retries
-■■■■                             17/170 ( 10%) | rate 0.0038/s | ETA 11h■■■■                             18/170 ( 11%) | rate 0.0038/s | ETA 11h
+■■■■                             17/174 ( 10%) | rate 0.0038/s | ETA 11h■■■■                             18/174 ( 10%) | rate 0.0038/s | ETA 11h
 ! pbp empty after retries
-■■■■                             18/170 ( 11%) | rate 0.0038/s | ETA 11h■■■■                             19/170 ( 11%) | rate 0.0038/s | ETA 11h
+■■■■                             18/174 ( 10%) | rate 0.0038/s | ETA 11h■■■■                             19/174 ( 11%) | rate 0.0038/s | ETA 11h
 ! pbp empty after retries
-■■■■                             19/170 ( 11%) | rate 0.0038/s | ETA 11h■■■■■                            20/170 ( 12%) | rate 0.0038/s | ETA 11h
+■■■■                             19/174 ( 11%) | rate 0.0038/s | ETA 11h■■■■                             20/174 ( 11%) | rate 0.0038/s | ETA 11h
 ! pbp empty after retries
-■■■■■                            20/170 ( 12%) | rate 0.0038/s | ETA 11h■■■■■                            21/170 ( 12%) | rate 0.0038/s | ETA 11h
+■■■■                             20/174 ( 11%) | rate 0.0038/s | ETA 11h■■■■■                            21/174 ( 12%) | rate 0.0038/s | ETA 11h
 ! pbp empty after retries
-■■■■■                            21/170 ( 12%) | rate 0.0038/s | ETA 11h■■■■■                            22/170 ( 13%) | rate 0.0038/s | ETA 11h
+■■■■■                            21/174 ( 12%) | rate 0.0038/s | ETA 11h■■■■■                            22/174 ( 13%) | rate 0.0038/s | ETA 11h
 ! pbp empty after retries
-■■■■■                            22/170 ( 13%) | rate 0.0038/s | ETA 11h■■■■■                            23/170 ( 14%) | rate 0.0038/s | ETA 11h
+■■■■■                            22/174 ( 13%) | rate 0.0038/s | ETA 11h■■■■■                            23/174 ( 13%) | rate 0.0038/s | ETA 11h
 ! pbp empty after retries
-■■■■■                            23/170 ( 14%) | rate 0.0038/s | ETA 11h■■■■■                            24/170 ( 14%) | rate 0.0038/s | ETA 11h
+■■■■■                            23/174 ( 13%) | rate 0.0038/s | ETA 11h■■■■■                            24/174 ( 14%) | rate 0.0038/s | ETA 11h
 ! pbp empty after retries
-■■■■■                            24/170 ( 14%) | rate 0.0038/s | ETA 11h■■■■■                            25/170 ( 15%) | rate 0.0038/s | ETA 10h
+■■■■■                            24/174 ( 14%) | rate 0.0038/s | ETA 11h■■■■■                            25/174 ( 14%) | rate 0.0038/s | ETA 11h
 ! pbp empty after retries
-■■■■■                            25/170 ( 15%) | rate 0.0038/s | ETA 10h■■■■■■                           26/170 ( 15%) | rate 0.0038/s | ETA 10h
-■■■■■■■■■■■■■■■■■■■■             108/170 ( 64%) | rate 0.016/s | ETA  1h
-■■■■■■■■■■■■■■■■■■■■             109/170 ( 64%) | rate 0.015/s | ETA  1h
-■■■■■■■■■■■■■■■■■■■■             110/170 ( 65%) | rate 0.015/s | ETA  1h
-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  170/170 (100%) | rate 0.023/s | ETA  0s
+■■■■■                            25/174 ( 14%) | rate 0.0038/s | ETA 11h■■■■■                            26/174 ( 15%) | rate 0.0038/s | ETA 11h
+! pbp empty after retries
+■■■■■                            26/174 ( 15%) | rate 0.0038/s | ETA 11h■■■■■■                           27/174 ( 16%) | rate 0.0038/s | ETA 11h
+! pbp empty after retries
+■■■■■■                           27/174 ( 16%) | rate 0.0038/s | ETA 11h■■■■■■                           28/174 ( 16%) | rate 0.0038/s | ETA 11h
+! pbp empty after retries
+■■■■■■                           28/174 ( 16%) | rate 0.0038/s | ETA 11h■■■■■■                           29/174 ( 17%) | rate 0.0038/s | ETA 10h
+! pbp empty after retries
+■■■■■■                           29/174 ( 17%) | rate 0.0038/s | ETA 10h■■■■■■                           30/174 ( 17%) | rate 0.0038/s | ETA 10h
+■■■■■■■■■■■■■■■■■■■■             108/174 ( 62%) | rate 0.014/s | ETA  1h
+■■■■■■■■■■■■■■■■■■■■             112/174 ( 64%) | rate 0.014/s | ETA  1h
+■■■■■■■■■■■■■■■■■■■■             113/174 ( 65%) | rate 0.014/s | ETA  1h
+■■■■■■■■■■■■■■■■■■■■■            114/174 ( 66%) | rate 0.014/s | ETA  1h
+■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  174/174 (100%) | rate 0.021/s | ETA  0s
 ℹ 
 ! pbp empty after retries
-■■                               1/26 (  4%) | retry: still failing 
+■■                               1/30 (  3%) | retry: still failing 
 ! pbp empty after retries
-■■                               1/26 (  4%) | retry: still failing ■■■                              2/26 (  8%) | retry: still failing 
+■■                               1/30 (  3%) | retry: still failing ■■■                              2/30 (  7%) | retry: still failing 
 ! pbp empty after retries
-■■■                              2/26 (  8%) | retry: still failing ■■■■                             3/26 ( 12%) | retry: still failing 
+■■■                              2/30 (  7%) | retry: still failing ■■■■                             3/30 ( 10%) | retry: still failing 
 ! pbp empty after retries
-■■■■                             3/26 ( 12%) | retry: still failing ■■■■■■                           4/26 ( 15%) | retry: still failing 
+■■■■                             3/30 ( 10%) | retry: still failing ■■■■■                            4/30 ( 13%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■                           4/26 ( 15%) | retry: still failing ■■■■■■■                          5/26 ( 19%) | retry: still failing 
+■■■■■                            4/30 ( 13%) | retry: still failing ■■■■■■                           5/30 ( 17%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■                          5/26 ( 19%) | retry: still failing ■■■■■■■■                         6/26 ( 23%) | retry: still failing 
+■■■■■■                           5/30 ( 17%) | retry: still failing ■■■■■■■                          6/30 ( 20%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■                         6/26 ( 23%) | retry: still failing ■■■■■■■■■                        7/26 ( 27%) | retry: still failing 
+■■■■■■■                          6/30 ( 20%) | retry: still failing ■■■■■■■■                         7/30 ( 23%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■                        7/26 ( 27%) | retry: still failing ■■■■■■■■■■                       8/26 ( 31%) | retry: still failing 
+■■■■■■■■                         7/30 ( 23%) | retry: still failing ■■■■■■■■■                        8/30 ( 27%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■                       8/26 ( 31%) | retry: still failing ■■■■■■■■■■■                      9/26 ( 35%) | retry: still failing 
+■■■■■■■■■                        8/30 ( 27%) | retry: still failing ■■■■■■■■■■                       9/30 ( 30%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■                      9/26 ( 35%) | retry: still failing ■■■■■■■■■■■■■                    10/26 ( 38%) | retry: still failing 
+■■■■■■■■■■                       9/30 ( 30%) | retry: still failing ■■■■■■■■■■■                      10/30 ( 33%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■■■                    10/26 ( 38%) | retry: still failing ■■■■■■■■■■■■■■                   11/26 ( 42%) | retry: still failing 
+■■■■■■■■■■■                      10/30 ( 33%) | retry: still failing ■■■■■■■■■■■■                     11/30 ( 37%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■■■■                   11/26 ( 42%) | retry: still failing ■■■■■■■■■■■■■■■                  12/26 ( 46%) | retry: still failing 
+■■■■■■■■■■■■                     11/30 ( 37%) | retry: still failing ■■■■■■■■■■■■■                    12/30 ( 40%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■■■■■                  12/26 ( 46%) | retry: still failing ■■■■■■■■■■■■■■■■                 13/26 ( 50%) | retry: still failing 
+■■■■■■■■■■■■■                    12/30 ( 40%) | retry: still failing ■■■■■■■■■■■■■■                   13/30 ( 43%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■■■■■■                 13/26 ( 50%) | retry: still failing ■■■■■■■■■■■■■■■■■                14/26 ( 54%) | retry: still failing 
+■■■■■■■■■■■■■■                   13/30 ( 43%) | retry: still failing ■■■■■■■■■■■■■■■                  14/30 ( 47%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■■■■■■■                14/26 ( 54%) | retry: still failing ■■■■■■■■■■■■■■■■■■               15/26 ( 58%) | retry: still failing 
+■■■■■■■■■■■■■■■                  14/30 ( 47%) | retry: still failing ■■■■■■■■■■■■■■■■                 15/30 ( 50%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■■■■■■■■               15/26 ( 58%) | retry: still failing ■■■■■■■■■■■■■■■■■■■              16/26 ( 62%) | retry: still failing 
+■■■■■■■■■■■■■■■■                 15/30 ( 50%) | retry: still failing ■■■■■■■■■■■■■■■■■                16/30 ( 53%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■■■■■■■■■              16/26 ( 62%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■            17/26 ( 65%) | retry: still failing 
+■■■■■■■■■■■■■■■■■                16/30 ( 53%) | retry: still failing ■■■■■■■■■■■■■■■■■■               17/30 ( 57%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■■■■■■■■■■■            17/26 ( 65%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■           18/26 ( 69%) | retry: still failing 
+■■■■■■■■■■■■■■■■■■               17/30 ( 57%) | retry: still failing ■■■■■■■■■■■■■■■■■■■              18/30 ( 60%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■■■■■■■■■■■■           18/26 ( 69%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■          19/26 ( 73%) | retry: still failing 
+■■■■■■■■■■■■■■■■■■■              18/30 ( 60%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■             19/30 ( 63%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■■■■■■■■■■■■■          19/26 ( 73%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■■         20/26 ( 77%) | retry: still failing 
+■■■■■■■■■■■■■■■■■■■■             19/30 ( 63%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■            20/30 ( 67%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■■■■■■■■■■■■■■         20/26 ( 77%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■■■        21/26 ( 81%) | retry: still failing 
+■■■■■■■■■■■■■■■■■■■■■            20/30 ( 67%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■           21/30 ( 70%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■■■■■■■■■■■■■■■        21/26 ( 81%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■■■■       22/26 ( 85%) | retry: still failing 
+■■■■■■■■■■■■■■■■■■■■■■           21/30 ( 70%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■          22/30 ( 73%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■■■■■■■■■■■■■■■■       22/26 ( 85%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■■■■■■     23/26 ( 88%) | retry: still failing 
+■■■■■■■■■■■■■■■■■■■■■■■          22/30 ( 73%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■■         23/30 ( 77%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■■■■■■■■■■■■■■■■■■     23/26 ( 88%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■    24/26 ( 92%) | retry: still failing 
+■■■■■■■■■■■■■■■■■■■■■■■■         23/30 ( 77%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■■■        24/30 ( 80%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■    24/26 ( 92%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■   25/26 ( 96%) | retry: still failing 
+■■■■■■■■■■■■■■■■■■■■■■■■■        24/30 ( 80%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■■■■       25/30 ( 83%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■   25/26 ( 96%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  26/26 (100%) | retry: still failing 
+■■■■■■■■■■■■■■■■■■■■■■■■■■       25/30 ( 83%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■■■■■      26/30 ( 87%) | retry: still failing 
+! pbp empty after retries
+■■■■■■■■■■■■■■■■■■■■■■■■■■■      26/30 ( 87%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■■■■■■     27/30 ( 90%) | retry: still failing 
+! pbp empty after retries
+■■■■■■■■■■■■■■■■■■■■■■■■■■■■     27/30 ( 90%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■    28/30 ( 93%) | retry: still failing 
+! pbp empty after retries
+■■■■■■■■■■■■■■■■■■■■■■■■■■■■■    28/30 ( 93%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■   29/30 ( 97%) | retry: still failing 
+! pbp empty after retries
+■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■   29/30 ( 97%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  30/30 (100%) | retry: still failing 
 ℹ pbp cool-off pass complete
 → Uploading 3 files!
 ℹ Start upload of 7 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_pbp
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_pbp on 2026-07-12 13:53:27.98463
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_pbp on 2026-07-13 15:24:15.832536
 ℹ pbp ok
 ℹ phase end: season 2026: pbp
 
@@ -839,10 +287,10 @@ wnba_stats_pbp
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_schedules
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_schedules on 2026-07-12 13:53:29.57027
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_schedules on 2026-07-13 15:24:18.472211
 ℹ master schedule ok
 ℹ phase end: master schedule
-[1] "cli-213-3454"
+[1] "cli-213-3976"
 
 ── manifest upload ──
 
@@ -852,19 +300,19 @@ wnba_stats_schedules
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_schedules
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_schedules on 2026-07-12 13:53:30.627818
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_schedules on 2026-07-13 15:24:20.232019
 → Uploading 1 files!
 ℹ Start upload of 5 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_player_game_logs
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_player_game_logs on 2026-07-12 13:53:31.60587
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_player_game_logs on 2026-07-13 15:24:21.884039
 → Uploading 1 files!
 ℹ Start upload of 5 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_pbp
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_pbp on 2026-07-12 13:53:32.60589
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_pbp on 2026-07-13 15:24:23.494391
 ℹ phase end: manifest upload
 # A tibble: 1 × 4
   season row_count generated_at_utc    source_endpoint            
