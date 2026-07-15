@@ -1,7 +1,7 @@
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302776 16.2     711068   38   507139 27.1
 Vcells 525462  4.1    8388608   64  1986039 15.2
-[2026-07-14 09:06:52.107071] WNBA Stats rosters: seasons 2026-2026
+[2026-07-15 09:11:14.837663] WNBA Stats rosters: seasons 2026-2026
 [1] FALSE
 [1] FALSE
 [1] FALSE
@@ -9,105 +9,105 @@ Vcells 525462  4.1    8388608   64  1986039 15.2
 [1] FALSE
 [1] FALSE
 [1] FALSE
-[2026-07-14 09:06:52.39929] season 2026: discovering team_ids
-[2026-07-14 09:06:53.044032] season 2026: 15 teams
+[2026-07-15 09:11:15.180149] season 2026: discovering team_ids
+[2026-07-15 09:11:16.248782] season 2026: 15 teams
 → Uploading 3 files!
 ℹ Start upload of 7 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_rosters
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_rosters on 2026-07-14 09:07:48.399709
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_rosters on 2026-07-15 09:12:10.833476
 → Uploading 3 files!
 ℹ Start upload of 7 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_coaches
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_coaches on 2026-07-14 09:07:50.292735
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_coaches on 2026-07-15 09:12:12.715846
 → Uploading 1 files!
 ℹ Start upload of 5 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_rosters
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_rosters on 2026-07-14 09:07:51.591495
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_rosters on 2026-07-15 09:12:13.921465
 → Uploading 1 files!
 ℹ Start upload of 5 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_coaches
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_coaches on 2026-07-14 09:07:52.804214
-[2026-07-14 09:07:52.808764] WNBA Stats rosters: done
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_coaches on 2026-07-15 09:12:15.116365
+[2026-07-15 09:12:15.121106] WNBA Stats rosters: done
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302776 16.2     711068   38   507139 27.1
 Vcells 525462  4.1    8388608   64  1986039 15.2
-ℹ [2026-07-14 09:07:59.16786] WNBA Stats shots: seasons 2026-2026
+ℹ [2026-07-15 09:12:21.776846] WNBA Stats shots: seasons 2026-2026
 [1] FALSE
 [1] FALSE
 [1] FALSE
 [1] FALSE
-ℹ [2026-07-14 09:07:59.500811] season 2026: discovering games
-ℹ [2026-07-14 09:07:59.816264] season 2026: using local PBP cache (19636 shot rows)
+ℹ [2026-07-15 09:12:22.176137] season 2026: discovering games
+ℹ [2026-07-15 09:12:22.502585] season 2026: using local PBP cache (19636 shot rows)
 → Uploading 3 files!
 ℹ Start upload of 7 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_shots
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_shots on 2026-07-14 09:08:02.466563
-✔ [2026-07-14 09:08:02.472563] season 2026: uploaded 19636 shot rows
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_shots on 2026-07-15 09:12:25.224086
+✔ [2026-07-15 09:12:25.229679] season 2026: uploaded 19636 shot rows
 → Uploading 1 files!
 ℹ Start upload of 5 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_shots
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_shots on 2026-07-14 09:08:03.837459
-✔ [2026-07-14 09:08:03.842395] WNBA Stats shots: done
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_shots on 2026-07-15 09:12:26.511433
+✔ [2026-07-15 09:12:26.516249] WNBA Stats shots: done
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302776 16.2     711068   38   507139 27.1
 Vcells 525462  4.1    8388608   64  1986039 15.2
-ℹ [2026-07-14 09:08:06.34109] WNBA Stats game rosters (inactive players): seasons 2026-2026
+ℹ [2026-07-15 09:12:28.91703] WNBA Stats game rosters (inactive players): seasons 2026-2026
 [1] FALSE
 [1] FALSE
 [1] FALSE
 [1] FALSE
-ℹ [2026-07-14 09:08:06.623997] season 2026: discovering games
-ℹ [2026-07-14 09:08:11.530339] season 2026: 176 games
+ℹ [2026-07-15 09:12:29.180494] season 2026: discovering games
+ℹ [2026-07-15 09:12:33.549529] season 2026: 178 games
 → Uploading 3 files!
 ℹ Start upload of 7 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_game_rosters
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_game_rosters on 2026-07-14 09:18:23.637066
-✔ [2026-07-14 09:18:23.642678] season 2026: uploaded 534 rows
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_game_rosters on 2026-07-15 09:22:59.15897
+✔ [2026-07-15 09:22:59.164613] season 2026: uploaded 536 rows
 → Uploading 1 files!
 ℹ Start upload of 5 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_game_rosters
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_game_rosters on 2026-07-14 09:18:24.870958
-✔ [2026-07-14 09:18:24.875453] WNBA Stats game rosters: done
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_game_rosters on 2026-07-15 09:23:00.458712
+✔ [2026-07-15 09:23:00.467877] WNBA Stats game rosters: done
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302776 16.2     711068   38   507139 27.1
 Vcells 525462  4.1    8388608   64  1986039 15.2
-ℹ [2026-07-14 09:18:27.27524] WNBA Stats officials: seasons 2026-2026
+ℹ [2026-07-15 09:23:02.842465] WNBA Stats officials: seasons 2026-2026
 [1] FALSE
 [1] FALSE
 [1] FALSE
 [1] FALSE
-ℹ [2026-07-14 09:18:27.573756] season 2026: discovering games
-ℹ [2026-07-14 09:18:31.353431] season 2026: 176 games
+ℹ [2026-07-15 09:23:03.191359] season 2026: discovering games
+ℹ [2026-07-15 09:23:06.998073] season 2026: 178 games
 → Uploading 3 files!
 ℹ Start upload of 7 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_officials
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_officials on 2026-07-14 09:28:25.147697
-✔ [2026-07-14 09:28:25.153168] season 2026: uploaded 528 rows
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_officials on 2026-07-15 09:33:07.12137
+✔ [2026-07-15 09:33:07.126919] season 2026: uploaded 534 rows
 → Uploading 1 files!
 ℹ Start upload of 5 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_officials
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_officials on 2026-07-14 09:28:26.317193
-✔ [2026-07-14 09:28:26.321796] WNBA Stats officials: done
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_officials on 2026-07-15 09:33:08.357792
+✔ [2026-07-15 09:33:08.36243] WNBA Stats officials: done
          used (Mb) gc trigger (Mb) max used (Mb)
 Ncells 302776 16.2     711068   38   507139 27.1
 Vcells 525462  4.1    8388608   64  1986039 15.2
@@ -124,7 +124,7 @@ Vcells 525462  4.1    8388608   64  1986039 15.2
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_schedules
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_schedules on 2026-07-14 09:28:33.660586
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_schedules on 2026-07-15 09:33:15.489597
 ℹ schedule ok
 ℹ phase end: season 2026: schedule
 
@@ -136,7 +136,7 @@ wnba_stats_schedules
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_player_game_logs
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_player_game_logs on 2026-07-14 09:28:38.022419
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_player_game_logs on 2026-07-15 09:33:19.288125
 ℹ player_game_logs ok
 ℹ phase end: season 2026: player_game_logs
 
@@ -144,147 +144,155 @@ wnba_stats_player_game_logs
 
 ℹ phase start: season 2026: pbp
 ! pbp empty after retries
-■                                1/176 (  1%) | rate 0.0038/s | ETA 13h
+■                                1/178 (  1%) | rate 0.0038/s | ETA 13h
 ! pbp empty after retries
-■                                1/176 (  1%) | rate 0.0038/s | ETA 13h■                                2/176 (  1%) | rate 0.0038/s | ETA 13h
+■                                1/178 (  1%) | rate 0.0038/s | ETA 13h■                                2/178 (  1%) | rate 0.0038/s | ETA 13h
 ! pbp empty after retries
-■                                2/176 (  1%) | rate 0.0038/s | ETA 13h■■                               3/176 (  2%) | rate 0.0038/s | ETA 13h
+■                                2/178 (  1%) | rate 0.0038/s | ETA 13h■■                               3/178 (  2%) | rate 0.0038/s | ETA 13h
 ! pbp empty after retries
-■■                               3/176 (  2%) | rate 0.0038/s | ETA 13h■■                               4/176 (  2%) | rate 0.0038/s | ETA 12h
+■■                               3/178 (  2%) | rate 0.0038/s | ETA 13h■■                               4/178 (  2%) | rate 0.0038/s | ETA 13h
 ! pbp empty after retries
-■■                               4/176 (  2%) | rate 0.0038/s | ETA 12h■■                               5/176 (  3%) | rate 0.0038/s | ETA 12h
+■■                               4/178 (  2%) | rate 0.0038/s | ETA 13h■■                               5/178 (  3%) | rate 0.0038/s | ETA 13h
 ! pbp empty after retries
-■■                               5/176 (  3%) | rate 0.0038/s | ETA 12h■■                               6/176 (  3%) | rate 0.0038/s | ETA 12h
+■■                               5/178 (  3%) | rate 0.0038/s | ETA 13h■■                               6/178 (  3%) | rate 0.0038/s | ETA 12h
 ! pbp empty after retries
-■■                               6/176 (  3%) | rate 0.0038/s | ETA 12h■■                               7/176 (  4%) | rate 0.0038/s | ETA 12h
+■■                               6/178 (  3%) | rate 0.0038/s | ETA 12h■■                               7/178 (  4%) | rate 0.0038/s | ETA 12h
 ! pbp empty after retries
-■■                               7/176 (  4%) | rate 0.0038/s | ETA 12h■■                               8/176 (  5%) | rate 0.0038/s | ETA 12h
+■■                               7/178 (  4%) | rate 0.0038/s | ETA 12h■■                               8/178 (  4%) | rate 0.0038/s | ETA 12h
 ! pbp empty after retries
-■■                               8/176 (  5%) | rate 0.0038/s | ETA 12h■■■                              9/176 (  5%) | rate 0.0038/s | ETA 12h
+■■                               8/178 (  4%) | rate 0.0038/s | ETA 12h■■■                              9/178 (  5%) | rate 0.0038/s | ETA 12h
 ! pbp empty after retries
-■■■                              9/176 (  5%) | rate 0.0038/s | ETA 12h■■■                              10/176 (  6%) | rate 0.0038/s | ETA 12h
+■■■                              9/178 (  5%) | rate 0.0038/s | ETA 12h■■■                              10/178 (  6%) | rate 0.0038/s | ETA 12h
 ! pbp empty after retries
-■■■                              10/176 (  6%) | rate 0.0038/s | ETA 12h■■■                              11/176 (  6%) | rate 0.0038/s | ETA 12h
+■■■                              10/178 (  6%) | rate 0.0038/s | ETA 12h■■■                              11/178 (  6%) | rate 0.0038/s | ETA 12h
 ! pbp empty after retries
-■■■                              11/176 (  6%) | rate 0.0038/s | ETA 12h■■■                              12/176 (  7%) | rate 0.0038/s | ETA 12h
+■■■                              11/178 (  6%) | rate 0.0038/s | ETA 12h■■■                              12/178 (  7%) | rate 0.0038/s | ETA 12h
 ! pbp empty after retries
-■■■                              12/176 (  7%) | rate 0.0038/s | ETA 12h■■■                              13/176 (  7%) | rate 0.0038/s | ETA 12h
+■■■                              12/178 (  7%) | rate 0.0038/s | ETA 12h■■■                              13/178 (  7%) | rate 0.0038/s | ETA 12h
 ! pbp empty after retries
-■■■                              13/176 (  7%) | rate 0.0038/s | ETA 12h■■■                              14/176 (  8%) | rate 0.0038/s | ETA 12h
+■■■                              13/178 (  7%) | rate 0.0038/s | ETA 12h■■■                              14/178 (  8%) | rate 0.0038/s | ETA 12h
 ! pbp empty after retries
-■■■                              14/176 (  8%) | rate 0.0038/s | ETA 12h■■■■                             15/176 (  9%) | rate 0.0038/s | ETA 12h
+■■■                              14/178 (  8%) | rate 0.0038/s | ETA 12h■■■■                             15/178 (  8%) | rate 0.0038/s | ETA 12h
 ! pbp empty after retries
-■■■■                             15/176 (  9%) | rate 0.0038/s | ETA 12h■■■■                             16/176 (  9%) | rate 0.0038/s | ETA 12h
+■■■■                             15/178 (  8%) | rate 0.0038/s | ETA 12h■■■■                             16/178 (  9%) | rate 0.0038/s | ETA 12h
 ! pbp empty after retries
-■■■■                             16/176 (  9%) | rate 0.0038/s | ETA 12h■■■■                             17/176 ( 10%) | rate 0.0038/s | ETA 11h
+■■■■                             16/178 (  9%) | rate 0.0038/s | ETA 12h■■■■                             17/178 ( 10%) | rate 0.0038/s | ETA 12h
 ! pbp empty after retries
-■■■■                             17/176 ( 10%) | rate 0.0038/s | ETA 11h■■■■                             18/176 ( 10%) | rate 0.0038/s | ETA 11h
+■■■■                             17/178 ( 10%) | rate 0.0038/s | ETA 12h■■■■                             18/178 ( 10%) | rate 0.0038/s | ETA 12h
 ! pbp empty after retries
-■■■■                             18/176 ( 10%) | rate 0.0038/s | ETA 11h■■■■                             19/176 ( 11%) | rate 0.0038/s | ETA 11h
+■■■■                             18/178 ( 10%) | rate 0.0038/s | ETA 12h■■■■                             19/178 ( 11%) | rate 0.0038/s | ETA 11h
 ! pbp empty after retries
-■■■■                             19/176 ( 11%) | rate 0.0038/s | ETA 11h■■■■                             20/176 ( 11%) | rate 0.0038/s | ETA 11h
+■■■■                             19/178 ( 11%) | rate 0.0038/s | ETA 11h■■■■                             20/178 ( 11%) | rate 0.0038/s | ETA 11h
 ! pbp empty after retries
-■■■■                             20/176 ( 11%) | rate 0.0038/s | ETA 11h■■■■■                            21/176 ( 12%) | rate 0.0038/s | ETA 11h
+■■■■                             20/178 ( 11%) | rate 0.0038/s | ETA 11h■■■■■                            21/178 ( 12%) | rate 0.0038/s | ETA 11h
 ! pbp empty after retries
-■■■■■                            21/176 ( 12%) | rate 0.0038/s | ETA 11h■■■■■                            22/176 ( 12%) | rate 0.0038/s | ETA 11h
+■■■■■                            21/178 ( 12%) | rate 0.0038/s | ETA 11h■■■■■                            22/178 ( 12%) | rate 0.0038/s | ETA 11h
 ! pbp empty after retries
-■■■■■                            22/176 ( 12%) | rate 0.0038/s | ETA 11h■■■■■                            23/176 ( 13%) | rate 0.0038/s | ETA 11h
+■■■■■                            22/178 ( 12%) | rate 0.0038/s | ETA 11h■■■■■                            23/178 ( 13%) | rate 0.0038/s | ETA 11h
 ! pbp empty after retries
-■■■■■                            23/176 ( 13%) | rate 0.0038/s | ETA 11h■■■■■                            24/176 ( 14%) | rate 0.0038/s | ETA 11h
+■■■■■                            23/178 ( 13%) | rate 0.0038/s | ETA 11h■■■■■                            24/178 ( 13%) | rate 0.0038/s | ETA 11h
 ! pbp empty after retries
-■■■■■                            24/176 ( 14%) | rate 0.0038/s | ETA 11h■■■■■                            25/176 ( 14%) | rate 0.0038/s | ETA 11h
+■■■■■                            24/178 ( 13%) | rate 0.0038/s | ETA 11h■■■■■                            25/178 ( 14%) | rate 0.0038/s | ETA 11h
 ! pbp empty after retries
-■■■■■                            25/176 ( 14%) | rate 0.0038/s | ETA 11h■■■■■                            26/176 ( 15%) | rate 0.0038/s | ETA 11h
+■■■■■                            25/178 ( 14%) | rate 0.0038/s | ETA 11h■■■■■                            26/178 ( 15%) | rate 0.0038/s | ETA 11h
 ! pbp empty after retries
-■■■■■                            26/176 ( 15%) | rate 0.0038/s | ETA 11h■■■■■■                           27/176 ( 15%) | rate 0.0038/s | ETA 11h
+■■■■■                            26/178 ( 15%) | rate 0.0038/s | ETA 11h■■■■■■                           27/178 ( 15%) | rate 0.0038/s | ETA 11h
 ! pbp empty after retries
-■■■■■■                           27/176 ( 15%) | rate 0.0038/s | ETA 11h■■■■■■                           28/176 ( 16%) | rate 0.0038/s | ETA 11h
+■■■■■■                           27/178 ( 15%) | rate 0.0038/s | ETA 11h■■■■■■                           28/178 ( 16%) | rate 0.0038/s | ETA 11h
 ! pbp empty after retries
-■■■■■■                           28/176 ( 16%) | rate 0.0038/s | ETA 11h■■■■■■                           29/176 ( 16%) | rate 0.0038/s | ETA 11h
+■■■■■■                           28/178 ( 16%) | rate 0.0038/s | ETA 11h■■■■■■                           29/178 ( 16%) | rate 0.0038/s | ETA 11h
 ! pbp empty after retries
-■■■■■■                           29/176 ( 16%) | rate 0.0038/s | ETA 11h■■■■■■                           30/176 ( 17%) | rate 0.0038/s | ETA 11h
+■■■■■■                           29/178 ( 16%) | rate 0.0038/s | ETA 11h■■■■■■                           30/178 ( 17%) | rate 0.0038/s | ETA 11h
 ! pbp empty after retries
-■■■■■■                           30/176 ( 17%) | rate 0.0038/s | ETA 11h■■■■■■                           31/176 ( 18%) | rate 0.0038/s | ETA 10h
+■■■■■■                           30/178 ( 17%) | rate 0.0038/s | ETA 11h■■■■■■                           31/178 ( 17%) | rate 0.0038/s | ETA 11h
 ! pbp empty after retries
-■■■■■■                           31/176 ( 18%) | rate 0.0038/s | ETA 10h■■■■■■                           32/176 ( 18%) | rate 0.0038/s | ETA 10h
-■■■■■■■■■■■■■■■■■■               98/176 ( 56%) | rate 0.012/s | ETA  2h
-■■■■■■■■■■■■■■■■■■■■             114/176 ( 65%) | rate 0.014/s | ETA  1h
-■■■■■■■■■■■■■■■■■■■■■            115/176 ( 65%) | rate 0.013/s | ETA  1h
-■■■■■■■■■■■■■■■■■■■■■            116/176 ( 66%) | rate 0.013/s | ETA  1h
-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■    164/176 ( 93%) | rate 0.018/s | ETA 11m
-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  176/176 (100%) | rate 0.02/s | ETA  0s
+■■■■■■                           31/178 ( 17%) | rate 0.0038/s | ETA 11h■■■■■■                           32/178 ( 18%) | rate 0.0038/s | ETA 11h
+! pbp empty after retries
+■■■■■■                           32/178 ( 18%) | rate 0.0038/s | ETA 11h■■■■■■■                          33/178 ( 19%) | rate 0.0038/s | ETA 10h
+! pbp empty after retries
+■■■■■■■                          33/178 ( 19%) | rate 0.0038/s | ETA 10h■■■■■■■                          34/178 ( 19%) | rate 0.0038/s | ETA 10h
+■■■■■■■■■■■■■■                   77/178 ( 43%) | rate 0.0087/s | ETA  3h
+■■■■■■■■■■■■■■■■■■■■■            116/178 ( 65%) | rate 0.013/s | ETA  1h
+■■■■■■■■■■■■■■■■■■■■■            117/178 ( 66%) | rate 0.013/s | ETA  1h
+■■■■■■■■■■■■■■■■■■■■■            118/178 ( 66%) | rate 0.012/s | ETA  1h
+■■■■■■■■■■■■■■■■■■■■■■■■■■■      154/178 ( 87%) | rate 0.016/s | ETA 25m
+■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  178/178 (100%) | rate 0.019/s | ETA  0s
 ℹ 
 ! pbp empty after retries
-■■                               1/32 (  3%) | retry: still failing 
+■■                               1/34 (  3%) | retry: still failing 
 ! pbp empty after retries
-■■                               1/32 (  3%) | retry: still failing ■■■                              2/32 (  6%) | retry: still failing 
+■■                               1/34 (  3%) | retry: still failing ■■■                              2/34 (  6%) | retry: still failing 
 ! pbp empty after retries
-■■■                              2/32 (  6%) | retry: still failing ■■■■                             3/32 (  9%) | retry: still failing 
+■■■                              2/34 (  6%) | retry: still failing ■■■■                             3/34 (  9%) | retry: still failing 
 ! pbp empty after retries
-■■■■                             3/32 (  9%) | retry: still failing ■■■■■                            4/32 ( 12%) | retry: still failing 
+■■■■                             3/34 (  9%) | retry: still failing ■■■■■                            4/34 ( 12%) | retry: still failing 
 ! pbp empty after retries
-■■■■■                            4/32 ( 12%) | retry: still failing ■■■■■■                           5/32 ( 16%) | retry: still failing 
+■■■■■                            4/34 ( 12%) | retry: still failing ■■■■■                            5/34 ( 15%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■                           5/32 ( 16%) | retry: still failing ■■■■■■■                          6/32 ( 19%) | retry: still failing 
+■■■■■                            5/34 ( 15%) | retry: still failing ■■■■■■                           6/34 ( 18%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■                          6/32 ( 19%) | retry: still failing ■■■■■■■■                         7/32 ( 22%) | retry: still failing 
+■■■■■■                           6/34 ( 18%) | retry: still failing ■■■■■■■                          7/34 ( 21%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■                         7/32 ( 22%) | retry: still failing ■■■■■■■■■                        8/32 ( 25%) | retry: still failing 
+■■■■■■■                          7/34 ( 21%) | retry: still failing ■■■■■■■■                         8/34 ( 24%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■                        8/32 ( 25%) | retry: still failing ■■■■■■■■■                        9/32 ( 28%) | retry: still failing 
+■■■■■■■■                         8/34 ( 24%) | retry: still failing ■■■■■■■■■                        9/34 ( 26%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■                        9/32 ( 28%) | retry: still failing ■■■■■■■■■■                       10/32 ( 31%) | retry: still failing 
+■■■■■■■■■                        9/34 ( 26%) | retry: still failing ■■■■■■■■■■                       10/34 ( 29%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■                       10/32 ( 31%) | retry: still failing ■■■■■■■■■■■                      11/32 ( 34%) | retry: still failing 
+■■■■■■■■■■                       10/34 ( 29%) | retry: still failing ■■■■■■■■■■■                      11/34 ( 32%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■                      11/32 ( 34%) | retry: still failing ■■■■■■■■■■■■                     12/32 ( 38%) | retry: still failing 
+■■■■■■■■■■■                      11/34 ( 32%) | retry: still failing ■■■■■■■■■■■■                     12/34 ( 35%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■■                     12/32 ( 38%) | retry: still failing ■■■■■■■■■■■■■                    13/32 ( 41%) | retry: still failing 
+■■■■■■■■■■■■                     12/34 ( 35%) | retry: still failing ■■■■■■■■■■■■                     13/34 ( 38%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■■■                    13/32 ( 41%) | retry: still failing ■■■■■■■■■■■■■■                   14/32 ( 44%) | retry: still failing 
+■■■■■■■■■■■■                     13/34 ( 38%) | retry: still failing ■■■■■■■■■■■■■                    14/34 ( 41%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■■■■                   14/32 ( 44%) | retry: still failing ■■■■■■■■■■■■■■■                  15/32 ( 47%) | retry: still failing 
+■■■■■■■■■■■■■                    14/34 ( 41%) | retry: still failing ■■■■■■■■■■■■■■                   15/34 ( 44%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■■■■■                  15/32 ( 47%) | retry: still failing ■■■■■■■■■■■■■■■■                 16/32 ( 50%) | retry: still failing 
+■■■■■■■■■■■■■■                   15/34 ( 44%) | retry: still failing ■■■■■■■■■■■■■■■                  16/34 ( 47%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■■■■■■                 16/32 ( 50%) | retry: still failing ■■■■■■■■■■■■■■■■■                17/32 ( 53%) | retry: still failing 
+■■■■■■■■■■■■■■■                  16/34 ( 47%) | retry: still failing ■■■■■■■■■■■■■■■■                 17/34 ( 50%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■■■■■■■                17/32 ( 53%) | retry: still failing ■■■■■■■■■■■■■■■■■■               18/32 ( 56%) | retry: still failing 
+■■■■■■■■■■■■■■■■                 17/34 ( 50%) | retry: still failing ■■■■■■■■■■■■■■■■■                18/34 ( 53%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■■■■■■■■               18/32 ( 56%) | retry: still failing ■■■■■■■■■■■■■■■■■■■              19/32 ( 59%) | retry: still failing 
+■■■■■■■■■■■■■■■■■                18/34 ( 53%) | retry: still failing ■■■■■■■■■■■■■■■■■■               19/34 ( 56%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■■■■■■■■■              19/32 ( 59%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■             20/32 ( 62%) | retry: still failing 
+■■■■■■■■■■■■■■■■■■               19/34 ( 56%) | retry: still failing ■■■■■■■■■■■■■■■■■■■              20/34 ( 59%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■■■■■■■■■■             20/32 ( 62%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■            21/32 ( 66%) | retry: still failing 
+■■■■■■■■■■■■■■■■■■■              20/34 ( 59%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■             21/34 ( 62%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■■■■■■■■■■■            21/32 ( 66%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■           22/32 ( 69%) | retry: still failing 
+■■■■■■■■■■■■■■■■■■■■             21/34 ( 62%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■             22/34 ( 65%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■■■■■■■■■■■■           22/32 ( 69%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■          23/32 ( 72%) | retry: still failing 
+■■■■■■■■■■■■■■■■■■■■             22/34 ( 65%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■            23/34 ( 68%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■■■■■■■■■■■■■          23/32 ( 72%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■          24/32 ( 75%) | retry: still failing 
+■■■■■■■■■■■■■■■■■■■■■            23/34 ( 68%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■           24/34 ( 71%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■■■■■■■■■■■■■          24/32 ( 75%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■■         25/32 ( 78%) | retry: still failing 
+■■■■■■■■■■■■■■■■■■■■■■           24/34 ( 71%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■          25/34 ( 74%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■■■■■■■■■■■■■■         25/32 ( 78%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■■■        26/32 ( 81%) | retry: still failing 
+■■■■■■■■■■■■■■■■■■■■■■■          25/34 ( 74%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■■         26/34 ( 76%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■■■■■■■■■■■■■■■        26/32 ( 81%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■■■■       27/32 ( 84%) | retry: still failing 
+■■■■■■■■■■■■■■■■■■■■■■■■         26/34 ( 76%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■■■        27/34 ( 79%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■■■■■■■■■■■■■■■■       27/32 ( 84%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■■■■■      28/32 ( 88%) | retry: still failing 
+■■■■■■■■■■■■■■■■■■■■■■■■■        27/34 ( 79%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■■■■       28/34 ( 82%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■■■■■■■■■■■■■■■■■      28/32 ( 88%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■■■■■■     29/32 ( 91%) | retry: still failing 
+■■■■■■■■■■■■■■■■■■■■■■■■■■       28/34 ( 82%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■■■■■      29/34 ( 85%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■■■■■■■■■■■■■■■■■■     29/32 ( 91%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■    30/32 ( 94%) | retry: still failing 
+■■■■■■■■■■■■■■■■■■■■■■■■■■■      29/34 ( 85%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■■■■■      30/34 ( 88%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■    30/32 ( 94%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■   31/32 ( 97%) | retry: still failing 
+■■■■■■■■■■■■■■■■■■■■■■■■■■■      30/34 ( 88%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■■■■■■     31/34 ( 91%) | retry: still failing 
 ! pbp empty after retries
-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■   31/32 ( 97%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  32/32 (100%) | retry: still failing 
+■■■■■■■■■■■■■■■■■■■■■■■■■■■■     31/34 ( 91%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■    32/34 ( 94%) | retry: still failing 
+! pbp empty after retries
+■■■■■■■■■■■■■■■■■■■■■■■■■■■■■    32/34 ( 94%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■   33/34 ( 97%) | retry: still failing 
+! pbp empty after retries
+■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■   33/34 ( 97%) | retry: still failing ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  34/34 (100%) | retry: still failing 
 ℹ pbp cool-off pass complete
 → Uploading 3 files!
 ℹ Start upload of 7 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_pbp
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_pbp on 2026-07-14 14:16:52.322429
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_pbp on 2026-07-15 14:38:53.907405
 ℹ pbp ok
 ℹ phase end: season 2026: pbp
 
@@ -296,10 +304,10 @@ wnba_stats_pbp
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_schedules
 ✔ Upload successfully completed.
-→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_schedules on 2026-07-14 14:16:54.403783
+→ Uploaded 7 to sportsdataverse/sportsdataverse-data @ wnba_stats_schedules on 2026-07-15 14:38:55.88244
 ℹ master schedule ok
 ℹ phase end: master schedule
-[1] "cli-213-4240"
+[1] "cli-213-4498"
 
 ── manifest upload ──
 
@@ -309,19 +317,19 @@ wnba_stats_schedules
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_schedules
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_schedules on 2026-07-14 14:16:55.69447
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_schedules on 2026-07-15 14:38:57.240946
 → Uploading 1 files!
 ℹ Start upload of 5 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_player_game_logs
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_player_game_logs on 2026-07-14 14:16:56.792591
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_player_game_logs on 2026-07-15 14:38:58.334354
 → Uploading 1 files!
 ℹ Start upload of 5 files to
 <https://github.com/sportsdataverse/sportsdataverse-data/releases> @
 wnba_stats_pbp
 ✔ Upload successfully completed.
-→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_pbp on 2026-07-14 14:16:57.96575
+→ Uploaded 5 to sportsdataverse/sportsdataverse-data @ wnba_stats_pbp on 2026-07-15 14:38:59.519466
 ℹ phase end: manifest upload
 # A tibble: 1 × 4
   season row_count generated_at_utc    source_endpoint            
