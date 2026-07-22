@@ -29,6 +29,7 @@ from typing import Optional
 
 import polars as pl
 
+from .io import write_release_formats
 from .publish import upload_artifacts
 from .scrape.leaguedash import LeagueDashClient, build_mega, megas, variants
 from .scrape.proxy import RoundRobin, load_proxies
@@ -41,9 +42,8 @@ _TAG = "wnba_stats_leaguedash"
 
 
 def _write(out: Path, table: str, season: int, df: pl.DataFrame) -> None:
-    dest = out / _TAG / f"{table}_{season}.parquet"
-    dest.parent.mkdir(parents=True, exist_ok=True)
-    df.write_parquet(dest)
+    """Write all three released formats (parquet + rds + csv) for one table/season."""
+    write_release_formats(df, out / _TAG, f"{table}_{season}")
 
 
 def build(

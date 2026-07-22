@@ -13,6 +13,11 @@ from pathlib import Path
 from typing import Callable, Iterable, Optional
 
 _GH_TIMEOUT = 600
+# Every released dataset ships all three formats to the tag.
+_RELEASE_EXTS: tuple[str, ...] = ("parquet", "rds", "csv")
+
+# Season detection stays anchored on the canonical parquet so a season is counted
+# once, not once per format.
 _SEASON_RE = re.compile(r"_(\d{4})\.parquet$")
 
 Runner = Callable[[list[str]], str]
@@ -45,18 +50,24 @@ def _gh_release_exists(tag: str, repo: str) -> bool:
 def plan_uploads(
     artifacts_dir: Path, seasons: Optional[Iterable[int]] = None
 ) -> list[Path]:
-    """Return the *.parquet files under *artifacts_dir* (sorted).
+    """Return the released artifacts (parquet + rds + csv) under *artifacts_dir*.
+
+    All three formats ship to the tag — the release is the distribution channel
+    (rds/csv are not committed to this repo), and ``wehoop::load_wnba_stats_*()``
+    reads the ``.rds``.
 
     ``seasons``, when given, scopes this to only files ending in
-    ``_{season}.parquet`` for one of the given seasons -- otherwise every
+    ``_{season}.{ext}`` for one of the given seasons -- otherwise every
     prior season's files sitting in the same directory get globbed in too,
     which turns a single-season publish call into an ever-growing re-upload
     of the whole backfill-to-date (O(n^2) across a multi-season backfill).
     """
-    files = sorted(Path(artifacts_dir).glob("*.parquet"))
+    files = sorted(
+        f for ext in _RELEASE_EXTS for f in Path(artifacts_dir).glob(f"*.{ext}")
+    )
     if seasons is None:
         return files
-    suffixes = tuple(f"_{s}.parquet" for s in seasons)
+    suffixes = tuple(f"_{s}.{ext}" for s in seasons for ext in _RELEASE_EXTS)
     return [f for f in files if f.name.endswith(suffixes)]
 
 
