@@ -13,6 +13,7 @@ All three are **release artifacts**: they ship to the ``wnba_stats_*`` tags on
 
 from __future__ import annotations
 
+from datetime import datetime, timezone
 from pathlib import Path
 
 import polars as pl
@@ -31,7 +32,11 @@ RDS_CLASS: tuple[str, ...] = (
 
 
 def write_release_formats(
-    df: pl.DataFrame, dest_dir: Path, stem: str
+    df: pl.DataFrame,
+    dest_dir: Path,
+    stem: str,
+    wehoop_type: str | None = None,
+    timestamp: datetime | None = None,
 ) -> dict[str, Path]:
     """Write ``{dest_dir}/{stem}.{parquet,rds,csv}``; return the written paths.
 
@@ -44,6 +49,16 @@ def write_release_formats(
     csv_path = dest_dir / f"{stem}.csv"
 
     df.write_parquet(parquet_path)
-    write_rds(df, rds_path, cls=RDS_CLASS)
+    # The R producers stamp make_wehoop_data(type, timestamp) before saveRDS, and
+    # print.wehoop_data renders both -- an rds without them prints a blank header.
+    write_rds(
+        df,
+        rds_path,
+        cls=RDS_CLASS,
+        attributes={
+            "wehoop_timestamp": timestamp or datetime.now(timezone.utc),
+            "wehoop_type": wehoop_type or stem,
+        },
+    )
     df.write_csv(csv_path)
     return {"parquet": parquet_path, "rds": rds_path, "csv": csv_path}

@@ -139,6 +139,14 @@ DATASETS: tuple[Dataset, ...] = (
         f"WNBA Stats Officials {_R}",
         level="game",
     ),
+    Dataset(
+        "player_boxscores", "boxscoretraditionalv3", None, "player_boxscores",
+        "wnba_stats_player_boxscores", f"WNBA Stats Player Boxscores {_R}", level="game",
+    ),
+    Dataset(
+        "team_boxscores", "boxscoretraditionalv3", None, "team_boxscores",
+        "wnba_stats_team_boxscores", f"WNBA Stats Team Boxscores {_R}", level="game",
+    ),
     # -- derived ------------------------------------------------------------------
     Dataset(
         "shots",

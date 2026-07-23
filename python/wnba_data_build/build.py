@@ -144,3 +144,122 @@ def build(root: str | Path, dataset: Dataset, season: int) -> pl.DataFrame:
     if dataset.level == "game":
         return build_game_dataset(root, dataset, season)
     return build_season_dataset(root, dataset, season)
+
+
+# -- play-by-play + shots ------------------------------------------------------
+#
+# playbyplayv3 does not use the resultSets envelope: its rows live under
+# game.actions as dicts, so it needs its own extractor rather than result_set().
+
+def pbp_rows(payload: Any) -> list[dict[str, Any]]:
+    """Action rows from one captured ``playbyplayv3`` payload."""
+    if not isinstance(payload, dict):
+        return []
+    return [a for a in (payload.get("game") or {}).get("actions") or [] if isinstance(a, dict)]
+
+
+def build_pbp(root: str | Path, season: int, game_ids: list[str] | None = None) -> pl.DataFrame:
+    """Season play-by-play, bound across every captured game.
+
+    Columns are snake-cased from the v3 camelCase field names. Rows are kept in
+    capture order within a game and games in id order, so the frame is stable
+    across rebuilds.
+    """
+    if game_ids is None:
+        game_ids = raw.season_game_ids(root, season) or raw.available_games(
+            root, "playbyplayv3", season
+        )
+    frames: list[pl.DataFrame] = []
+    for gid, payload in raw.iter_game_payloads(root, "playbyplayv3", game_ids):
+        rows = pbp_rows(payload)
+        if not rows:
+            continue
+        df = pl.DataFrame(rows, infer_schema_length=None, strict=False)
+        df = df.rename({c: snake(c) for c in df.columns})
+        frames.append(df.with_columns(game_id=pl.lit(gid), season=pl.lit(season)))
+    if not frames:
+        return pl.DataFrame()
+    return pl.concat(frames, how="diagonal_relaxed")
+
+
+#: Field-goal actions carry shot geometry; everything else in pbp does not.
+_SHOT_COLUMNS = (
+    "game_id", "season", "period", "clock", "team_id", "team_tricode", "person_id",
+    "player_name", "action_type", "sub_type", "shot_result", "shot_value",
+    "shot_distance", "x_legacy", "y_legacy", "description", "score_home", "score_away",
+)
+
+
+def build_shots(pbp: pl.DataFrame) -> pl.DataFrame:
+    """Shot attempts derived from play-by-play.
+
+    Derived rather than fetched: every field the shots dataset needs is already in
+    the pbp capture, so this costs no request and cannot drift from the pbp it is
+    built from. Selects only the shot-relevant columns, keeping whichever are
+    present -- the v3 field set varies across seasons.
+    """
+    if pbp.is_empty() or "is_field_goal" not in pbp.columns:
+        return pl.DataFrame()
+    shots = pbp.filter(pl.col("is_field_goal") == 1)
+    keep = [c for c in _SHOT_COLUMNS if c in shots.columns]
+    return shots.select(keep) if keep else shots
+
+
+# -- traditional boxscores -----------------------------------------------------
+#
+# boxscoretraditionalv3 nests: boxScoreTraditional.{homeTeam,awayTeam} each carry
+# a players[] list whose rows hold their counting stats in a `statistics` object.
+# Flattening lifts those onto the row so the published frame is one row per
+# player-game rather than a struct column no R consumer could read.
+
+def _flatten_stats(row: dict[str, Any]) -> dict[str, Any]:
+    """Lift a nested ``statistics`` object onto its parent row."""
+    out = {k: v for k, v in row.items() if k != "statistics"}
+    out.update(row.get("statistics") or {})
+    return out
+
+
+def boxscore_rows(payload: Any, *, team_level: bool) -> list[dict[str, Any]]:
+    """Player- or team-level rows from one ``boxscoretraditionalv3`` payload."""
+    if not isinstance(payload, dict):
+        return []
+    box = payload.get("boxScoreTraditional") or {}
+    rows: list[dict[str, Any]] = []
+    for side in ("homeTeam", "awayTeam"):
+        team = box.get(side) or {}
+        if not isinstance(team, dict):
+            continue
+        common = {
+            "team_id": team.get("teamId"),
+            "team_name": team.get("teamName"),
+            "team_tricode": team.get("teamTricode"),
+            "side": "home" if side == "homeTeam" else "away",
+        }
+        if team_level:
+            rows.append({**common, **_flatten_stats({"statistics": team.get("statistics") or {}})})
+        else:
+            for player in team.get("players") or []:
+                if isinstance(player, dict):
+                    rows.append({**common, **_flatten_stats(player)})
+    return rows
+
+
+def build_boxscores(
+    root: str | Path, season: int, *, team_level: bool, game_ids: list[str] | None = None
+) -> pl.DataFrame:
+    """Season traditional boxscores, player- or team-level, bound across games."""
+    if game_ids is None:
+        game_ids = raw.season_game_ids(root, season) or raw.available_games(
+            root, "boxscoretraditionalv3", season
+        )
+    frames: list[pl.DataFrame] = []
+    for gid, payload in raw.iter_game_payloads(root, "boxscoretraditionalv3", game_ids):
+        rows = boxscore_rows(payload, team_level=team_level)
+        if not rows:
+            continue
+        df = pl.DataFrame(rows, infer_schema_length=None, strict=False)
+        df = df.rename({c: snake(c) for c in df.columns})
+        frames.append(df.with_columns(game_id=pl.lit(gid), season=pl.lit(season)))
+    if not frames:
+        return pl.DataFrame()
+    return pl.concat(frames, how="diagonal_relaxed")
