@@ -1,0 +1,187 @@
+"""Reader for the ``wehoop-wnba-stats-raw`` store — the only input this repo has.
+
+Every dataset compiled here is reshaped from payloads that ``wehoop-wnba-stats-raw``
+already captured, so a compile makes **no network calls** and is reproducible from a
+checkout. That is what makes the builders testable: point ``root`` at a fixture tree
+and the whole pipeline runs offline.
+
+The store has two layouts, because the endpoints are keyed differently:
+
+``{endpoint}/{season}/{game_id}.json``
+    Per-game payloads (``playbyplayv3``, ``boxscoretraditionalv3``, ``gamerotation``,
+    ``boxscoresummaryv2``). The season directory is decoded from the game id by
+    :func:`season_of`. The writer decodes it independently, inside sdv-py's raw
+    store, so the two could drift apart and silently look at different directories
+    — ``test_raw.py`` pins them equal across every game id in the real store.
+
+``{endpoint}/{season}/{variant}.json`` or ``{endpoint}/{season}.json``
+    Season-level payloads (rosters, season stats, lineups, standings, draft, and the
+    ``leaguegamelog`` game index), written by the raw repo's ``season_capture``.
+
+``root`` may be a local checkout or the ``raw.githubusercontent.com`` base URL, so a
+job can run against a sibling clone on disk or read the tree straight from GitHub.
+"""
+
+from __future__ import annotations
+
+import json
+import urllib.error
+import urllib.request
+from collections.abc import Iterator
+from pathlib import Path
+from typing import Any
+
+RAW_BASE = "https://raw.githubusercontent.com/sportsdataverse/wehoop-wnba-stats-raw/main/wnba_stats/json"
+
+# Per-game endpoints live under the game-keyed store; season-level ones do not.
+GAME_ENDPOINTS = (
+    "playbyplayv3",
+    "boxscoretraditionalv3",
+    "gamerotation",
+    "boxscoresummaryv2",
+)
+
+
+def _is_url(root: str | Path) -> bool:
+    return str(root).startswith(("http://", "https://"))
+
+
+def _read_json(root: str | Path, rel: str) -> Any | None:
+    """Load ``rel`` under ``root`` from disk or over HTTP; ``None`` when absent."""
+    if _is_url(root):
+        try:
+            with urllib.request.urlopen(
+                f"{str(root).rstrip('/')}/{rel}", timeout=60
+            ) as resp:
+                return json.loads(resp.read())
+        except (urllib.error.URLError, TimeoutError, json.JSONDecodeError):
+            return None
+    path = Path(root) / rel
+    if not path.exists():
+        return None
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return None
+
+
+def season_of(game_id: str) -> int:
+    """Season (single calendar year) encoded in a 10-digit WNBA game id.
+
+    ``1022600071`` -> 2026. Digits 3-4 are the two-digit year behind the ``10``
+    league prefix and the season-type digit; years >= 90 are 19xx (the league
+    started in 1997).
+    """
+    gid = str(game_id).zfill(10)
+    yy = int(gid[3:5])
+    return 1900 + yy if yy >= 90 else 2000 + yy
+
+
+def game_payload_path(root: str | Path, endpoint: str, game_id: str) -> Path:
+    """On-disk path of a per-game payload (local roots only)."""
+    return (
+        Path(root)
+        / endpoint
+        / str(season_of(game_id))
+        / f"{str(game_id).zfill(10)}.json"
+    )
+
+
+def read_game(root: str | Path, endpoint: str, game_id: str) -> Any | None:
+    """One per-game payload, or ``None`` if the raw store never captured it."""
+    gid = str(game_id).zfill(10)
+    return _read_json(root, f"{endpoint}/{season_of(gid)}/{gid}.json")
+
+
+def read_season(
+    root: str | Path, endpoint: str, season: int, variant: str | None = None
+) -> Any | None:
+    """One season-level payload, or ``None`` if absent.
+
+    ``variant`` matches the raw repo's slug (``advanced_playoffs``, ``regular-season``,
+    a team id for ``commonteamroster``); omit it for unparameterized endpoints.
+    """
+    rel = (
+        f"{endpoint}/{season}/{variant}.json"
+        if variant
+        else f"{endpoint}/{season}.json"
+    )
+    return _read_json(root, rel)
+
+
+def available_games(root: str | Path, endpoint: str, season: int) -> list[str]:
+    """Game ids captured for ``endpoint`` in ``season`` (local roots only).
+
+    Enumerating a URL root is not supported — GitHub serves files, not listings —
+    so callers working against RAW_BASE should drive from :func:`season_game_ids`.
+    """
+    if _is_url(root):
+        raise ValueError(
+            "available_games needs a local root; use season_game_ids for URLs"
+        )
+    d = Path(root) / endpoint / str(season)
+    if not d.is_dir():
+        return []
+    return sorted(p.stem for p in d.glob("*.json"))
+
+
+def season_game_ids(root: str | Path, season: int) -> list[str]:
+    """Every game id for ``season`` from the captured ``leaguegamelog`` payloads.
+
+    This is the authoritative index — it covers games whose per-game payloads have
+    not been captured yet, which :func:`available_games` by definition cannot.
+    """
+    out: set[str] = set()
+    for stype in ("regular-season", "playoffs"):
+        payload = read_season(root, "leaguegamelog", season, stype)
+        if not isinstance(payload, dict):
+            continue
+        for rs in payload.get("resultSets") or []:
+            headers = [str(h).upper() for h in rs.get("headers") or []]
+            if "GAME_ID" not in headers:
+                continue
+            idx = headers.index("GAME_ID")
+            for row in rs.get("rowSet") or []:
+                if row[idx] is not None:
+                    out.add(str(row[idx]).zfill(10))
+    return sorted(out)
+
+
+def iter_game_payloads(
+    root: str | Path, endpoint: str, game_ids: list[str]
+) -> Iterator[tuple[str, Any]]:
+    """Yield ``(game_id, payload)`` for each captured game, skipping misses.
+
+    A generator so a season compiles without holding every payload at once — a
+    season of play-by-play is hundreds of MB of JSON.
+    """
+    for gid in game_ids:
+        payload = read_game(root, endpoint, gid)
+        if payload is not None:
+            yield gid, payload
+
+
+def result_set(
+    payload: Any, name: str | None = None
+) -> tuple[list[str], list[list[Any]]]:
+    """``(headers, rows)`` from a stats.com ``resultSets`` envelope.
+
+    Returns the named set, or the first non-empty one when ``name`` is omitted.
+    Empty/malformed payloads give ``([], [])`` rather than raising, so callers can
+    build a zero-row frame with the documented schema instead of null-checking.
+    """
+    if not isinstance(payload, dict):
+        return [], []
+    sets = payload.get("resultSets") or payload.get("resultSet") or []
+    if isinstance(sets, dict):
+        sets = [sets]
+    for rs in sets:
+        if not isinstance(rs, dict):
+            continue
+        if name is not None and str(rs.get("name")) != name:
+            continue
+        headers = [str(h) for h in rs.get("headers") or []]
+        rows = [list(r) for r in rs.get("rowSet") or []]
+        if name is not None or rows:
+            return headers, rows
+    return [], []
