@@ -17,9 +17,16 @@ Package metadata (per `DESCRIPTION`):
 
 Pipeline: `stats.wnba.com -> wehoop-wnba-stats-data [HERE] -> sportsdataverse-data releases -> wehoop`.
 
-There is no `wehoop-wnba-stats-raw` -- the WNBA Stats API IS the raw
-layer. The per-game JSON cache lives in this repo under
-`wnba_stats/pbp/json/`, gated by the `RESCRAPE` flag.
+Two producers now feed the release tags. The **R** scripts here scrape
+`stats.wnba.com` directly (per-game JSON cached under `wnba_stats/pbp/json/`,
+gated by `RESCRAPE`). Separately, the **Python** reshaper
+(`python/wnba_data_build/`) rebuilds the same datasets from the unified raw
+store in the sibling **`wehoop-wnba-stats-raw`** repo
+(`wnba_stats/json/{endpoint}/{season}/`) and publishes via
+`python -m wnba_data_build --publish` / `scripts/daily_wnba_stats_python_processor.sh`
+(the sdv-orch `data.build_py` stage). The earlier note that "there is no
+wehoop-wnba-stats-raw" is obsolete — that repo now holds a full 1997–2026 raw
+capture that the Python path reads.
 
 ## Repository Workflow
 
