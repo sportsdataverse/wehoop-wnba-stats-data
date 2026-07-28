@@ -26,9 +26,7 @@ ExistsCheck = Callable[[str, str], bool]
 
 def _gh_runner(args: list[str]) -> str:
     """Run `gh <args>`, returning stdout. Raises on non-zero."""
-    return subprocess.run(
-        ["gh", *args], check=True, capture_output=True, text=True, timeout=_GH_TIMEOUT
-    ).stdout
+    return subprocess.run(["gh", *args], check=True, capture_output=True, text=True, timeout=_GH_TIMEOUT).stdout
 
 
 def _gh_release_exists(tag: str, repo: str) -> bool:
@@ -48,32 +46,36 @@ def _gh_release_exists(tag: str, repo: str) -> bool:
 
 
 def plan_uploads(
-    artifacts_dir: Path, seasons: Optional[Iterable[int]] = None
+    artifacts_dir: Path,
+    seasons: Optional[Iterable[int]] = None,
+    *,
+    pattern: str = "*.parquet",
+    exts: tuple[str, ...] = _RELEASE_EXTS,
 ) -> list[Path]:
-    """Return the released artifacts (parquet + rds + csv) under *artifacts_dir*.
+    """Return the files under *artifacts_dir* to upload (sorted).
 
-    All three formats ship to the tag — the release is the distribution channel
-    (rds/csv are not committed to this repo), and ``wehoop::load_wnba_stats_*()``
-    reads the ``.rds``.
+    Two selection modes (backported from hoopR-nba-stats-data's publish.py):
 
-    ``seasons``, when given, scopes this to only files ending in
-    ``_{season}.{ext}`` for one of the given seasons -- otherwise every
-    prior season's files sitting in the same directory get globbed in too,
-    which turns a single-season publish call into an ever-growing re-upload
-    of the whole backfill-to-date (O(n^2) across a multi-season backfill).
+    * default (``pattern="*.parquet"``): glob each extension in *exts* and,
+      when *seasons* is given, keep only files ending in ``_{season}.{ext}``
+      for one of those seasons. *exts* defaults to all three release formats
+      — the release is the distribution channel (rds/csv are not committed to
+      this repo) and ``wehoop::load_wnba_stats_*()`` reads the ``.rds``.
+      Season scoping avoids re-uploading the whole backfill-to-date on every
+      single-season call (O(n^2) across a multi-season backfill).
+    * custom *pattern* (e.g. a model-card ``*_card.json`` sidecar): returned
+      unscoped, *exts* ignored.
     """
-    files = sorted(
-        f for ext in _RELEASE_EXTS for f in Path(artifacts_dir).glob(f"*.{ext}")
-    )
+    if pattern != "*.parquet":
+        return sorted(Path(artifacts_dir).glob(pattern))
+    files = sorted(f for ext in exts for f in Path(artifacts_dir).glob(f"*.{ext}"))
     if seasons is None:
         return files
-    suffixes = tuple(f"_{s}.{ext}" for s in seasons for ext in _RELEASE_EXTS)
+    suffixes = tuple(f"_{s}.{ext}" for s in seasons for ext in exts)
     return [f for f in files if f.name.endswith(suffixes)]
 
 
-def published_seasons(
-    tag: str, repo: str, *, runner: Optional[Runner] = None
-) -> set[int]:
+def published_seasons(tag: str, repo: str, *, runner: Optional[Runner] = None) -> set[int]:
     """Season start-years already on the release, parsed from `_{season}.parquet` asset names.
 
     Returns an empty set if the release does not exist.
@@ -101,11 +103,7 @@ def published_seasons(
         if "not found" in stderr:
             return set()
         raise
-    return {
-        int(m.group(1))
-        for line in (out or "").splitlines()
-        if (m := _SEASON_RE.search(line))
-    }
+    return {int(m.group(1)) for line in (out or "").splitlines() if (m := _SEASON_RE.search(line))}
 
 
 def upload_artifacts(
@@ -114,6 +112,9 @@ def upload_artifacts(
     repo: str,
     *,
     seasons: Optional[Iterable[int]] = None,
+    pattern: str = "*.parquet",
+    exts: tuple[str, ...] = _RELEASE_EXTS,
+    notes: Optional[str] = None,
     dry_run: bool = False,
     runner: Optional[Runner] = None,
     exists_check: Optional[ExistsCheck] = None,
@@ -135,7 +136,7 @@ def upload_artifacts(
     """
     run = runner or _gh_runner
     exists = exists_check or _gh_release_exists
-    files = plan_uploads(artifacts_dir, seasons)
+    files = plan_uploads(artifacts_dir, seasons, pattern=pattern, exts=exts)
     if dry_run:
         return {"uploaded": 0, "failed": [], "files": [f.name for f in files]}
     if not exists(tag, repo):
@@ -149,7 +150,7 @@ def upload_artifacts(
                 "--title",
                 tag,
                 "--notes",
-                f"{tag} datasets (WNBA model zoo)",
+                notes or f"{tag} datasets (WNBA model zoo)",
             ]
         )
     uploaded: list[str] = []
