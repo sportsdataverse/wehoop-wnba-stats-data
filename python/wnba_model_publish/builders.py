@@ -59,6 +59,7 @@ from pathlib import Path
 from typing import Any, Callable, Optional, Sequence
 
 import polars as pl
+from sportsdataverse._rds import write_rds
 from sportsdataverse.nba import (
     AdjRapmModel,
     box_features,
@@ -90,6 +91,8 @@ from sportsdataverse.wnba.wnba_stats import (
     wnba_stats_leaguegamelog,
     wnba_stats_playerindex,
 )
+
+from wnba_data_build.io import RDS_CLASS
 
 _LOG = logging.getLogger(__name__)
 
@@ -850,6 +853,15 @@ def build_wnba_player_impact(
 
         path = out_dir / f"wnba_player_impact_{season}.parquet"
         impact.write_parquet(path)
+        # csv + rds ship alongside the parquet -- every released dataset in the
+        # family carries all three formats (2026-07 decision; the tag launched
+        # parquet-only mirroring the NBA sibling, both since converged).
+        impact.write_csv(out_dir / f"wnba_player_impact_{season}.csv")
+        write_rds(
+            impact,
+            out_dir / f"wnba_player_impact_{season}.rds",
+            cls=list(RDS_CLASS),
+        )
         results.append({"season": season, "rows": impact.height, "path": str(path)})
         print(
             f"impact: season={season} rows={impact.height} types={impact['season_type'].unique().to_list()} -> {path}"

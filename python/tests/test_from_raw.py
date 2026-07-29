@@ -19,9 +19,7 @@ def test_readonly_store_sets_and_restores(tmp_path: Path) -> None:
         assert os.environ["SDV_PY_WNBA_RAW_JSON_DIR"] == str(tmp_path)
         assert os.environ["SDV_PY_WNBA_RAW_JSON_READONLY"] == "1"
     assert os.environ.get("SDV_PY_WNBA_RAW_JSON_DIR") == before.get("SDV_PY_WNBA_RAW_JSON_DIR")
-    assert os.environ.get("SDV_PY_WNBA_RAW_JSON_READONLY") == before.get(
-        "SDV_PY_WNBA_RAW_JSON_READONLY"
-    )
+    assert os.environ.get("SDV_PY_WNBA_RAW_JSON_READONLY") == before.get("SDV_PY_WNBA_RAW_JSON_READONLY")
 
 
 def test_readonly_store_restores_on_exception(tmp_path: Path) -> None:
@@ -43,12 +41,31 @@ def test_readonly_store_preserves_a_preexisting_value(tmp_path: Path) -> None:
         os.environ.pop("SDV_PY_WNBA_RAW_JSON_DIR", None)
 
 
-def test_missing_game_returns_none_not_an_error(tmp_path: Path) -> None:
+def _no_live_fallback(monkeypatch) -> None:
+    """Sever the engine's live fallback: a store miss must MISS, not fetch.
+
+    The read-through store falls back to stats.wnba.com on a miss, so these
+    empty-store tests only passed while the host was unreachable (they went
+    red the moment a residential IP's throttle lifted). Offline-pin them.
+    """
+    from sportsdataverse.wnba import wnba_engine
+
+    def _die(*args, **kwargs):
+        raise RuntimeError("live fetch attempted in an offline test")
+
+    monkeypatch.setattr(wnba_engine, "_fetch_pbp", _die)
+    monkeypatch.setattr(wnba_engine, "_fetch_rotation", _die)
+    monkeypatch.setattr(wnba_engine, "_fetch_box", _die)
+
+
+def test_missing_game_returns_none_not_an_error(tmp_path: Path, monkeypatch) -> None:
     """An uncaptured game costs that game, never the season."""
+    _no_live_fallback(monkeypatch)
     assert from_raw.process_game(tmp_path, "1022400001") is None
 
 
-def test_process_season_of_nothing_is_empty(tmp_path: Path) -> None:
+def test_process_season_of_nothing_is_empty(tmp_path: Path, monkeypatch) -> None:
+    _no_live_fallback(monkeypatch)
     assert from_raw.process_season(tmp_path, 2024, ["1022400001"]) == {}
 
 
