@@ -6,7 +6,6 @@ import os
 from pathlib import Path
 
 import pytest
-
 from wnba_data_build import from_raw
 
 REAL = Path("/mnt/sdv_repos/wehoop-wnba-stats-raw/wnba_stats/json")

@@ -65,8 +65,8 @@ from sportsdataverse.nba import (
     box_features,
     calibrate_pts_per_win,
     nba_adj_rapm,
-    nba_bpm,
     nba_box_logs,
+    nba_bpm,
     nba_darko,
     nba_player_ages,
     nba_player_identity,
@@ -91,7 +91,6 @@ from sportsdataverse.wnba.wnba_stats import (
     wnba_stats_leaguegamelog,
     wnba_stats_playerindex,
 )
-
 from wnba_data_build.io import RDS_CLASS
 
 _LOG = logging.getLogger(__name__)

@@ -66,3 +66,23 @@ proxylist.csv
 *.log
 !logs/*.log
 .positai
+
+# --- SDV repo template ---------------------------------------------------
+/*.out
+/*.log
+*.egg-info/
+**/*.egg-info/
+.omc/
+**/.omc/
+.Rproj.user/
+**/.Rproj.user/
+.ruff_cache/
+**/.ruff_cache/
+.pytest_cache/
+**/.pytest_cache/
+.understand-anything/
+**/.understand-anything/
+.superpowers/
+**/.superpowers/
+.venv/
+**/.venv/

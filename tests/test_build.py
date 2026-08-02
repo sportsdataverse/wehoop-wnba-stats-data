@@ -6,7 +6,6 @@ import json
 from pathlib import Path
 
 import pytest
-
 from wnba_data_build import build
 from wnba_data_build.datasets import BY_KEY, DATASETS, RELEASE_TAGS
 

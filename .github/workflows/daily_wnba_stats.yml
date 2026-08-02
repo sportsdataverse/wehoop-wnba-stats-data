@@ -1,5 +1,12 @@
 name: Update WNBA Stats Data
 
+# Python-only since 2026-08-02. The scrape lives in wehoop-wnba-stats-raw
+# (its daily job commits the raw store before this cron); this job only
+# COMPILES + PUBLISHES: it reads the store over raw.githubusercontent.com,
+# builds parquet+rds+csv, and uploads to the wnba_stats_* release tags on
+# sportsdataverse-data. No stats.wnba.com calls, no commits. The retired R
+# chain (10 wnba_stats_*.R creation scripts + R processor) scraped live from
+# CI; the python registry covers all 15 datasets it produced.
 on:
   schedule:
     - cron: "0 7 * 5-9 *" # May - September daily
@@ -12,106 +19,45 @@ on:
       end_year:
         required: false
         type: string
-      rescrape:
-        required: false
-        default: true
-        type: boolean
-      use_python_build:
-        required: false
-        default: true
-        type: boolean
-        description: "Use the python wnba_data_build processor (default; build-only from the committed wehoop-wnba-stats-raw store over raw.githubusercontent). Set false to roll back to the R scrape+build processor."
 
 permissions:
   contents: write
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 jobs:
-  update_wnba_stats_data:
-    runs-on: ${{ matrix.config.os }}
-    name: Update WNBA Stats Data ${{ inputs.start_year }}-${{ inputs.end_year }} (Rescrape? ${{ inputs.rescrape }})
-    strategy:
-      fail-fast: false
-      matrix:
-        config:
-          - { os: ubuntu-latest, r: "release" }
-
+  build_publish:
+    runs-on: ubuntu-latest
     env:
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-      PROXY_KEY: ${{ secrets.PROXY_KEY }}
-      PROXY_PKG: ${{ secrets.PROXY_PKG }}
-      PROXY_ENDPOINT: ${{ secrets.PROXY_ENDPOINT }}
-      R_KEEP_PKG_SOURCE: yes
-      START_YEAR: ${{ inputs.start_year }}
-      END_YEAR: ${{ inputs.end_year }}
-      RESCRAPE: ${{ inputs.rescrape }}
-      # Shared stats.wnba.com rate budget (R/utils.R rate_limit()). Tune here
-      # without code changes. STATS_RATE_MAX requests per STATS_RATE_WINDOW
-      # seconds; each pbp game is budgeted as STATS_RATE_HITS endpoint hits.
-      STATS_RATE_MAX: "250"
-      STATS_RATE_WINDOW: "600"
-      STATS_RATE_HITS: "3"
-
+      GH_TOKEN: ${{ secrets.SDV_GH_TOKEN }}
+      GITHUB_PAT: ${{ secrets.SDV_GH_TOKEN }}
+      WEHOOP_WNBA_STATS_RAW_ROOT: https://raw.githubusercontent.com/sportsdataverse/wehoop-wnba-stats-raw/main/wnba_stats/json
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
 
-      - name: Setting up R
-        uses: r-lib/actions/setup-r@v2
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
         with:
-          r-version: ${{ matrix.config.r }}
-          http-user-agent: ${{ matrix.config.http-user-agent }}
-          use-public-rspm: true
+          python-version: '3.12'
+          cache-dependency-glob: uv.lock
 
-      - uses: r-lib/actions/setup-pandoc@v2
+      - name: Install
+        run: uv sync --frozen --dev
 
-      - name: Setting up R dependencies
-        uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          cache-version: 1
-          extra-packages: |
-            sportsdataverse/wehoop
-            sportsdataverse/sportsdataverse-data
-            ropensci/piggyback
-
-      - name: Setup Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: "3.13"
-
-      - name: Install Python dependencies
+      - name: Default season window
+        if: ${{ inputs.start_year == '' }}
+        # WNBA seasons are calendar years (nba_api WnbaSeasonYear) -- no
+        # October rollover. Replaces the retired Rscript/wehoop lookup.
         run: |
-          python -m pip install --upgrade pip setuptools wheel
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          y=$(date -u +%Y)
+          echo "START_YEAR=$y" >> "$GITHUB_ENV"
+          echo "END_YEAR=$y" >> "$GITHUB_ENV"
 
-      - name: Set up uv (for the python build)
-        uses: astral-sh/setup-uv@v5
-
-      - name: Sync python build deps
-        run: uv sync --project python
-
-      - name: Default year inputs if empty
-        if: ${{ env.START_YEAR == '' }}
+      - name: Inputs override
+        if: ${{ inputs.start_year != '' }}
         run: |
-          echo "START_YEAR=$(Rscript -e 'cat(wehoop::most_recent_wnba_season())')" >> $GITHUB_ENV
-          echo "END_YEAR=$(Rscript -e 'cat(wehoop::most_recent_wnba_season())')" >> $GITHUB_ENV
+          echo "START_YEAR=${{ inputs.start_year }}" >> "$GITHUB_ENV"
+          echo "END_YEAR=${{ inputs.end_year || inputs.start_year }}" >> "$GITHUB_ENV"
 
-      - name: Run processor
-        env:
-          GITHUB_PAT: ${{ secrets.SDV_GH_TOKEN }}
-          # gh CLI (python publish) needs cross-repo write to sportsdataverse-data;
-          # the default github.token only reaches this repo. R uses GITHUB_PAT above.
-          GH_TOKEN: ${{ secrets.SDV_GH_TOKEN }}
+      - name: Build + publish
         run: |
-          # Python is the default: build-only from the committed raw store over
-          # raw.githubusercontent (the droplet's daily raw refresh is the scrape
-          # half -- wehoop-wnba-stats-raw commits the store before this cron).
-          # Set use_python_build=false to roll back to the R scrape+build path.
-          if [ "${{ inputs.use_python_build }}" = "false" ]; then
-            bash scripts/daily_wnba_stats_R_processor.sh -s ${{ env.START_YEAR }} -e ${{ env.END_YEAR }} -r ${{ env.RESCRAPE || 'false' }}
-          else
-            WEHOOP_WNBA_STATS_RAW_ROOT="https://raw.githubusercontent.com/sportsdataverse/wehoop-wnba-stats-raw/main/wnba_stats/json" \
-            bash scripts/daily_wnba_stats_python_processor.sh -s ${{ env.START_YEAR }} -e ${{ env.END_YEAR }}
-          fi
+          WEHOOP_WNBA_STATS_PYBIN="$(pwd)/.venv/bin/python" \
+            bash scripts/daily_wnba_stats_python_processor.sh -s "$START_YEAR" -e "$END_YEAR"

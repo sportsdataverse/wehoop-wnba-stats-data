@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import polars as pl
 import pytest
-
 from wnba_data_build import cli
 from wnba_data_build.datasets import DATASETS
 

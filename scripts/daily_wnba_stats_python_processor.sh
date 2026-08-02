@@ -43,7 +43,8 @@ RAW_ROOT="${WEHOOP_WNBA_STATS_RAW_ROOT:-${REPOS_ROOT}/wehoop-wnba-stats-raw/wnba
 
 # Venv interpreter by absolute path, not `uv run`: sdv-orch invokes this from a
 # systemd unit whose PATH excludes /root/.local/bin, so `uv` exits 127 there.
-PYBIN="${WEHOOP_WNBA_STATS_PYBIN:-${REPO_DIR}/python/.venv/bin/python}"
+# Packaging moved to the repo root (2026-08-02); the venv lives at .venv now.
+PYBIN="${WEHOOP_WNBA_STATS_PYBIN:-${REPO_DIR}/.venv/bin/python}"
 
 # Fail before doing anything if the raw checkout isn't where we expect. A missing
 # root would build zero rows and "succeed", quietly publishing nothing. A URL
@@ -54,11 +55,11 @@ if [[ "${RAW_ROOT}" != http*://* && ! -d "${RAW_ROOT}/playbyplayv3" ]]; then
 fi
 
 if [ ! -x "${PYBIN}" ]; then
-    echo "::error ::python venv not found at ${PYBIN} -- run 'uv sync' in ${REPO_DIR}/python"
+    echo "::error ::python venv not found at ${PYBIN} -- run 'uv sync' in ${REPO_DIR}"
     exit 1
 fi
 
-cd "${REPO_DIR}/python" || exit 1
+cd "${REPO_DIR}" || exit 1
 mkdir -p "${REPO_DIR}/logs"
 
 # Commit identity for CI/droplet runs (no-op when already configured).
@@ -70,16 +71,21 @@ for i in $(seq "${START_YEAR}" "${END_YEAR}"); do
     LOGFILE="${REPO_DIR}/logs/wehoop_wnba_stats_python_logfile_${i}.log"
     OUT_DIR="$(mktemp -d "/tmp/wnba_stats_build_${i}.XXXXXX")"
     echo "=== Building WNBA stats (python) for season ${i} ==="
-    {
+    # A SUBSHELL, not a brace group: a group's status is its LAST command, so
+    # the trailing echo masked a failing build -- PIPESTATUS[0] was always 0 and
+    # every season reported success (same bug fixed in the NBA sibling).
+    (
         echo "=== season ${i} started $(date -u +'%F %T')Z ==="
         "${PYBIN}" -m wnba_data_build \
             --root "${RAW_ROOT}" \
             --seasons "${i}" \
             --out "${OUT_DIR}" \
             --publish
-        echo "EXIT=$?"
+        py_rc=$?
+        echo "EXIT=${py_rc}"
         echo "=== season ${i} finished $(date -u +'%F %T')Z ==="
-    } 2>&1 | tee -a "${LOGFILE}"
+        exit "${py_rc}"
+    ) 2>&1 | tee -a "${LOGFILE}"
     # tee hides python's exit status behind its own; recover it from PIPESTATUS[0].
     rc=${PIPESTATUS[0]}
     if [ "${rc}" -ne 0 ]; then

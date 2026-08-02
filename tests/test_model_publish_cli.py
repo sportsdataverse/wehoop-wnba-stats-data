@@ -3,7 +3,6 @@
 import argparse
 
 import pytest
-
 from wnba_model_publish.builders import (
     _season_store_year,
     _season_str,

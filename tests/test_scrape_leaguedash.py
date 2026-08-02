@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import polars as pl
 import pytest
-
 from wnba_data_build.scrape.leaguedash import (
     LeagueDashClient,
     Variant,
