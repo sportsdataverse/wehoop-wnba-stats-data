@@ -63,8 +63,8 @@ Rscript R/wnba_stats_09_game_rosters.R        2025 2025
 Rscript R/wnba_stats_10_officials.R           2025 2025
 
 # One-off helpers
-Rscript R/0000_create_wehoop_releases_init.R    # Idempotent release creation
-Rscript R/0001_push_existing_release_data.R     # Re-push everything on disk
+Rscript ops/init/0000_create_wehoop_releases_init.R    # Idempotent release creation
+Rscript ops/init/0001_push_existing_release_data.R     # Re-push everything on disk
 ```
 
 `RESCRAPE=true` (default for `01_pbp.R`) re-fetches every game from

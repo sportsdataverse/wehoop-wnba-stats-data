@@ -22,8 +22,8 @@ bash scripts/daily_wnba_stats_R_processor.sh -s 2025 -e 2025 -r false   # CI dai
 bash scripts/annual_wnba_stats_draft_R_processor.sh -s 2025 -e 2025     # draft (annual, split out)
 Rscript R/wnba_stats_01_pbp.R 2025 2025 false   # 3rd arg = RESCRAPE (default true)
 Rscript R/wnba_stats_02_rosters.R 2025 2025     # 02..10 ignore RESCRAPE
-Rscript R/0000_create_wehoop_releases_init.R    # one-off: create/refresh release tags
-Rscript R/0001_push_existing_release_data.R     # one-off: re-push on-disk artifacts
+Rscript ops/init/0000_create_wehoop_releases_init.R    # one-off: create/refresh release tags
+Rscript ops/init/0001_push_existing_release_data.R     # one-off: re-push on-disk artifacts
 ```
 `R/wnba_stats_{01_pbp,02_rosters,03_player_season_stats,04_lineups,05_team_season_stats,06_standings,07_draft,08_shots,09_game_rosters,10_officials}.R`.
 `RESCRAPE=false` reads the JSON cache instead of re-hitting the API.
@@ -33,7 +33,7 @@ Rscript R/0001_push_existing_release_data.R     # one-off: re-push on-disk artif
   player game logs). Anything destined for releases is uploaded via
   `piggyback::pb_upload()` wrapped in `insistent_save()` (`purrr::insistently`).
 - 15 release tags on `sportsdataverse/sportsdataverse-data` (created by
-  `0000_create_wehoop_releases_init.R`): `wnba_stats_{schedules,pbp,player_game_logs,rosters,player_season_stats,lineups,team_season_stats,standings,draft,shots,game_rosters,officials,coaches,team_boxscores,player_boxscores}`.
+  `ops/init/0000_create_wehoop_releases_init.R`): `wnba_stats_{schedules,pbp,player_game_logs,rosters,player_season_stats,lineups,team_season_stats,standings,draft,shots,game_rosters,officials,coaches,team_boxscores,player_boxscores}`.
 
 ## Gotchas — stats.wnba.com handling (the non-obvious part)
 - **Headers are load-bearing** and live in `wehoop` (`R/utils_wnba_stats.R`,
