@@ -1,0 +1,84 @@
+name: WNBA Model Datasets
+
+# Manual-only publisher for the `wnba_player_impact` release on
+# sportsdataverse-data: the per-season player-impact suite
+# (RAPM / adj-RAPM / SPM / BPM / DARKO / WAR) built by
+# python/wnba_model_publish over the committed wehoop-wnba-stats-raw
+# store. NO cron on purpose -- the build is long and rate-budgeted and
+# must never auto-fire; `dry_run` defaults to true so even a stray
+# dispatch publishes nothing.
+#
+# Known limitation: the player-variant leaguegamelog call still goes
+# live (the raw store carries no {season_type}_p.json captures), and
+# stats.wnba.com HANGS on datacenter IPs -- so a run from a GitHub
+# runner can stall on that call. timeout-minutes caps the burn; for a
+# multi-season backfill prefer scripts/leaguedash_backfill.sh-style
+# local runs from a residential IP.
+#
+# Credential scoping: the cross-repo publish PAT (SDV_GH_TOKEN) is NOT
+# exported job-wide; it is set only on the build+publish step.
+
+on:
+  workflow_dispatch:
+    inputs:
+      seasons:
+        description: 'Season or inclusive range, calendar-year convention (e.g. 2026 or 1997:2026). Default: the current season.'
+        required: false
+        type: string
+      dry_run:
+        description: 'Build only; plan the uploads without publishing'
+        required: false
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+env:
+  PUBLISH_REPO: sportsdataverse/sportsdataverse-data
+  WNBA_RAW_STORE: https://raw.githubusercontent.com/sportsdataverse/wehoop-wnba-stats-raw/main/wnba_stats/json
+
+jobs:
+  models:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Checkout wnba-stats-data
+        uses: actions/checkout@v6
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          python-version: '3.12'
+          cache-dependency-glob: uv.lock
+
+      - name: Sync deps
+        run: uv sync --frozen
+
+      # WNBA seasons are single calendar years (2024 = the 2024 summer
+      # season) -- no October rollover, unlike the NBA sibling.
+      - name: Resolve seasons
+        env:
+          # Via env, not `${{ }}` inline in the script: a dispatch input
+          # interpolated straight into `run:` is a shell-injection sink.
+          SEASONS_INPUT: ${{ inputs.seasons }}
+        run: |
+          if [ -n "$SEASONS_INPUT" ]; then
+            SEASONS="$SEASONS_INPUT"
+          else
+            SEASONS=$(date -u +%Y)
+          fi
+          echo "SEASONS=$SEASONS" >> "$GITHUB_ENV"
+          echo "building wnba_player_impact for seasons: $SEASONS"
+
+      - name: Build + publish wnba_player_impact ${{ env.SEASONS }}
+        env:
+          GH_TOKEN: ${{ secrets.SDV_GH_TOKEN }}
+        run: |
+          uv run --no-sync python -m wnba_model_publish impact \
+            --seasons "$SEASONS" \
+            --out out/wnba_player_impact \
+            --raw-store-dir "$WNBA_RAW_STORE" \
+            --tag wnba_player_impact \
+            --repo "$PUBLISH_REPO" \
+            ${{ inputs.dry_run && '--dry-run' || '' }}

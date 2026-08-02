@@ -59,6 +59,43 @@ Rscript R/0001_push_existing_release_data.R     # one-off: re-push on-disk artif
 - Library loads are plain `library(pkg)` inside `suppressPackageStartupMessages(suppressMessages(...))`
   — do NOT pin `lib.loc = Sys.getenv("R_LIBS")` (CI never exports `R_LIBS`, so it halts every script).
 
+## Model publish — `python/wnba_model_publish`
+
+Builds + uploads the per-season **`wnba_player_impact`** tables (RAPM /
+adj-RAPM / SPM / BPM / DARKO / WAR; one row per player-season-season_type,
+Regular Season + Playoffs) from WNBA possessions compiled off the committed
+`wehoop-wnba-stats-raw` store, via the league-agnostic `sportsdataverse.nba`
+model zoo. Runs from the repo root (the root uv project installs
+`wnba_model_publish` from `python/`):
+
+```sh
+# Plan only -- builds locally, uploads nothing:
+uv run python -m wnba_model_publish impact \
+  --seasons 2026 --out out/wnba_player_impact \
+  --raw-store-dir "$SDV_PY_WNBA_RAW_JSON_DIR" --dry-run
+
+# Re-upload an already-built directory (no recompute):
+uv run python -m wnba_model_publish upload \
+  --dir out/wnba_player_impact --tag wnba_player_impact --dry-run
+```
+
+**Dry-run discipline:** there is no `--publish` flag — publishing is the
+*default*; `--dry-run` is the opt-out that plans the uploads without touching
+the release. Always run `--dry-run` first and inspect the plan, then rerun
+the identical command without it. Seasons build earliest-to-latest so
+multi-season priors (adj-RAPM / DARKO) flow forward — for a single-season
+refresh pass a few trailing seasons (e.g. `2021:2026`).
+
+CI wrapper: `.github/workflows/wnba_models.yml` (workflow_dispatch ONLY, no
+cron; `dry_run` input defaults **true** so a stray dispatch publishes
+nothing). Caveat for CI runs: the player-variant leaguegamelog call still
+goes live and stats.wnba.com hangs on datacenter IPs — multi-season
+backfills belong on a residential IP, not a runner.
+
+| Model | Artifact | Release tag | Training data | Fitting script | Cadence |
+|---|---|---|---|---|---|
+| `wnba_player_impact` (RAPM/adj-RAPM/SPM/BPM/DARKO/WAR) | `wnba_player_impact_{season}.parquet` + `*_card.json` | `wnba_player_impact` on `sportsdataverse-data` | 1997–2026 possessions + box logs (stats.wnba.com via the raw store) | `python/wnba_model_publish/builders.py` (`build_wnba_player_impact`) | manual |
+
 ## Workflows & commits
 - `.github/workflows/daily_wnba_stats.yml` — cron over the WNBA window (`0 7 * 5-9 *`
   + `0 7 1-20 10 *`), one season per run, shells to the daily processor. Draft is **excluded**
