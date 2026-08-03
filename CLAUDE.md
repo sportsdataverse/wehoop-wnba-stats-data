@@ -1,32 +1,41 @@
 # CLAUDE.md — wehoop-wnba-stats-data
 
-R-side parser + release uploader for the **WNBA Stats API** (`stats.wnba.com`,
-the official NBA-Stats-style tracking/advanced endpoints — distinct upstream
-from the ESPN-sourced `wehoop-wnba-data`). Calls `wehoop::wnba_*()`, compiles
-per-season artifacts, and `piggyback`-uploads them to `sportsdataverse-data`
-release tags that `wehoop`'s `load_wnba_stats_*()` loaders read. No separate
-`-raw` repo backs this: the API IS the raw layer; per-game PBP JSON is cached
-locally under `wnba_stats/pbp/json/` (the placeholder `wehoop-wnba-stats-raw`
-exists but ships no scraper).
+Parser + release uploader for the **WNBA Stats API** (`stats.wnba.com`, the
+official NBA-Stats-style tracking/advanced endpoints — distinct upstream from
+the ESPN-sourced `wehoop-wnba-data`). Compiles per-season artifacts and
+uploads them to `sportsdataverse-data` release tags that `wehoop`'s
+`load_wnba_stats_*()` loaders read.
+
+> **Producer is Python (`python/wnba_data_build/`); this repo does not scrape.**
+> Capture lives in the sibling **`wehoop-wnba-stats-raw`**, which holds a full
+> 1997–2026 raw store (`wnba_stats/json/{endpoint}/{season}/`). Two claims that
+> were true once and are now false: that this is "the R-side parser", and that
+> the raw sibling "ships no scraper".
+>
+> **The R stage scripts and both R processors were deleted** when the Python
+> producer took over — `R/wnba_stats_01_pbp.R` … `10_officials.R`,
+> `scripts/daily_wnba_stats_R_processor.sh`,
+> `scripts/annual_wnba_stats_draft_R_processor.sh`. `R/` retains three helpers
+> (`utils.R`, `manifest_upload_helper.R`, `minify_json_folders.R`).
 
 `DESCRIPTION`: package `wehoop.wnbastats` (≠ repo name; namespace string used in
-scripts/logs — don't rename one without the other), CC BY 4.0, R >= 4.0.0. Not a
-CRAN package — the Rscripts just run; treat `DESCRIPTION` as a `devtools::install_deps()` manifest.
+logs — don't rename one without the other), CC BY 4.0. Vestigial: not a CRAN
+package and no longer an R pipeline; treat it as a dependency manifest for the
+remaining helpers.
 
-## Commands (VERIFIED)
-R-side scripts take **positional** args `<START> <END>` (and `<RESCRAPE>` for
-`01_pbp`); the shell processors take `-s/-e/-r` flags. Do not port the flag
-style into the Rscripts without also editing the processors.
+## Commands
 ```sh
-bash scripts/daily_wnba_stats_R_processor.sh -s 2025 -e 2025 -r false   # CI daily entry
-bash scripts/annual_wnba_stats_draft_R_processor.sh -s 2025 -e 2025     # draft (annual, split out)
-Rscript R/wnba_stats_01_pbp.R 2025 2025 false   # 3rd arg = RESCRAPE (default true)
-Rscript R/wnba_stats_02_rosters.R 2025 2025     # 02..10 ignore RESCRAPE
-Rscript ops/init/0000_create_wehoop_releases_init.R    # one-off: create/refresh release tags
-Rscript ops/init/0001_push_existing_release_data.R     # one-off: re-push on-disk artifacts
+bash scripts/daily_wnba_stats_python_processor.sh -s 2025 -e 2025   # daily entry
+python -m wnba_data_build --root <wehoop-wnba-stats-raw> \
+    --seasons 2025 --out wnba_stats --publish                       # direct
+python -m wnba_data_build --root <...> --seasons 2025 --out wnba_stats
+                                                     # omit --publish = dry run
+bash scripts/leaguedash_backfill.sh                  # checkpointed backfill
+Rscript ops/init/0000_create_wehoop_releases_init.R  # one-off: create release tags
+Rscript ops/init/0001_push_existing_release_data.R   # one-off: re-push on-disk artifacts
 ```
-`R/wnba_stats_{01_pbp,02_rosters,03_player_season_stats,04_lineups,05_team_season_stats,06_standings,07_draft,08_shots,09_game_rosters,10_officials}.R`.
-`RESCRAPE=false` reads the JSON cache instead of re-hitting the API.
+Seasons are **calendar years** here (no October rollover — the NBA sibling's
+end-year span convention does not apply).
 
 ## Inputs / Outputs
 - Artifacts land under `wnba_stats/` as rds + parquet (plus per-game JSON for PBP /

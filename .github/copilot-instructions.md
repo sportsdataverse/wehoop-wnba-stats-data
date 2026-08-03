@@ -2,121 +2,101 @@
 
 ## Project Context
 
-This repo is the R-side parser + uploader for the **WNBA Stats API**
+This repo is the parser + uploader for the **WNBA Stats API**
 (source: <https://stats.wnba.com/>). Per-season artifacts (PBP,
 rosters, lineups, player and team season stats, standings, draft,
-shots, per-game rosters, officials) are compiled by
-`R/wnba_stats_*.R` and pushed to release tags on
-`sportsdataverse/sportsdataverse-data` via `piggyback::pb_upload()`.
+shots, per-game rosters, officials) are compiled and pushed to release
+tags on `sportsdataverse/sportsdataverse-data`.
 
-Package metadata (per `DESCRIPTION`):
-- **Package**: `wehoop.wnbastats`
-- **Version**: 0.0.1
-- **License**: CC BY 4.0
-- **R**: >= 4.0.0
+Pipeline: `stats.wnba.com -> wehoop-wnba-stats-raw -> wehoop-wnba-stats-data [HERE] -> sportsdataverse-data releases -> wehoop`.
 
-Pipeline: `stats.wnba.com -> wehoop-wnba-stats-data [HERE] -> sportsdataverse-data releases -> wehoop`.
+> **The producer is Python: `python/wnba_data_build/`.** It reads the unified
+> raw store in the sibling **`wehoop-wnba-stats-raw`** repo
+> (`wnba_stats/json/{endpoint}/{season}/`, a full 1997–2026 capture) and
+> publishes with `python -m wnba_data_build --publish`.
+>
+> **The R stage scripts no longer exist.** `R/wnba_stats_01_pbp.R` …
+> `R/wnba_stats_10_officials.R`, `scripts/daily_wnba_stats_R_processor.sh` and
+> `scripts/annual_wnba_stats_draft_R_processor.sh` were all removed when the
+> Python producer took over; this file described them long after. `R/` now
+> holds three helpers only (`utils.R`, `manifest_upload_helper.R`,
+> `minify_json_folders.R`) and `DESCRIPTION` is a vestigial dependency
+> manifest. Do not reintroduce an R scrape path here.
 
-Two producers now feed the release tags. The **R** scripts here scrape
-`stats.wnba.com` directly (per-game JSON cached under `wnba_stats/pbp/json/`,
-gated by `RESCRAPE`). Separately, the **Python** reshaper
-(`python/wnba_data_build/`) rebuilds the same datasets from the unified raw
-store in the sibling **`wehoop-wnba-stats-raw`** repo
-(`wnba_stats/json/{endpoint}/{season}/`) and publishes via
-`python -m wnba_data_build --publish` / `scripts/daily_wnba_stats_python_processor.sh`
-(the sdv-orch `data.build_py` stage). The earlier note that "there is no
-wehoop-wnba-stats-raw" is obsolete — that repo now holds a full 1997–2026 raw
-capture that the Python path reads.
+`python/wnba_model_publish/` is the separate model-publish CLI
+(`wnba_models.yml`, dispatch-only, `dry_run` default true) — see the model
+registry in the README.
 
 ## Repository Workflow
 
 - Branch from `main`; `main` is the default and release branch.
-- The CI entry point is `scripts/daily_wnba_stats_R_processor.sh -s <START> -e <END> -r <true|false>`.
-- Annual draft runs separately via `scripts/annual_wnba_stats_draft_R_processor.sh`.
-- The R scripts here are runnable Rscripts, **not** an installable R
-  package, despite the `DESCRIPTION`. Treat `DESCRIPTION` as a
-  dependency manifest for `devtools::install_deps()`.
+- The CI entry point is `.github/workflows/daily_wnba_stats.yml`, which calls
+  `scripts/daily_wnba_stats_python_processor.sh -s <START> -e <END>`.
+- Annual draft runs separately on `.github/workflows/annual_wnba_stats_draft.yml`.
+- **Seasons are calendar years** (no October rollover — the WNBA convention,
+  unlike the NBA sibling's end-year span). The daily workflow derives the
+  default window from `date -u +%Y`.
+- This repo does not scrape. Capture belongs to `wehoop-wnba-stats-raw`; if a
+  season is missing here, check the raw store first.
 
 ## Build & Development Commands
 
-`R/wnba_stats_*.R` scripts take **positional args**
-(`<start_year> <end_year>`), not the `-s`/`-e` flag style used by the
-sister ESPN parsers in `wehoop-wnba-data`.
-
 ```sh
-# Daily orchestrator (CI entry point)
-bash scripts/daily_wnba_stats_R_processor.sh -s 2025 -e 2025 -r false
+# Daily flow (droplet / local entry point; the workflow calls this same script)
+bash scripts/daily_wnba_stats_python_processor.sh -s 2025 -e 2025
 
-# Annual draft (excluded from daily)
-bash scripts/annual_wnba_stats_draft_R_processor.sh -s 2025 -e 2025
+# Direct invocation
+python -m wnba_data_build --root <path-to-wehoop-wnba-stats-raw> \
+    --seasons 2025 --out wnba_stats --publish
 
-# Individual parsers (positional args)
-Rscript R/wnba_stats_01_pbp.R                 2025 2025 false  # 3rd arg = RESCRAPE
-Rscript R/wnba_stats_02_rosters.R             2025 2025
-Rscript R/wnba_stats_03_player_season_stats.R 2025 2025
-Rscript R/wnba_stats_04_lineups.R             2025 2025
-Rscript R/wnba_stats_05_team_season_stats.R   2025 2025
-Rscript R/wnba_stats_06_standings.R           2025 2025
-Rscript R/wnba_stats_07_draft.R               2025 2025  # ANNUAL only
-Rscript R/wnba_stats_08_shots.R               2025 2025
-Rscript R/wnba_stats_09_game_rosters.R        2025 2025
-Rscript R/wnba_stats_10_officials.R           2025 2025
+# Backfill a leaguedash season range (checkpointed; .done_<season> on rc 0 only)
+bash scripts/leaguedash_backfill.sh
 
-# One-off helpers
+# One-off helpers (already run; kept for reference)
 Rscript ops/init/0000_create_wehoop_releases_init.R    # Idempotent release creation
 Rscript ops/init/0001_push_existing_release_data.R     # Re-push everything on disk
 ```
 
-`RESCRAPE=true` (default for `01_pbp.R`) re-fetches every game from
-the API and overwrites `wnba_stats/pbp/json/`. `RESCRAPE=false` reads
-the on-disk JSON when present and skips the API call for cached games.
-The other parsers ignore `RESCRAPE`.
+Omit `--publish` for a local build with no release upload — that is the
+dry-run equivalent, and the right default while iterating.
 
 ## Code Style
 
-- **Library loading** uses `lib.loc = Sys.getenv("R_LIBS")` inside
-  `suppressPackageStartupMessages(suppressMessages(...))`. CI exports
-  `R_LIBS` to a project-local path; every script must respect it so
-  it doesn't pick up a stale system library.
-- **Proxy acquisition** is centralised in `R/utils.R::load_proxies()`
-  (env vars first, then `../../proxylist.csv`, then unproxied). Every
-  API call goes through `select_proxy(load_proxies())`.
-- **Per-call `tryCatch`** with 3-attempt proxy rotation is mandatory
-  for every WNBA Stats API request. A flake should cause a one-game
-  miss, not a whole-season abort.
+- **polars 1.x modern API only**; snake_case; typed new modules. Read the
+  raw store, reshape, write — no HTTP in this repo.
 - **Output paths** all land under `wnba_stats/`. Local artifacts are
-  rds + parquet (plus per-game JSON for PBP and player game logs).
-  Release uploads go via `piggyback::pb_upload()` inside
-  `insistent_save()` retry wrappers.
-- **cli messaging**: `cli::cli_alert_*` for status, `cli::cli_progress_*`
-  for per-season loops. Theme files in `themes/` set defaults.
-- **Logging**: every parser tees output to
-  `logs/wehoop_wnba_stats_*_logfile_<year>.log`. `.gitignore` ignores
-  `*.log` globally and re-includes `logs/*.log`. The shell processors
-  commit data and log as **separate commits** -- tee writes to `/tmp`
-  during the work block so in-flight `git pull` calls don't collide.
+  parquet + rds + csv; the rds is written natively by the sdv-py writer
+  (there is no `serialize_rds.R` shim — that pattern is retired
+  ecosystem-wide).
+- **Exit codes must survive `tee`.** The driver pipes each season through
+  `tee` and recovers the real status from `PIPESTATUS[0]`; a trailing `echo`
+  inside the pipeline masked a failing build and reported every season green
+  (the same bug was fixed in the NBA sibling). Don't reintroduce a trailing
+  command after the build inside a teed subshell.
+- **Logging**: the driver tees to
+  `logs/wehoop_wnba_stats_python_logfile_<year>.log`. `.gitignore` ignores
+  `*.log` globally but re-includes `logs/*.log`, so that path is trackable —
+  the committed logs there are R-era leftovers; the Python driver writes them
+  and commits only `wnba_stats/`.
 
 ## HTTP / Messaging Conventions
 
-- Calls go through the upstream `wehoop` R package
-  (`wehoop::wnba_pbp()`, `wehoop::wnba_commonteamroster()`, etc.) --
-  never hand-roll a WNBA Stats API request in this repo.
-- Fix WNBA Stats parsing bugs in `wehoop`, not here.
-- `wnba_stats_01_pbp.R` relies on
-  `wehoop::wnba_pbp(game_id, on_court = TRUE, version = "v3")` which
-  already returns V2-shape rows with on-court lineups populated via
-  `wnba_gamerotation`. Don't reintroduce the old
-  substitution-tracking code path.
+- **This repo makes no WNBA Stats API calls.** Capture lives in
+  `wehoop-wnba-stats-raw`, whose scrape layer is the shared
+  `sportsdataverse.scrape.stats` engine (TLS-impersonating `curl_cffi`
+  transport — `stats.wnba.com` silently stalls on plain `requests`).
+- Fix WNBA Stats *parsing* bugs in `sportsdataverse-py`, and *capture* bugs
+  in the shared engine, not here.
 
 ## Daily Umbrella Workflow
 
 `.github/workflows/daily_wnba_stats.yml` invokes
-`scripts/daily_wnba_stats_R_processor.sh` on a cron, looping seasons
-through every per-dataset parser **except** `07_draft.R`. The draft
-has annual cadence -- it runs separately on
-`annual_wnba_stats_draft_R_processor.sh`.
+`scripts/daily_wnba_stats_python_processor.sh` on a cron, looping seasons
+through `python -m wnba_data_build --publish`. The draft has annual cadence
+and runs separately on `.github/workflows/annual_wnba_stats_draft.yml`.
 
-- Two commits per season: the data update and the log update.
+- One commit per season (`git add wnba_stats/`). The R processors made a
+  second log commit; the Python driver does not.
 - Commit message format `WNBA Stats Data Update (Start: YYYY End: YYYY)`
   is **load-bearing** -- downstream tooling parses the year range. Do
   not reword.
