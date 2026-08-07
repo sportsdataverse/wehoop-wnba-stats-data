@@ -17,11 +17,12 @@ invents a flag. The flag SET is derived from the ``DATASETS`` registry
 (``level == "game"``), never hand-listed, so a dataset added to the registry
 gets its flag with no wiring here.
 
-WNBA divergences from the NBA twin: the yearly schedule files are TEAM-level
-``leaguegamelog`` frames (two rows per game, R-era uppercase columns,
-``GAME_ID``), so :func:`game_level` pivots them to one row per game before the
-union; and seasons are BARE CALENDAR YEARS ("2023" from ``SEASON_ID`` 22023),
-never the NBA span form ("2023-24").
+WNBA divergences from the NBA twin: the yearly schedule files are
+``leaguegamelog`` frames of mixed grain — two TEAM rows per game plus the
+player game-log rows (``measure_type == "p"``) — so :func:`game_level` keeps
+the team rows and pivots them to one row per game before the union; and
+seasons are BARE CALENDAR YEARS ("2023" from ``season_id`` 22023), never the
+NBA span form ("2023-24").
 
 Game ids are pinned ``Utf8``: WNBA ids carry the "10" league prefix
 ("1022300001"); an int-typed source is restored via ``zfill(10)`` rather than
@@ -44,8 +45,8 @@ GAME_LEVEL: tuple[Dataset, ...] = tuple(d for d in DATASETS if d.level == "game"
 #: Per-game raw files: "10" league prefix + 8 digits.
 _GAME_FILE_RE = re.compile(r"^(10\d{8})\.json$")
 
-#: The yearly schedule files keep the R-era leaguegamelog casing.
-_YEARLY_GID = "GAME_ID"
+#: The yearly schedule files use the builder's snake_case leaguegamelog columns.
+_YEARLY_GID = "game_id"
 
 
 def flag_columns() -> tuple[str, ...]:
@@ -133,19 +134,23 @@ def stamp_from_raw(schedule: pl.DataFrame, endpoint_gids: dict[str, set[str]]) -
 
 
 def game_level(yearly: pl.DataFrame) -> pl.DataFrame:
-    """Pivot a team-level yearly schedule (two rows per game) to one row per game.
+    """Pivot a yearly schedule's TEAM rows (two per game) to one row per game.
 
-    Season and season_type_id come from ``SEASON_ID`` (leading digit = type,
-    remainder = calendar year) — the rows are the truth, not the file label.
-    ``in_*`` flags are stamped per game id, so ``any()`` across the two team
-    rows is exact.
+    The builder's yearly frame mixes grains: team game-log rows plus player
+    game-log rows (``player_id`` set, ``measure_type == "p"``); only the team
+    rows describe the schedule. Season and season_type_id come from
+    ``season_id`` (leading digit = type, remainder = calendar year) — the rows
+    are the truth, not the file label. ``in_*`` flags are stamped per game id,
+    so ``any()`` across a game's rows is exact.
     """
     flags = [c for c in yearly.columns if c.startswith("in_")]
+    if "player_id" in yearly.columns:
+        yearly = yearly.filter(pl.col("player_id").is_null())
     base = yearly.with_columns(
         _utf8_game_id(pl.col(_YEARLY_GID), yearly.schema[_YEARLY_GID]).alias("game_id"),
-        pl.col("SEASON_ID").str.slice(1).cast(pl.Int64).cast(pl.Utf8).alias("season"),
-        pl.col("SEASON_ID").str.slice(0, 1).alias("season_type_id"),
-        pl.col("GAME_DATE").str.to_date("%Y-%m-%d", strict=False).alias("game_date"),
+        pl.col("season_id").str.slice(1).cast(pl.Int64).cast(pl.Utf8).alias("season"),
+        pl.col("season_id").str.slice(0, 1).alias("season_type_id"),
+        pl.col("game_date").str.to_date("%Y-%m-%d", strict=False).alias("game_date"),
     )
     out = base.group_by("game_id", maintain_order=True).agg(
         pl.col("season").first(),
@@ -154,15 +159,15 @@ def game_level(yearly: pl.DataFrame) -> pl.DataFrame:
         *[pl.col(c).any() for c in flags],
     )
     for side, mask in (
-        ("home", pl.col("MATCHUP").str.contains(" vs")),
-        ("away", pl.col("MATCHUP").str.contains("@")),
+        ("home", pl.col("matchup").str.contains(" vs")),
+        ("away", pl.col("matchup").str.contains("@")),
     ):
         team = base.filter(mask).select(
             "game_id",
-            pl.col("TEAM_ID").cast(pl.Int64).alias(f"{side}_team_id"),
-            pl.col("TEAM_ABBREVIATION").alias(f"{side}_team_abbreviation"),
-            pl.col("TEAM_NAME").alias(f"{side}_team_name"),
-            pl.col("PTS").cast(pl.Int64, strict=False).alias(f"{side}_team_score"),
+            pl.col("team_id").cast(pl.Int64).alias(f"{side}_team_id"),
+            pl.col("team_abbreviation").alias(f"{side}_team_abbreviation"),
+            pl.col("team_name").alias(f"{side}_team_name"),
+            pl.col("pts").cast(pl.Int64, strict=False).alias(f"{side}_team_score"),
         )
         out = out.join(team, on="game_id", how="left")
     return out

@@ -5,10 +5,10 @@ exactly mirrors the ``DATASETS`` registry's game-level keys — a dataset added
 to the registry gets its flag with no edit here, and a hand-listed flag with
 no registry entry cannot exist.
 
-WNBA divergences locked here: yearly schedule files are TEAM-level
-leaguegamelog frames (two rows per game, uppercase columns) pivoted to game
-level by the master build, and seasons are bare calendar years derived from
-``SEASON_ID`` ("22023" -> "2023"), never a span.
+WNBA divergences locked here: yearly schedule files are mixed-grain
+leaguegamelog frames (two TEAM rows per game plus player game-log rows)
+pivoted to game level by the master build, and seasons are bare calendar
+years derived from ``season_id`` ("22023" -> "2023"), never a span.
 """
 
 from __future__ import annotations
@@ -47,37 +47,30 @@ GAME_LEVEL_COLUMNS = (
 )
 
 _TEAMS = {
-    "1022300001": (("1611661319", "LVA", "Las Vegas Aces"), ("1611661328", "SEA", "Seattle Storm")),
+    "1022300001": ((1611661319, "LVA", "Las Vegas Aces"), (1611661328, "SEA", "Seattle Storm")),
     "1022300002": (
-        ("1611661313", "NYL", "New York Liberty"),
-        ("1611661322", "WAS", "Washington Mystics"),
+        (1611661313, "NYL", "New York Liberty"),
+        (1611661322, "WAS", "Washington Mystics"),
     ),
     "1042300101": (
-        ("1611661319", "LVA", "Las Vegas Aces"),
-        ("1611661313", "NYL", "New York Liberty"),
+        (1611661319, "LVA", "Las Vegas Aces"),
+        (1611661313, "NYL", "New York Liberty"),
     ),
-    "1022400001": (("1611661319", "LVA", "Las Vegas Aces"), ("1611661328", "SEA", "Seattle Storm")),
+    "1022400001": ((1611661319, "LVA", "Las Vegas Aces"), (1611661328, "SEA", "Seattle Storm")),
 }
 
 
 def _yearly(year: str, gids: list[str]) -> pl.DataFrame:
-    """Team-level leaguegamelog rows: two per game, the committed-file shape."""
+    """Mixed-grain leaguegamelog rows, the committed-file shape: two TEAM rows
+    per game plus a player game-log row (``player_id`` set) that the game-level
+    pivot must drop."""
     rows = []
     for i, gid in enumerate(gids):
         sid = ("2" if i < len(gids) - 1 else "4") + year
         (home_id, home_abbr, home_name), (away_id, away_abbr, away_name) = _TEAMS[gid]
-        rows.append(
-            [
-                sid,
-                home_id,
-                home_abbr,
-                home_name,
-                gid,
-                f"{year}-05-19",
-                f"{home_abbr} vs. {away_abbr}",
-                "88",
-            ]
-        )
+        date = f"{year}-05-19"
+        home_vs = f"{home_abbr} vs. {away_abbr}"
+        rows.append([sid, home_id, home_abbr, home_name, gid, date, home_vs, 88, None, None])
         rows.append(
             [
                 sid,
@@ -85,29 +78,35 @@ def _yearly(year: str, gids: list[str]) -> pl.DataFrame:
                 away_abbr,
                 away_name,
                 gid,
-                f"{year}-05-19",
+                date,
                 f"{away_abbr} @ {home_abbr}",
-                "84",
+                84,
+                None,
+                None,
             ]
         )
+        # Player game-log row: same game id, must not double the pivot.
+        rows.append([sid, home_id, home_abbr, home_name, gid, date, home_vs, 21, 203400, "p"])
     return pl.DataFrame(
         rows,
-        schema=[
-            "SEASON_ID",
-            "TEAM_ID",
-            "TEAM_ABBREVIATION",
-            "TEAM_NAME",
-            "GAME_ID",
-            "GAME_DATE",
-            "MATCHUP",
-            "PTS",
-        ],
+        schema={
+            "season_id": pl.Utf8,
+            "team_id": pl.Int64,
+            "team_abbreviation": pl.Utf8,
+            "team_name": pl.Utf8,
+            "game_id": pl.Utf8,
+            "game_date": pl.Utf8,
+            "matchup": pl.Utf8,
+            "pts": pl.Int64,
+            "player_id": pl.Int64,
+            "measure_type": pl.Utf8,
+        },
         orient="row",
     )
 
 
 def _flagged(frame: pl.DataFrame, flag: str, gids: list[str]) -> pl.DataFrame:
-    return frame.with_columns(pl.col("GAME_ID").is_in(gids).alias(flag))
+    return frame.with_columns(pl.col("game_id").is_in(gids).alias(flag))
 
 
 def test_flag_columns_exactly_mirror_the_registry():

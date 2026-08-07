@@ -23,8 +23,9 @@ files — the origin of every flag — by one of two sources:
 
 WNBA seasons are bare calendar years (``--season 2025`` targets
 ``wnba_stats_schedule_2025.parquet``) — no span conversion, unlike the NBA
-twin. The yearly files are team-level leaguegamelog frames; the master build
-pivots them to one row per game.
+twin. The yearly files are mixed-grain leaguegamelog frames (team rows plus
+player game-log rows); the master build keeps the team rows and pivots them
+to one row per game.
 
 Stage 99 is not a dataset shim: it has no registry entry and no ``DATASET``
 constant. Number 99 is reserved for the schedule master (spec D16/D34).
