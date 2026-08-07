@@ -1,0 +1,150 @@
+# Column descriptions for the released WNBA stats datasets (spec D43).
+#
+# Authored for THIS league against the real stats.wnba.com payloads and the
+# committed/published parquets. Never borrowed from another sport's schema
+# store -- a borrowed description is an invented one (the WBB pilot's
+# borrowed store produced `assists` = "Assisted tackles").
+#
+# Keyed by column NAME: a column means the same thing in every dataset that
+# carries it (`game_id` is always the padded stats.wnba.com game id). A
+# column with no entry renders as an empty cell in the generated docs, which
+# is an honest TODO. Priority coverage: pbp, schedules, the schedule-master
+# artifacts, and the shared identity/join keys.
+
+# --- identity / join keys -----------------------------------------------------
+game_id: >-
+  stats.wnba.com game id, 10-char string carrying the "10" WNBA league prefix
+  ("1022400001"); pinned Utf8 so it never round-trips through int.
+season: >-
+  Season the row belongs to, as a BARE calendar year ("2023") — the WNBA
+  season fits one calendar year, unlike the NBA span form.
+season_id: >-
+  stats.wnba.com composite season id: season-type digit + year
+  ("22023" = 2023 regular season).
+season_type: >-
+  Season type the capture was made under ("Regular Season", "Playoffs", ...).
+season_type_id: >-
+  Leading digit of season_id encoding the season type (2 = regular season,
+  4 = playoffs).
+league_id: >-
+  stats.wnba.com league id ("10" = WNBA).
+team_id: >-
+  stats.wnba.com team id (Int64, e.g. 1611661313 = New York Liberty).
+person_id: >-
+  stats.wnba.com person id of the player (or official) the row describes; the
+  same id space as player_id.
+player_id: >-
+  stats.wnba.com person id of the player (Int64); joins rosters, boxscores,
+  game logs and pbp (`person_id`).
+player_name: >-
+  Player display name as the stats API ships it ("Breanna Stewart").
+official_id: >-
+  stats.wnba.com person id of the game official.
+team_abbreviation: >-
+  Three-letter team code ("NYL").
+team_tricode: >-
+  Three-letter team code as the v3 endpoints name it ("NYL").
+team_name: >-
+  Team nickname or full name as the source endpoint ships it.
+team_city: >-
+  Team city name.
+
+# --- pbp (playbyplayv3) -------------------------------------------------------
+action_number: >-
+  Ordinal of the action within the game as numbered by the stats feed;
+  monotone but not gapless (video-only actions are skipped).
+action_id: >-
+  Feed-internal id of the action row.
+clock: >-
+  Game clock at the action in ISO-8601 duration form ("PT08M12.00S").
+period: >-
+  Period number (1-4; 5+ = overtime).
+player_name_i: >-
+  Abbreviated player name ("B. Stewart").
+x_legacy: >-
+  Shot x-coordinate in the legacy stats coordinate frame (tenths of feet from
+  the basket centerline; null for non-shots).
+y_legacy: >-
+  Shot y-coordinate in the legacy coordinate frame (tenths of feet from the
+  baseline; null for non-shots).
+shot_distance: >-
+  Shot distance in feet (0 for non-shots).
+shot_result: >-
+  "Made" / "Missed" for shot actions; empty otherwise.
+is_field_goal: >-
+  1 when the action is a field-goal attempt, else 0.
+score_home: >-
+  Home score after the action (string; carried forward between scores).
+score_away: >-
+  Away score after the action (string; carried forward between scores).
+points_total: >-
+  Points the acting team has scored through this action.
+location: >-
+  Which side the acting team is on: "h" (home) or "v" (visitor).
+description: >-
+  Human-readable action narrative from the feed.
+action_type: >-
+  Action family ("Made Shot", "Rebound", "Turnover", "Foul", ...).
+sub_type: >-
+  Action detail within the family ("Jump Shot", "Offensive", ...).
+shot_value: >-
+  Point value of a shot attempt (2 or 3; 1 for free throws, 0 for non-shots).
+video_available: >-
+  1 when the feed links video for the action/game row.
+
+# --- schedules / game logs (leaguegamelog, mixed grain) -----------------------
+game_date: >-
+  Game date as the source ships it (calendar date, US Eastern; a Date column
+  in the schedule master).
+matchup: >-
+  Matchup string from the log ("NYL @ LVA" away, "NYL vs. LVA" home).
+wl: >-
+  Result from the row team's perspective: "W" or "L".
+min: >-
+  Team (or player) minutes in the log row.
+fgm: Field goals made.
+fga: Field goals attempted.
+fg_pct: Field-goal percentage (0-1).
+fg3m: Three-point field goals made.
+fg3a: Three-point field goals attempted.
+fg3_pct: Three-point percentage (0-1).
+ftm: Free throws made.
+fta: Free throws attempted.
+ft_pct: Free-throw percentage (0-1).
+oreb: Offensive rebounds.
+dreb: Defensive rebounds.
+reb: Total rebounds.
+ast: Assists.
+stl: Steals.
+blk: Blocks.
+tov: Turnovers.
+pf: Personal fouls.
+pts: Points.
+plus_minus: >-
+  Point differential while on the floor (player rows) or final margin
+  (team rows).
+fantasy_pts: >-
+  WNBA fantasy points for the player log row (null on team rows).
+measure_type: >-
+  Grain marker of the yearly schedule file's mixed leaguegamelog capture:
+  "t" rows are the two per-team game rows, "p" rows are player game logs.
+
+# --- schedule master / games_in_data_repo (D34) -------------------------------
+in_pbp: >-
+  True when the game's play-by-play made it into a compiled season release.
+in_game_rosters: >-
+  True when the game is present in the compiled game_rosters release.
+in_officials: >-
+  True when the game is present in the compiled officials release.
+in_player_boxscores: >-
+  True when the game is present in the compiled player_boxscores release.
+in_team_boxscores: >-
+  True when the game is present in the compiled team_boxscores release.
+home_team_id: stats.wnba.com team id of the home team.
+away_team_id: stats.wnba.com team id of the away team.
+home_team_name: Home team name.
+away_team_name: Away team name.
+home_team_abbreviation: Home team three-letter code.
+away_team_abbreviation: Away team three-letter code.
+home_team_score: Home final (or current) score.
+away_team_score: Away final (or current) score.
