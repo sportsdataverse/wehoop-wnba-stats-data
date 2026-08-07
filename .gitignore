@@ -86,3 +86,5 @@ proxylist.csv
 **/.superpowers/
 .venv/
 **/.venv/
+v3_staging/
+.wnba_pipeline_cache/
