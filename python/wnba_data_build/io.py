@@ -13,11 +13,14 @@ All three are **release artifacts**: they ship to the ``wnba_stats_*`` tags on
 
 from __future__ import annotations
 
+import os
 from datetime import datetime, timezone
 from pathlib import Path
 
 import polars as pl
 from sportsdataverse._rds import write_rds
+
+from wnba_data_build.models import check_stem
 
 # The R producers stamp `make_wehoop_data()` before saveRDS, so the rds carries
 # the wehoop S3 chain — mirror it exactly (same vector as wehoop-wnba-data).
@@ -42,6 +45,15 @@ def write_release_formats(
     ``dest_dir`` is the per-tag release directory (flat, one dir per release
     tag), matching this repo's publish layout.
     """
+    # D39: frame-level schema assertion at the single write chokepoint. Drift
+    # is reported loudly but only blocks the write under the strict env toggle
+    # -- a stats.com column addition must not silently strand a daily publish.
+    problems = check_stem(stem, df)
+    for problem in problems:
+        print(f"::warning ::schema drift {stem}: {problem}")
+    if problems and os.environ.get("WNBA_DATA_SCHEMA_STRICT") == "1":
+        raise ValueError(f"schema drift for {stem}: {problems}")
+
     dest_dir.mkdir(parents=True, exist_ok=True)
     parquet_path = dest_dir / f"{stem}.parquet"
     rds_path = dest_dir / f"{stem}.rds"
