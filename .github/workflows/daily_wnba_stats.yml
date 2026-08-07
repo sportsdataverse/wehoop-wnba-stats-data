@@ -4,7 +4,9 @@ name: Update WNBA Stats Data
 # (its daily job commits the raw store before this cron); this job only
 # COMPILES + PUBLISHES: it reads the store over raw.githubusercontent.com,
 # builds parquet+rds+csv, and uploads to the wnba_stats_* release tags on
-# sportsdataverse-data. No stats.wnba.com calls, no commits. The retired R
+# sportsdataverse-data. No stats.wnba.com calls; the processor commits the
+# wnba_stats/ tree per season, and the schedule family (master + manifest +
+# coverage, spec D34) is committed by the step below. The retired R
 # chain (10 wnba_stats_*.R creation scripts + R processor) scraped live from
 # CI; the python registry covers all 15 datasets it produced.
 on:
@@ -61,3 +63,21 @@ jobs:
         run: |
           WEHOOP_WNBA_STATS_PYBIN="$(pwd)/.venv/bin/python" \
             bash scripts/daily_wnba_stats_python_processor.sh -s "$START_YEAR" -e "$END_YEAR"
+
+      # The schedule family (spec D34/D36): the processor's stage-99 steps
+      # restamp the built window's season schedule flags (committed with the
+      # per-season tree commit) and rebuild the master + games_in_data_repo
+      # manifest + coverage index AFTER the last season commit; commit those
+      # union artifacts here.
+      - name: Commit schedule master
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- wnba_stats/schedules/parquet \
+                     wnba_stats/wnba_stats_schedule_master.parquet \
+                     wnba_stats/wnba_stats_games_in_data_repo.parquet \
+                     wnba_stats/wnba_stats_schedule_coverage.parquet
+          git diff --cached --quiet || {
+            git commit -m "chore(schedule): refresh schedule master + coverage (${START_YEAR}-${END_YEAR})"
+            git push
+          }

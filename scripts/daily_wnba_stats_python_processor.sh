@@ -115,6 +115,15 @@ for i in $(seq "${START_YEAR}" "${END_YEAR}"); do
             cp -f "${f}" "${REPO_DIR}/wnba_stats/${key}/rds/"
         done
     done
+    # Stage 99 (spec D34), in-loop half: restamp this season's committed
+    # schedule file's in_* flags from the artifacts just built, BEFORE the
+    # scratch dir goes away (and before the season commit below picks the
+    # stamped file up). Non-fatal: a stamp failure must not fail the publish
+    # that already happened.
+    "${PYBIN}" python/wnba_stats_99_schedule_master_creation.py \
+        --built-dir "${OUT_DIR}" --season "${i}" --stamp-only \
+        2>&1 | tee -a "${LOGFILE}" \
+        || echo "schedule-master stamp failed for season ${i}" | tee -a "${LOGFILE}"
     rm -rf "${OUT_DIR}"
     # Mirror the R processor's run_and_commit: pull, add the tree, commit with
     # the load-bearing message format, rebase, push. Best-effort like R.
@@ -128,5 +137,13 @@ for i in $(seq "${START_YEAR}" "${END_YEAR}"); do
         git push >> /dev/null 2>&1 || true
     )
 done
+
+# Stage 99, union half: rebuild the master + games_in_data_repo manifest +
+# coverage index from ALL committed season schedules (the whole archive, not
+# just this run's window). Non-fatal for the same reason as above; the
+# workflow's schedule-family commit step (or the next season commit) picks
+# the artifacts up.
+"${PYBIN}" python/wnba_stats_99_schedule_master_creation.py \
+    || echo "schedule-master union failed"
 
 exit "${ANY_FAILED}"
