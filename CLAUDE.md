@@ -31,6 +31,7 @@ python -m wnba_data_build --root <wehoop-wnba-stats-raw> \
 python -m wnba_data_build --root <...> --seasons 2025 --out wnba_stats
                                                      # omit --publish = dry run
 bash scripts/leaguedash_backfill.sh                  # checkpointed backfill
+bash scripts/run_v3_backfill.sh -s 1997 -e 2026      # Program V v3 backfill (resumable)
 Rscript ops/init/0000_create_wehoop_releases_init.R  # one-off: create release tags
 Rscript ops/init/0001_push_existing_release_data.R   # one-off: re-push on-disk artifacts
 ```

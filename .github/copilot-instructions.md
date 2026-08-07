@@ -52,6 +52,10 @@ python -m wnba_data_build --root <path-to-wehoop-wnba-stats-raw> \
 # Backfill a leaguedash season range (checkpointed; .done_<season> on rc 0 only)
 bash scripts/leaguedash_backfill.sh
 
+# Program V v3 backfill -> v3_staging/ (resumable; verify with the section-10.3 gate)
+bash scripts/run_v3_backfill.sh -s 1997 -e 2026
+python -m wnba_data_build.v3_gate -s 1997 -e 2026
+
 # One-off helpers (already run; kept for reference)
 Rscript ops/init/0000_create_wehoop_releases_init.R    # Idempotent release creation
 Rscript ops/init/0001_push_existing_release_data.R     # Re-push everything on disk
