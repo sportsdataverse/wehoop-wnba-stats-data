@@ -93,8 +93,11 @@ idempotent. Operator-run, not workflow-wired.
 - Artifacts land under `wnba_stats/` as rds + parquet (plus per-game JSON for PBP /
   player game logs). Anything destined for releases is uploaded via
   `piggyback::pb_upload()` wrapped in `insistent_save()` (`purrr::insistently`).
-- 15 release tags on `sportsdataverse/sportsdataverse-data` (created by
-  `ops/init/0000_create_wehoop_releases_init.R`): `wnba_stats_{schedules,pbp,player_game_logs,rosters,player_season_stats,lineups,team_season_stats,standings,draft,shots,game_rosters,officials,coaches,team_boxscores,player_boxscores}`.
+- 17 release tags on `sportsdataverse/sportsdataverse-data` (created by
+  `ops/init/0000_create_wehoop_releases_init.R`): `wnba_stats_{schedules,pbp,player_game_logs,rosters,player_season_stats,lineups,team_season_stats,standings,draft,shots,game_rosters,officials,coaches,team_boxscores,player_boxscores,possessions,game_lineups}`.
+  The last two are the Program V (D26d) cutover targets. **`run_v3_cutover.sh -x`
+  uploads but never creates a tag** — `gh release upload` fails on a missing
+  release, so run the init script first whenever the cutover gains a new target.
 
 ## Gotchas — stats.wnba.com handling (the non-obvious part)
 - **Headers are load-bearing** and live in `wehoop` (`R/utils_wnba_stats.R`,

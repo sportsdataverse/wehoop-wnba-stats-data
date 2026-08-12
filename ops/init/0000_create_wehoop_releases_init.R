@@ -54,3 +54,10 @@ create_release("wnba_stats_game_rosters",        "WNBA Game Rosters Data (from s
 create_release("wnba_stats_officials",           "WNBA Officials Data (from stats.wnba.com)")
 create_release("wnba_stats_coaches",             "WNBA Coaches Data (from stats.wnba.com)")
 create_release("wnba_stats_player_game_logs",    "WNBA Player Game Logs Data (from stats.wnba.com)")
+
+# Program V (D26d) cutover targets. `wnba_stats_game_lineups` is the PER-GAME
+# lineups dataset and is deliberately NOT `wnba_stats_lineups` above, which
+# carries the season-level leaguedashlineups dataset -- a different dataset,
+# not an older version of this one.
+create_release("wnba_stats_possessions",         "WNBA Possessions Data (from stats.wnba.com)")
+create_release("wnba_stats_game_lineups",        "WNBA Per-Game Lineups Data (from stats.wnba.com)")
