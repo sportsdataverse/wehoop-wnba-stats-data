@@ -60,6 +60,7 @@ python -m wnba_data_build.v3_gate -s 1997 -e 2026
 bash scripts/run_v3_cutover.sh -s 1997 -e 2026        # writes logs/v3_cutover_manifest_*.md
 bash scripts/run_v3_cutover.sh -s 1997 -e 2026 -x     # PUBLISH (destructive; read the manifest)
 bash scripts/run_v3_cutover.sh -R -x                  # SEPARATE step: retire the _v3 tags
+bash scripts/run_v3_cutover.sh -L -x                  # SEPARATE step: retire the LEGACY assets
 
 # One-off helpers (already run; kept for reference)
 Rscript ops/init/0000_create_wehoop_releases_init.R    # Idempotent release creation
@@ -79,6 +80,19 @@ updated-at, before touching anything. Uploads are per-file with a post-upload
 size verification and stop on the first mismatch; verified uploads are recorded
 in `v3_staging/.cutover_receipts.json` so a re-run is idempotent. Operator-run,
 not workflow-wired.
+
+Every artifact publishes in **three formats** — `parquet` + `rds` + `csv.gz`,
+derived from the staged parquet by `wnba_data_build/v3_formats.py`.
+`wehoop::load_wnba_*()` reads the `.rds`, which is written by
+`sportsdataverse._rds.write_rds` (no R) and verified by reading it back before
+upload. The publish is **additive**: the `wnba_`-prefixed assets land beside the
+legacy ones, so an all-`NEW` manifest is expected, the manifest carries a
+**SEASON-LABEL COLLISION** section pairing the two names covering each season,
+and each touched tag gets a generated `README.md`. The v3 per-game lineups go to
+`wnba_stats_game_lineups`, leaving the season-level `wnba_stats_lineups` dataset
+untouched. Retiring the `_v3` tags (`-R`) and retiring the legacy assets (`-L`,
+which refuses any season whose replacement is not verified in every format) are
+separate invocations, never bundled with the data upload or with each other.
 
 ## Code Style
 

@@ -49,10 +49,36 @@ previous bytes and `wehoop::load_wnba_*()` reads them.
 
 ```sh
 bash scripts/run_v3_cutover.sh -s 1997 -e 2026            # dry run; prints its own tail -f
-bash scripts/run_v3_cutover.sh -s 1997 -e 2026 -- --allow-diff 2011:schedule
+bash scripts/run_v3_cutover.sh -s 1997 -e 2026 -- --allow-diff 1999:play_by_play
 bash scripts/run_v3_cutover.sh -s 1997 -e 2026 -x         # PUBLISH (after reading the manifest)
 bash scripts/run_v3_cutover.sh -R -x                      # SEPARATE step: retire the _v3 tags
+bash scripts/run_v3_cutover.sh -L -x                      # SEPARATE step: retire the LEGACY assets
 ```
+
+**Three formats, always.** Every artifact publishes as `parquet` + `rds` +
+`csv.gz` (`wnba_data_build/v3_formats.py`). `wehoop::load_wnba_*()` reads the
+`.rds`, so a parquet-only publish ships data wehoop cannot open; the rds comes
+from `sportsdataverse._rds.write_rds` (byte-parity, no R / no `Rscript`) and is
+**verified by reading it back** — shape, column names, and per-column R vector
+type against the source parquet — before it can be uploaded. The csv is gzipped
+per the `ncaa-wbb-hoops-data` convention (GitHub's 2 GiB per-asset limit).
+
+**The publish is ADDITIVE (decision B).** The `wnba_`-prefixed assets land *next
+to* the legacy ones rather than replacing them, so an all-`NEW` / 0-`REPLACE`
+manifest is the intended outcome, not a defect. The manifest's **SEASON-LABEL
+COLLISION** section enumerates, per tag, each new asset and the legacy asset
+covering the same season (here both carry the same number — `legacy_offset=0` —
+so the hazard is "which is authoritative", not "which year"; the NBA sibling's
+legacy names are START-year and really do disagree). A generated per-tag
+`README.md` is uploaded on `-x` to say so. `-L` (`--retire-legacy-assets`)
+removes the legacy names once consumers have migrated; it refuses any season
+whose replacement is not present and byte-verified on the tag **in every
+format**, and is never bundled with an upload or with `-R`.
+
+**The v3 per-game lineups publish to `wnba_stats_game_lineups`** (decision 3),
+not `wnba_stats_lineups` — the latter carries the season-level
+`leaguedashlineups` dataset from stage 04, a different dataset rather than an
+older version, and is left untouched.
 
 Read the manifest's **WOULD BE DESTROYED** and **SURVIVES UN-REPLACED** sections
 before ever passing `-x`. The gate hard-aborts on any unexplained `DIFF`; each
