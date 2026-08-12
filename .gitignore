@@ -88,3 +88,9 @@ proxylist.csv
 **/.venv/
 v3_staging/
 .wnba_pipeline_cache/
+
+# Build artifacts + publish receipts: the release is the distribution channel,
+# so built parquet/csv/rds are never committed here. `--out` defaults to
+# build_out/; the glob also covers a per-run dir like build_out_draft/.
+build_out*/
+.cutover_receipts.json

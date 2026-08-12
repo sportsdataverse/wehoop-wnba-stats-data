@@ -8,9 +8,9 @@ WNBA Stats Draft History from wehoop data repository — `drafthistory` (season-
 | **Release tag** | [`wnba_stats_draft`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_draft) |
 | **File stem** | `draft_{season}.{parquet,csv,rds}` |
 | **Seasons built** | — |
-| **Last published** | 2026-07-29 (newest release asset) |
+| **Last published** | 2026-08-12 (newest release asset) |
 | **Tag created** | 2026-05-11 |
-| **Release assets** | 11 |
+| **Release assets** | 95 |
 
 ## Automation
 
