@@ -32,11 +32,36 @@ python -m wnba_data_build --root <...> --seasons 2025 --out wnba_stats
                                                      # omit --publish = dry run
 bash scripts/leaguedash_backfill.sh                  # checkpointed backfill
 bash scripts/run_v3_backfill.sh -s 1997 -e 2026      # Program V v3 backfill (resumable)
+bash scripts/run_v3_cutover.sh -s 1997 -e 2026       # D26d cutover -- DRY RUN by default
 Rscript ops/init/0000_create_wehoop_releases_init.R  # one-off: create release tags
 Rscript ops/init/0001_push_existing_release_data.R   # one-off: re-push on-disk artifacts
 ```
 Seasons are **calendar years** here (no October rollover — the NBA sibling's
 end-year span convention does not apply).
+
+`scripts/run_v3_cutover.sh` (`python -m wnba_data_build.v3_cutover`) is the
+Program V (design §10, D26d) cutover publisher: it moves the staged `v3_staging/`
+parquets onto the **production** release tags. **It is a dry run by default** —
+it re-runs the §10.3 gate, writes a REPLACE MANIFEST into `logs/`, and uploads
+nothing. Publishing needs an explicit `-x` (`--execute`), which is the least
+reversible action in the program: overwriting a release asset destroys the
+previous bytes and `wehoop::load_wnba_*()` reads them.
+
+```sh
+bash scripts/run_v3_cutover.sh -s 1997 -e 2026            # dry run; prints its own tail -f
+bash scripts/run_v3_cutover.sh -s 1997 -e 2026 -- --allow-diff 2011:schedule
+bash scripts/run_v3_cutover.sh -s 1997 -e 2026 -x         # PUBLISH (after reading the manifest)
+bash scripts/run_v3_cutover.sh -R -x                      # SEPARATE step: retire the _v3 tags
+```
+
+Read the manifest's **WOULD BE DESTROYED** and **SURVIVES UN-REPLACED** sections
+before ever passing `-x`. The gate hard-aborts on any unexplained `DIFF`; each
+explained case needs its own `--allow-diff SEASON:FAMILY`, which is echoed into
+the manifest — there is no blanket ignore switch. Uploads run one asset at a time
+with a size re-check after each and stop on the first mismatch (`gh release
+upload` with many files has silently dropped large assets). Verified uploads land
+in `v3_staging/.cutover_receipts.json`, so a re-run skips them: resumable and
+idempotent. Operator-run, not workflow-wired.
 
 ## Inputs / Outputs
 - Artifacts land under `wnba_stats/` as rds + parquet (plus per-game JSON for PBP /

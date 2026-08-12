@@ -56,6 +56,11 @@ bash scripts/leaguedash_backfill.sh
 bash scripts/run_v3_backfill.sh -s 1997 -e 2026
 python -m wnba_data_build.v3_gate -s 1997 -e 2026
 
+# D26d cutover: staged v3 -> production release tags. DRY RUN unless -x is passed.
+bash scripts/run_v3_cutover.sh -s 1997 -e 2026        # writes logs/v3_cutover_manifest_*.md
+bash scripts/run_v3_cutover.sh -s 1997 -e 2026 -x     # PUBLISH (destructive; read the manifest)
+bash scripts/run_v3_cutover.sh -R -x                  # SEPARATE step: retire the _v3 tags
+
 # One-off helpers (already run; kept for reference)
 Rscript ops/init/0000_create_wehoop_releases_init.R    # Idempotent release creation
 Rscript ops/init/0001_push_existing_release_data.R     # Re-push everything on disk
@@ -63,6 +68,17 @@ Rscript ops/init/0001_push_existing_release_data.R     # Re-push everything on d
 
 Omit `--publish` for a local build with no release upload — that is the
 dry-run equivalent, and the right default while iterating.
+
+`scripts/run_v3_cutover.sh` (`python -m wnba_data_build.v3_cutover`) publishes the
+staged `v3_staging/` parquets onto the production release tags. It re-runs the
+§10.3 gate and hard-aborts on any unexplained `DIFF` (explained cases are
+allowlisted one at a time with `--allow-diff SEASON:FAMILY` and echoed into the
+manifest — there is no blanket ignore switch). It writes a REPLACE MANIFEST
+naming every asset it would overwrite, with the current remote size and
+updated-at, before touching anything. Uploads are per-file with a post-upload
+size verification and stop on the first mismatch; verified uploads are recorded
+in `v3_staging/.cutover_receipts.json` so a re-run is idempotent. Operator-run,
+not workflow-wired.
 
 ## Code Style
 
