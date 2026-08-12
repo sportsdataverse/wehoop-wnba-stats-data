@@ -40,9 +40,9 @@ Seasons are **calendar years** here (no October rollover — the NBA sibling's
 end-year span convention does not apply).
 
 `scripts/run_v3_cutover.sh` (`python -m wnba_data_build.v3_cutover`) is the
-Program V (design §10, D26d) cutover publisher: it moves the staged `v3_staging/`
+Program V (design §9, D26d) cutover publisher: it moves the staged `v3_staging/`
 parquets onto the **production** release tags. **It is a dry run by default** —
-it re-runs the §10.3 gate, writes a REPLACE MANIFEST into `logs/`, and uploads
+it re-runs the §9.3 gate, writes a REPLACE MANIFEST into `logs/`, and uploads
 nothing. Publishing needs an explicit `-x` (`--execute`), which is the least
 reversible action in the program: overwriting a release asset destroys the
 previous bytes and `wehoop::load_wnba_*()` reads them.

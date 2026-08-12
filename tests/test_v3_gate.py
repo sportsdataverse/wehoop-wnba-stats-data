@@ -1,4 +1,4 @@
-"""Offline unit tests for the section-10.3 gate diff logic (WNBA)."""
+"""Offline unit tests for the section-9.3 gate diff logic (WNBA)."""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Program V (design §10, D28) v3 backfill: D26b-named season parquets into staging.
+"""Program V (design §9, D28) v3 backfill: D26b-named season parquets into staging.
 
 WNBA mirror of ``hoopR-nba-stats-data``'s ``nba_data_build.v3_backfill``. Builds the
 four v3 families -- ``schedule`` / ``play_by_play`` / ``possessions`` / ``lineups`` --
@@ -12,7 +12,7 @@ for a range of seasons entirely from the committed ``wehoop-wnba-stats-raw`` sto
     wnba_possessions_2010.parquet
     wnba_lineups_2010.parquet
 
-The committed tree is untouched until the section-10.3 gate (:mod:`.v3_gate`)
+The committed tree is untouched until the section-9.3 gate (:mod:`.v3_gate`)
 passes; the cutover move + tag swap (D26d) is a separate operator decision.
 
 Resumability is two-level: a per-game frame cache (``{repo}/.wnba_pipeline_cache``)

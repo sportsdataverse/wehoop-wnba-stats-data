@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Program V (design section 10.4, D26d) operator runbook: the v3 -> production
+# Program V (design section 9.4, D26d) operator runbook: the v3 -> production
 # release-tag cutover.
 #
 # Usage: scripts/run_v3_cutover.sh [-s START] [-e END] [-x] [-R] [-L] [-- EXTRA...]
@@ -12,7 +12,7 @@
 #             wnba_-prefixed replacement is not present and verified in every format.
 #   --        everything after is passed through (e.g. --allow-diff 2011:schedule)
 #
-# DRY RUN IS THE DEFAULT. A dry run re-runs the section-10.3 gate, derives the
+# DRY RUN IS THE DEFAULT. A dry run re-runs the section-9.3 gate, derives the
 # release formats, writes the REPLACE MANIFEST to logs/, and uploads nothing.
 # Read the manifest's "WOULD BE DESTROYED" and "SEASON-LABEL COLLISION" sections
 # before ever passing -x -- overwriting a release asset destroys the previous

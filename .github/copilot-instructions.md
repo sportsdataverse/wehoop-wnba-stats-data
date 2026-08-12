@@ -52,7 +52,7 @@ python -m wnba_data_build --root <path-to-wehoop-wnba-stats-raw> \
 # Backfill a leaguedash season range (checkpointed; .done_<season> on rc 0 only)
 bash scripts/leaguedash_backfill.sh
 
-# Program V v3 backfill -> v3_staging/ (resumable; verify with the section-10.3 gate)
+# Program V v3 backfill -> v3_staging/ (resumable; verify with the section-9.3 gate)
 bash scripts/run_v3_backfill.sh -s 1997 -e 2026
 python -m wnba_data_build.v3_gate -s 1997 -e 2026
 
@@ -72,7 +72,7 @@ dry-run equivalent, and the right default while iterating.
 
 `scripts/run_v3_cutover.sh` (`python -m wnba_data_build.v3_cutover`) publishes the
 staged `v3_staging/` parquets onto the production release tags. It re-runs the
-§10.3 gate and hard-aborts on any unexplained `DIFF` (explained cases are
+§9.3 gate and hard-aborts on any unexplained `DIFF` (explained cases are
 allowlisted one at a time with `--allow-diff SEASON:FAMILY` and echoed into the
 manifest — there is no blanket ignore switch). It writes a REPLACE MANIFEST
 naming every asset it would overwrite, with the current remote size and

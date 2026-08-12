@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Program V (design section 10.4, D28) operator runbook: v3 backfill from the raw store.
+# Program V (design section 9.4, D28) operator runbook: v3 backfill from the raw store.
 #
 # Usage: scripts/run_v3_backfill.sh [-s START] [-e END] [-r]
 #   -s START  first season, bare year (default 1997)
