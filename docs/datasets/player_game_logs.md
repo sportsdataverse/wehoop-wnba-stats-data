@@ -16,6 +16,16 @@ WNBA Stats Player Game Logs from wehoop data repository — `leaguegamelog` (sea
 
 `.github/workflows/daily_wnba_stats.yml` — nightly scrape + build + publish (draft additionally refreshes annually via `annual_wnba_stats_draft.yml`). Runs `scripts/daily_wnba_stats_python_processor.sh`; the stage-99 schedule master is restamped at the end of every run.
 
+## Caveats
+
+**This frame carries team-level rows alongside player rows.** It is built from `leaguegamelog`, which stats.wnba.com publishes in both a player and a team flavour per season type, and the builder binds all of them. Team rows have a **null `player_id`** (roughly 9% of rows in every season) and a null `measure_type`; player rows carry `measure_type = "p"`. For a player-only view, filter:
+
+```python
+logs.filter(pl.col("player_id").is_not_null())
+```
+
+Both season types are present and tagged via `season_type` (`regular-season` / `playoffs`). This shape is long-standing rather than new; splitting the team rows into their own dataset would be a breaking change and is tracked as a follow-up, not done here.
+
 ## Columns
 
 | col_name | type | description |

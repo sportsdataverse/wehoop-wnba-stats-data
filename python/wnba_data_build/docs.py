@@ -101,6 +101,40 @@ AUTOMATION = (
 )
 
 
+#: Dataset key -> what a consumer needs to know before trusting the frame.
+#: Only for facts a reader cannot see from the column table or the coverage
+#: counts -- an era boundary, or a row population that is not what the dataset
+#: name implies.
+CAVEATS: dict[str, str] = {
+    "player_game_logs": (
+        "**This frame carries team-level rows alongside player rows.** It is "
+        "built from `leaguegamelog`, which stats.wnba.com publishes in both a "
+        "player and a team flavour per season type, and the builder binds all "
+        "of them. Team rows have a **null `player_id`** (roughly 9% of rows in "
+        "every season) and a null `measure_type`; player rows carry "
+        '`measure_type = "p"`. For a player-only view, filter:\n\n'
+        "```python\n"
+        'logs.filter(pl.col("player_id").is_not_null())\n'
+        "```\n\n"
+        "Both season types are present and tagged via `season_type` "
+        "(`regular-season` / `playoffs`). This shape is long-standing rather "
+        "than new; splitting the team rows into their own dataset would be a "
+        "breaking change and is tracked as a follow-up, not done here."
+    ),
+    "officials": (
+        "**Officials coverage begins in 2004.** stats.wnba.com publishes no "
+        "officiating crew for 1997, 2000 or 2003 at all, and only a handful of "
+        "stray games for 1998 (2 of 158), 1999 (1 of 203), 2001 (2 of 274) and "
+        "2002 (1 of 273) — those build into a well-formed 3-6 row frame that "
+        "looks like a season and is not one, so they are deliberately not "
+        "published. From 2004 coverage is complete: every game carries its "
+        "three officials (240 of 240 games in 2004). The floor is enforced by "
+        "`first_season` on the dataset registry entry, so a build for an "
+        "earlier season is refused rather than silently shipped."
+    ),
+}
+
+
 @lru_cache(maxsize=1)
 def _descriptions() -> dict[str, str]:
     """Column name -> description, flattened across the store.
@@ -215,6 +249,12 @@ def _seasons_built(dataset: str) -> str:
     return span + (")" if contiguous else ", non-contiguous)")
 
 
+def _caveats_section(dataset: str) -> str:
+    """The ``## Caveats`` block, or "" for a dataset that needs no warning."""
+    text = CAVEATS.get(dataset)
+    return f"## Caveats\n\n{text}\n\n" if text else ""
+
+
 def dataset_page(dataset: str, *, live: bool) -> str:
     if dataset in MASTERS:
         return _master_page(dataset)
@@ -240,7 +280,7 @@ def dataset_page(dataset: str, *, live: bool) -> str:
 
 {AUTOMATION}
 
-## Columns
+{_caveats_section(dataset)}## Columns
 
 {column_table(dataset)}
 ## Coverage

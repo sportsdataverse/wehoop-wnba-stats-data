@@ -16,6 +16,10 @@ WNBA Stats Officials from wehoop data repository — `boxscoresummaryv2` (game-l
 
 `.github/workflows/daily_wnba_stats.yml` — nightly scrape + build + publish (draft additionally refreshes annually via `annual_wnba_stats_draft.yml`). Runs `scripts/daily_wnba_stats_python_processor.sh`; the stage-99 schedule master is restamped at the end of every run.
 
+## Caveats
+
+**Officials coverage begins in 2004.** stats.wnba.com publishes no officiating crew for 1997, 2000 or 2003 at all, and only a handful of stray games for 1998 (2 of 158), 1999 (1 of 203), 2001 (2 of 274) and 2002 (1 of 273) — those build into a well-formed 3-6 row frame that looks like a season and is not one, so they are deliberately not published. From 2004 coverage is complete: every game carries its three officials (240 of 240 games in 2004). The floor is enforced by `first_season` on the dataset registry entry, so a build for an earlier season is refused rather than silently shipped.
+
 ## Columns
 
 | col_name | type | description |
