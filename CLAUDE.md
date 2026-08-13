@@ -45,8 +45,9 @@ end-year span convention does not apply).
 `backfill_historical_seasons.sh` both write under `build_out/` and upload only
 when `leaguedash_backfill.sh` is given `-p` (`-n` plans a publish without
 uploading). `leaguedash_backfill.sh` previously passed `--publish`
-unconditionally — a live release one stray invocation from a rewrite, the same
-hazard as the R creation stages that overwrote three WNBA 2025 tags.
+unconditionally, leaving a live release one stray invocation away from a
+rewrite — the same hazard as the R creation stages that overwrote three WNBA
+2025 tags.
 
 **Era floors live in the registry, not in a runbook.** A dataset whose upstream
 coverage starts late carries `first_season` in `datasets.py` (today: `officials`

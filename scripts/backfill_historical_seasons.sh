@@ -17,8 +17,16 @@ OUT="${OUT:-$HERE/build_out}"
 LOG="${LOG:-$HERE/logs/backfill_$(date -u +%Y%m%dT%H%M%SZ).log}"
 FIRST_SEASON="${FIRST_SEASON:-1997}"
 LAST_SEASON="${LAST_SEASON:-2026}"
-PY="$HERE/.venv/Scripts/python.exe"
-[ -x "$PY" ] || PY="/c/Users/saiem/Documents/GitHub-Data/sdv-dev/wehoop-dev/wehoop-wnba-stats-data/.venv/Scripts/python.exe"
+# Interpreter by absolute path (house style, see
+# daily_wnba_stats_python_processor.sh), resolved against THIS checkout so a
+# clone or a worktree does not silently drive another repo's venv.
+PY="${WEHOOP_WNBA_STATS_PYBIN:-$HERE/.venv/bin/python}"
+[ -x "$PY" ] || PY="$HERE/.venv/Scripts/python.exe"
+if [ ! -x "$PY" ]; then
+    echo "::error ::python venv not found under $HERE/.venv (checked bin/python and" \
+         "Scripts/python.exe) -- run 'uv sync', or set WEHOOP_WNBA_STATS_PYBIN" >&2
+    exit 1
+fi
 
 DATASETS=("$@")
 [ ${#DATASETS[@]} -eq 0 ] && DATASETS=(rosters coaches player_game_logs officials game_rosters shots)
@@ -28,6 +36,9 @@ export PYTHONUNBUFFERED=1 PYTHONIOENCODING=utf-8 PYTHONPATH="$HERE/python"
 
 ts() { date -u +%Y-%m-%dT%H:%M:%SZ; }
 say() { echo "[$(ts)] $*" | tee -a "$LOG"; }
+
+overall_rc=0
+failed=()
 
 say "START backfill  datasets=${DATASETS[*]}  seasons=${FIRST_SEASON}-${LAST_SEASON}"
 say "raw_root=$RAW_ROOT"
@@ -56,8 +67,22 @@ for ds in "${DATASETS[@]}"; do
     "$PY" -m wnba_data_build \
       --datasets "$ds" --seasons "$season" \
       --root "$RAW_ROOT" --out "$OUT" 2>&1 | tee -a "$LOG"
+    # tee hides python's status behind its own; recover it from PIPESTATUS[0].
+    rc=${PIPESTATUS[0]}
+    if [ "$rc" -ne 0 ]; then
+      overall_rc=$rc
+      failed+=("$ds $season (rc=$rc)")
+      say "WARNING $ds $season exited $rc -- continuing"
+    fi
   done
 done
 
-say "DONE backfill"
-echo "EXIT=$?" | tee -a "$LOG"
+if [ ${#failed[@]} -gt 0 ]; then
+  say "DONE backfill WITH FAILURES: ${failed[*]}"
+else
+  say "DONE backfill"
+fi
+# Aggregate status, not `$?` of the preceding echo -- a completion marker that
+# always reads 0 is worse than none, since it is grepped to decide "did it work".
+echo "EXIT=$overall_rc" | tee -a "$LOG"
+exit "$overall_rc"

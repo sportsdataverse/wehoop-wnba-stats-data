@@ -97,6 +97,9 @@ export PYTHONPATH="${REPO_DIR}/python${PYTHONPATH:+:${PYTHONPATH}}"
 echo "$(date -Iseconds) BACKFILL START seasons=${START}-${END} mode=${MODE} out=${OUT_DIR}" | tee -a "${LOG}"
 [ -z "${PUBLISH}" ] && echo "$(date -Iseconds) build-only: nothing will be uploaded (pass -p to publish)" | tee -a "${LOG}"
 
+overall_rc=0
+failed=()
+
 for season in $(seq "${START}" "${END}"); do
     marker="${OUT_DIR}/${TAG}/.done_${MODE}_${season}"
     if [ -f "${marker}" ]; then
@@ -112,10 +115,19 @@ for season in $(seq "${START}" "${END}"); do
         mkdir -p "${OUT_DIR}/${TAG}"
         touch "${marker}"
     else
+        overall_rc="${rc}"
+        failed+=("${season} (rc=${rc})")
         echo "$(date -Iseconds) WARNING season=${season} did not exit cleanly -- will retry on next run" | tee -a "${LOG}"
     fi
     sleep 5   # keep a fresh per-process rate window from stacking on the last one's tail
 done
 
-echo "$(date -Iseconds) BACKFILL DONE mode=${MODE}" | tee -a "${LOG}"
-echo "EXIT=$?" | tee -a "${LOG}"
+if [ ${#failed[@]} -gt 0 ]; then
+    echo "$(date -Iseconds) BACKFILL DONE mode=${MODE} WITH FAILURES: ${failed[*]}" | tee -a "${LOG}"
+else
+    echo "$(date -Iseconds) BACKFILL DONE mode=${MODE}" | tee -a "${LOG}"
+fi
+# Aggregate status, not `$?` of the preceding echo -- this line is grepped to
+# decide whether the run worked, so a marker that always reads 0 is a trap.
+echo "EXIT=${overall_rc}" | tee -a "${LOG}"
+exit "${overall_rc}"
