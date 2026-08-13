@@ -3,17 +3,19 @@
 # lives in hoopR-nba-stats-data/scripts/leaguedash_backfill.sh, mirroring the
 # hoopR/wehoop producer split).
 #
-# BUILDS BY DEFAULT; PUBLISHING IS OPT-IN (-p).
-# This script used to pass --publish unconditionally and upload after every
-# season, which put a live release one stray invocation away from a rewrite --
-# the same hazard as the R creation stages that overwrote three WNBA 2025 tags.
-# Without -p the cube is written under the output dir and nothing is uploaded,
-# so a human gates the release step.
+# THIS SCRIPT CANNOT PUBLISH. It builds; the release step lives elsewhere.
+# It used to pass --publish unconditionally and upload after every season,
+# which put a live release one stray invocation away from a rewrite -- the same
+# hazard as the R creation stages that overwrote three WNBA 2025 tags. An
+# opt-in flag was the first fix and was still wrong: a flag can be typed by
+# accident or copied out of a runbook line, whereas a script with no upload
+# path cannot publish at all. To publish, run the module directly and mean it:
+#
+#   python -m wnba_data_build.leaguedash_cli --seasons 2026 --publish
 #
 #   bash scripts/leaguedash_backfill.sh                 # build 1997-2023
 #   bash scripts/leaguedash_backfill.sh -s 2026 -e 2026 # build one season
-#   bash scripts/leaguedash_backfill.sh -s 2026 -e 2026 -p   # build AND publish
-#   bash scripts/leaguedash_backfill.sh -s 2026 -e 2026 -n   # plan publish only
+#   bash scripts/leaguedash_backfill.sh -s 2026 -e 2026 -n   # plan uploads, upload nothing
 #
 # Run this DIRECTLY in your own terminal from a residential IP for a long range:
 # stats.wnba.com is rate-limited and IP-sensitive, and a full-history sweep is a
@@ -42,14 +44,13 @@ PUBLISH=""
 MODE="build"
 OUT_DIR="${REPO_DIR}/build_out/leaguedash"
 
-while getopts s:e:o:pn flag; do
+while getopts s:e:o:n flag; do
     case "${flag}" in
         s) START="${OPTARG}" ;;
         e) END="${OPTARG}" ;;
         o) OUT_DIR="${OPTARG}" ;;
-        p) PUBLISH="--publish"; MODE="publish" ;;
         n) PUBLISH="--dry-run"; MODE="dryrun" ;;
-        *) echo "usage: $0 [-s start] [-e end] [-o out] [-p publish | -n dry-run]" >&2; exit 2 ;;
+        *) echo "usage: $0 [-s start] [-e end] [-o out] [-n dry-run]" >&2; exit 2 ;;
     esac
 done
 
@@ -94,9 +95,7 @@ if [ -z "${PROXY_ENDPOINT:-}" ] || [ -z "${PROXY_KEY:-}" ] || [ -z "${PROXY_PKG:
     echo "Without them, calls fall through to direct (unproxied) and will 429 fast." >&2
     exit 1
 fi
-if [ -n "${PUBLISH}" ] && [ "${MODE}" = "publish" ]; then
-    gh auth status >/dev/null 2>&1 || { echo "gh is not authenticated -- --publish will fail." >&2; exit 1; }
-fi
+# No gh-auth check: this script never uploads, so gh is not on its path.
 
 export PYTHONUNBUFFERED=1
 export PYTHONIOENCODING=utf-8
@@ -105,7 +104,7 @@ export PYTHONPATH="${REPO_DIR}/python${PYTHONPATH:+:${PYTHONPATH}}"
 #   export STATS_RATE_HITS=3 STATS_RATE_MAX=250 STATS_RATE_WINDOW=600
 
 echo "$(date -Iseconds) BACKFILL START seasons=${START}-${END} mode=${MODE} out=${OUT_DIR}" | tee -a "${LOG}"
-[ -z "${PUBLISH}" ] && echo "$(date -Iseconds) build-only: nothing will be uploaded (pass -p to publish)" | tee -a "${LOG}"
+echo "$(date -Iseconds) nothing is uploaded by this script; publish with 'python -m wnba_data_build.leaguedash_cli --seasons <y> --publish'" | tee -a "${LOG}"
 
 overall_rc=0
 failed=()

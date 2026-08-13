@@ -70,10 +70,19 @@ tag_of() { echo "wnba_stats_$1"; }
 for ds in "${DATASETS[@]}"; do
   stem="$(stem_of "$ds")"; tag="$(tag_of "$ds")"
   for season in $(seq "$FIRST_SEASON" "$LAST_SEASON"); do
-    target="$OUT/$tag/${stem}_${season}.parquet"
-    if [ -f "$target" ]; then
-      say "skip  $ds $season (already built)"
+    # Resume on the FULL artifact set, not the parquet alone. Formats are
+    # written parquet -> rds -> csv, so a run that dies mid-write leaves a
+    # parquet with no rds; keying the skip on the parquet would then make that
+    # gap permanent and invisible -- and wehoop::load_wnba_*() reads the .rds.
+    # Names are exact, so a `.{stem}.rds.{hash}.partial` remnant cannot satisfy
+    # this check (it is a different filename, and io.py sweeps it besides).
+    base="$OUT/$tag/${stem}_${season}"
+    if [ -f "$base.parquet" ] && [ -f "$base.rds" ] && [ -f "$base.csv" ]; then
+      say "skip  $ds $season (already built: parquet+rds+csv)"
       continue
+    fi
+    if [ -f "$base.parquet" ]; then
+      say "rebuild $ds $season (incomplete artifact set)"
     fi
     say "build $ds $season ..."
     "$PY" -m wnba_data_build \

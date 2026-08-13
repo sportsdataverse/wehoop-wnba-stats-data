@@ -31,7 +31,8 @@ python -m wnba_data_build --root <wehoop-wnba-stats-raw> \
 python -m wnba_data_build --root <...> --seasons 2025 --out wnba_stats
                                                      # omit --publish = dry run
 bash scripts/leaguedash_backfill.sh                  # league-dash cube, BUILD-ONLY
-bash scripts/leaguedash_backfill.sh -s 2026 -e 2026 -p   # ...and publish (opt-in)
+bash scripts/leaguedash_backfill.sh -s 2026 -e 2026 -n   # ...plan uploads, upload nothing
+python -m wnba_data_build.leaguedash_cli --seasons 2026 --publish   # publish (deliberate)
 bash scripts/backfill_historical_seasons.sh          # raw-backed families, all seasons
 bash scripts/run_v3_backfill.sh -s 1997 -e 2026      # Program V v3 backfill (resumable)
 bash scripts/run_v3_cutover.sh -s 1997 -e 2026       # D26d cutover -- DRY RUN by default
