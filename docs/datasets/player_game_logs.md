@@ -16,6 +16,16 @@ WNBA Stats Player Game Logs from wehoop data repository — `leaguegamelog` (sea
 
 `.github/workflows/daily_wnba_stats.yml` — nightly scrape + build + publish (draft additionally refreshes annually via `annual_wnba_stats_draft.yml`). Runs `scripts/daily_wnba_stats_python_processor.sh`; the stage-99 schedule master is restamped at the end of every run.
 
+## Caveats
+
+**This frame carries team-level rows alongside player rows.** It is built from `leaguegamelog`, which stats.wnba.com publishes in both a player and a team flavour per season type, and the builder binds all of them. Team rows have a **null `player_id`** (roughly 9% of rows in every season) and a null `measure_type`; player rows carry `measure_type = "p"`. For a player-only view, filter:
+
+```python
+logs.filter(pl.col("player_id").is_not_null())
+```
+
+Both season types are present and tagged via `season_type` (`regular-season` / `playoffs`). This shape is long-standing rather than new; splitting the team rows into their own dataset would be a breaking change and is tracked as a follow-up, not done here.
+
 ## Columns
 
 | col_name | type | description |
@@ -50,11 +60,11 @@ WNBA Stats Player Game Logs from wehoop data repository — `leaguegamelog` (sea
 | `plus_minus` | Int64 | Point differential while on the floor (player rows) or final margin (team rows). |
 | `video_available` | Int64 | 1 when the feed links video for the action/game row. |
 | `season` | Int64 | Season the row belongs to, as a BARE calendar year ("2023") — the WNBA season fits one calendar year, unlike the NBA span form. |
-| `season_type` | String | Season type the capture was made under ("Regular Season", "Playoffs", ...). |
+| `season_type` | String | First underscore-separated field of the raw capture's filename, which for a season-type-partitioned endpoint IS the season type: "regular-season" or "playoffs" (lower-case and hyphenated, not "Regular Season"). On rosters and coaches the captures are partitioned by TEAM, so this column repeats team_id and carries no season-type meaning -- a known defect, see those pages. |
 | `player_id` | Int64 | stats.wnba.com person id of the player (Int64); joins rosters, boxscores, game logs and pbp (`person_id`). |
 | `player_name` | String | Player display name as the stats API ships it ("Breanna Stewart"). |
 | `fantasy_pts` | Float64 | WNBA fantasy points for the player log row (null on team rows). |
-| `measure_type` | String | Grain marker of the yearly schedule file's mixed leaguegamelog capture: "t" rows are the two per-team game rows, "p" rows are player game logs. |
+| `measure_type` | String | Grain marker of the mixed leaguegamelog capture: "p" marks player game-log rows; the per-team rows come from a capture with no measure suffix and so carry NULL here, not "t". Filter on player_id.is_not_null() rather than on this column if you want player rows only. |
 
 ## Coverage
 

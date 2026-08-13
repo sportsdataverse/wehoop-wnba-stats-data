@@ -34,6 +34,10 @@ class Dataset(NamedTuple):
     wehoop_type: str
     #: "season" = one payload per season; "game" = one per game, bound per season.
     level: str = "season"
+    #: Earliest season upstream actually covers. Seasons before it are refused by
+    #: the builder rather than published as a well-formed frame holding a
+    #: fraction of a season -- see ``officials``.
+    first_season: int | None = None
 
 
 _R = "from wehoop data repository"
@@ -138,14 +142,31 @@ DATASETS: tuple[Dataset, ...] = (
         "wnba_stats_officials",
         f"WNBA Stats Officials {_R}",
         level="game",
+        # stats.wnba.com starts officiating crews in 2004, and starts them
+        # complete: 240/240 games in 2004 versus 2/158 in 1998, 1/203 in 1999,
+        # 2/274 in 2001, 1/273 in 2002 (1997/2000/2003 carry none at all).
+        # Those stray games build into a valid 3-6 row frame that looks like a
+        # season and isn't, so the floor is enforced here rather than left to
+        # whoever next passes --seasons 1998.
+        first_season=2004,
     ),
     Dataset(
-        "player_boxscores", "boxscoretraditionalv3", None, "player_boxscores",
-        "wnba_stats_player_boxscores", f"WNBA Stats Player Boxscores {_R}", level="game",
+        "player_boxscores",
+        "boxscoretraditionalv3",
+        None,
+        "player_boxscores",
+        "wnba_stats_player_boxscores",
+        f"WNBA Stats Player Boxscores {_R}",
+        level="game",
     ),
     Dataset(
-        "team_boxscores", "boxscoretraditionalv3", None, "team_boxscores",
-        "wnba_stats_team_boxscores", f"WNBA Stats Team Boxscores {_R}", level="game",
+        "team_boxscores",
+        "boxscoretraditionalv3",
+        None,
+        "team_boxscores",
+        "wnba_stats_team_boxscores",
+        f"WNBA Stats Team Boxscores {_R}",
+        level="game",
     ),
     # -- derived ------------------------------------------------------------------
     Dataset(

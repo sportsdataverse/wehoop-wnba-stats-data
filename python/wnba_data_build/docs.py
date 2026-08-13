@@ -101,6 +101,56 @@ AUTOMATION = (
 )
 
 
+#: rosters and coaches both come from the team-partitioned commonteamroster
+#: capture, so they inherit the same mislabelled column.
+_TEAM_PARTITIONED_SEASON_TYPE = (
+    "**Ignore the `season_type` column here — it is a mislabelled copy of "
+    "`team_id`.** `commonteamroster` is captured one file per team, and the "
+    "builder names a capture's variant fields positionally from the filename "
+    "(`{season_type}_{measure_type}_{per_mode}`), which is right for the "
+    "season-type-partitioned endpoints and wrong for this one: the team id "
+    "lands in `season_type`. Upstream ships no season type on this endpoint at "
+    "all. The column is present in the published assets, so it is documented "
+    "rather than silently dropped; removing it changes the published shape and "
+    "is tracked as its own change."
+)
+
+#: Dataset key -> what a consumer needs to know before trusting the frame.
+#: Only for facts a reader cannot see from the column table or the coverage
+#: counts -- an era boundary, or a row population that is not what the dataset
+#: name implies.
+CAVEATS: dict[str, str] = {
+    "player_game_logs": (
+        "**This frame carries team-level rows alongside player rows.** It is "
+        "built from `leaguegamelog`, which stats.wnba.com publishes in both a "
+        "player and a team flavour per season type, and the builder binds all "
+        "of them. Team rows have a **null `player_id`** (roughly 9% of rows in "
+        "every season) and a null `measure_type`; player rows carry "
+        '`measure_type = "p"`. For a player-only view, filter:\n\n'
+        "```python\n"
+        'logs.filter(pl.col("player_id").is_not_null())\n'
+        "```\n\n"
+        "Both season types are present and tagged via `season_type` "
+        "(`regular-season` / `playoffs`). This shape is long-standing rather "
+        "than new; splitting the team rows into their own dataset would be a "
+        "breaking change and is tracked as a follow-up, not done here."
+    ),
+    "rosters": _TEAM_PARTITIONED_SEASON_TYPE,
+    "coaches": _TEAM_PARTITIONED_SEASON_TYPE,
+    "officials": (
+        "**Officials coverage begins in 2004.** stats.wnba.com publishes no "
+        "officiating crew for 1997, 2000 or 2003 at all, and only a handful of "
+        "stray games for 1998 (2 of 158), 1999 (1 of 203), 2001 (2 of 274) and "
+        "2002 (1 of 273) — those build into a well-formed 3-6 row frame that "
+        "looks like a season and is not one, so they are deliberately not "
+        "published. From 2004 coverage is complete: every game carries its "
+        "three officials (240 of 240 games in 2004). The floor is enforced by "
+        "`first_season` on the dataset registry entry, so a build for an "
+        "earlier season is refused rather than silently shipped."
+    ),
+}
+
+
 @lru_cache(maxsize=1)
 def _descriptions() -> dict[str, str]:
     """Column name -> description, flattened across the store.
@@ -179,20 +229,46 @@ def coverage_table(dataset: str) -> str:
         return f"_{games.height:,} games across {seasons} seasons (committed)._\n"
     spec = BY_KEY[dataset]
     flag = f"in_{dataset}"
+    # The floor belongs on the page regardless of which coverage rendering runs.
+    # CI has no committed manifest, so the early return below is the branch that
+    # actually renders there -- omitting the note from it published a page whose
+    # only statement about coverage was the release link.
+    floor_note = (
+        f"\n_Seasons before {spec.first_season} are not built or published; see Caveats._\n"
+        if spec.first_season is not None
+        else ""
+    )
     if spec.level != "game" or games is None or flag not in games.columns:
         return (
             f"_Coverage is tracked per release asset on "
-            f"[`{spec.release_tag}`]({RELEASE_URL}/{spec.release_tag})._\n"
+            f"[`{spec.release_tag}`]({RELEASE_URL}/{spec.release_tag})._\n" + floor_note
         )
     counts = (
         games.group_by("season")
         .agg(pl.col(flag).sum().alias("games"), pl.len().alias("of"))
         .sort("season")
     )
+    keep = set(_available(dataset, counts["season"]).to_list())
+    counts = counts.filter(pl.col("season").is_in(list(keep)))
     lines = ["| season | games built | games known |", "|---:|---:|---:|"]
     for row in counts.to_dicts():
         lines.append(f"| {row['season']} | {row['games']:,} | {row['of']:,} |")
-    return "\n".join(lines) + "\n"
+    return "\n".join(lines) + "\n" + floor_note
+
+
+def _available(dataset: str, seasons: pl.Series) -> pl.Series:
+    """Drop seasons the registry refuses to build (``first_season``).
+
+    The manifest records raw-capture presence, which for ``officials`` runs back
+    to 1997 even though nothing before 2004 is buildable or published. Without
+    this filter the page reports a coverage the release does not have -- and
+    ``Seasons built`` is one of the volatile fields the drift gate skips, so
+    nothing else would catch it.
+    """
+    floor = BY_KEY[dataset].first_season if dataset in BY_KEY else None
+    if floor is None:
+        return seasons
+    return seasons.filter(seasons.cast(pl.Utf8).str.slice(0, 4).cast(pl.Int32) >= floor)
 
 
 def _seasons_built(dataset: str) -> str:
@@ -201,6 +277,7 @@ def _seasons_built(dataset: str) -> str:
     if games is None or flag not in games.columns:
         return ""
     seasons = games.filter(pl.col(flag) == True)["season"].unique().sort()  # noqa: E712
+    seasons = _available(dataset, seasons)
     if seasons.is_empty():
         return ""
     count = len(seasons)
@@ -213,6 +290,12 @@ def _seasons_built(dataset: str) -> str:
     contiguous = count == years[-1] - years[0] + 1
     span = f"{seasons[0]}–{seasons[-1]} ({count} seasons"
     return span + (")" if contiguous else ", non-contiguous)")
+
+
+def _caveats_section(dataset: str) -> str:
+    """The ``## Caveats`` block, or "" for a dataset that needs no warning."""
+    text = CAVEATS.get(dataset)
+    return f"## Caveats\n\n{text}\n\n" if text else ""
 
 
 def dataset_page(dataset: str, *, live: bool) -> str:
@@ -240,7 +323,7 @@ def dataset_page(dataset: str, *, live: bool) -> str:
 
 {AUTOMATION}
 
-## Columns
+{_caveats_section(dataset)}## Columns
 
 {column_table(dataset)}
 ## Coverage

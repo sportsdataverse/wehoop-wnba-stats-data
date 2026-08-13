@@ -26,7 +26,9 @@ ExistsCheck = Callable[[str, str], bool]
 
 def _gh_runner(args: list[str]) -> str:
     """Run `gh <args>`, returning stdout. Raises on non-zero."""
-    return subprocess.run(["gh", *args], check=True, capture_output=True, text=True, timeout=_GH_TIMEOUT).stdout
+    return subprocess.run(
+        ["gh", *args], check=True, capture_output=True, text=True, timeout=_GH_TIMEOUT
+    ).stdout
 
 
 def _gh_release_exists(tag: str, repo: str) -> bool:
@@ -43,6 +45,18 @@ def _gh_release_exists(tag: str, repo: str) -> bool:
         # False would trigger a `gh release create` that then fails because the
         # release already exists.
         return False
+
+
+def _publishable(path: Path) -> bool:
+    """False for staging leftovers that must never reach a release.
+
+    Writers stage to a dotfile ``.{stem}.{ext}.{hash}.partial`` and rename. A
+    failed rename (Windows AV/indexer lock) strands that file in the directory
+    this function globs, where its truncated bytes would upload under a
+    plausible name. Suffix and dot-prefix are both checked because a custom
+    ``pattern`` can reach names the extension globs would not.
+    """
+    return not path.name.startswith(".") and not path.name.endswith(".partial")
 
 
 def plan_uploads(
@@ -67,8 +81,10 @@ def plan_uploads(
       unscoped, *exts* ignored.
     """
     if pattern != "*.parquet":
-        return sorted(Path(artifacts_dir).glob(pattern))
-    files = sorted(f for ext in exts for f in Path(artifacts_dir).glob(f"*.{ext}"))
+        return sorted(f for f in Path(artifacts_dir).glob(pattern) if _publishable(f))
+    files = sorted(
+        f for ext in exts for f in Path(artifacts_dir).glob(f"*.{ext}") if _publishable(f)
+    )
     if seasons is None:
         return files
     suffixes = tuple(f"_{s}.{ext}" for s in seasons for ext in exts)

@@ -8,9 +8,9 @@ WNBA Stats Schedule from wehoop data repository — `leaguegamelog` (season-leve
 | **Release tag** | [`wnba_stats_schedules`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_schedules) |
 | **File stem** | `wnba_stats_schedule_{season}.{parquet,csv,rds}` |
 | **Seasons built** | — |
-| **Last published** | 2026-07-29 (newest release asset) |
+| **Last published** | 2026-08-12 (newest release asset) |
 | **Tag created** | 2023-04-03 |
-| **Release assets** | 14 |
+| **Release assets** | 105 |
 
 ## Automation
 
@@ -50,11 +50,11 @@ WNBA Stats Schedule from wehoop data repository — `leaguegamelog` (season-leve
 | `plus_minus` | Int64 | Point differential while on the floor (player rows) or final margin (team rows). |
 | `video_available` | Int64 | 1 when the feed links video for the action/game row. |
 | `season` | Int64 | Season the row belongs to, as a BARE calendar year ("2023") — the WNBA season fits one calendar year, unlike the NBA span form. |
-| `season_type` | String | Season type the capture was made under ("Regular Season", "Playoffs", ...). |
+| `season_type` | String | First underscore-separated field of the raw capture's filename, which for a season-type-partitioned endpoint IS the season type: "regular-season" or "playoffs" (lower-case and hyphenated, not "Regular Season"). On rosters and coaches the captures are partitioned by TEAM, so this column repeats team_id and carries no season-type meaning -- a known defect, see those pages. |
 | `player_id` | Int64 | stats.wnba.com person id of the player (Int64); joins rosters, boxscores, game logs and pbp (`person_id`). |
 | `player_name` | String | Player display name as the stats API ships it ("Breanna Stewart"). |
 | `fantasy_pts` | Float64 | WNBA fantasy points for the player log row (null on team rows). |
-| `measure_type` | String | Grain marker of the yearly schedule file's mixed leaguegamelog capture: "t" rows are the two per-team game rows, "p" rows are player game logs. |
+| `measure_type` | String | Grain marker of the mixed leaguegamelog capture: "p" marks player game-log rows; the per-team rows come from a capture with no measure suffix and so carry NULL here, not "t". Filter on player_id.is_not_null() rather than on this column if you want player rows only. |
 | `in_pbp` | Boolean | True when the game's play-by-play made it into a compiled season release. |
 | `in_game_rosters` | Boolean | True when the game is present in the compiled game_rosters release. |
 | `in_officials` | Boolean | True when the game is present in the compiled officials release. |

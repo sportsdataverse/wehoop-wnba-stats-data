@@ -8,9 +8,9 @@ WNBA Stats Play-by-Play from wehoop data repository — `playbyplayv3` (game-lev
 | **Release tag** | [`wnba_stats_pbp`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_pbp) |
 | **File stem** | `play_by_play_{season}.{parquet,csv,rds}` |
 | **Seasons built** | 1997–2026 (30 seasons) |
-| **Last published** | 2026-07-29 (newest release asset) |
+| **Last published** | 2026-08-12 (newest release asset) |
 | **Tag created** | 2023-04-03 |
-| **Release assets** | 8 |
+| **Release assets** | 99 |
 
 ## Automation
 

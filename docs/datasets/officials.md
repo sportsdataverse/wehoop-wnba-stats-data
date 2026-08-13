@@ -7,7 +7,7 @@ WNBA Stats Officials from wehoop data repository — `boxscoresummaryv2` (game-l
 | **Builder** | [`python/wnba_stats_12_officials_creation.py`](../../python/wnba_stats_12_officials_creation.py) |
 | **Release tag** | [`wnba_stats_officials`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_officials) |
 | **File stem** | `officials_{season}.{parquet,csv,rds}` |
-| **Seasons built** | 1997–2026 (30 seasons) |
+| **Seasons built** | 2004–2026 (23 seasons) |
 | **Last published** | 2026-07-29 (newest release asset) |
 | **Tag created** | 2026-05-11 |
 | **Release assets** | 8 |
@@ -15,6 +15,10 @@ WNBA Stats Officials from wehoop data repository — `boxscoresummaryv2` (game-l
 ## Automation
 
 `.github/workflows/daily_wnba_stats.yml` — nightly scrape + build + publish (draft additionally refreshes annually via `annual_wnba_stats_draft.yml`). Runs `scripts/daily_wnba_stats_python_processor.sh`; the stage-99 schedule master is restamped at the end of every run.
+
+## Caveats
+
+**Officials coverage begins in 2004.** stats.wnba.com publishes no officiating crew for 1997, 2000 or 2003 at all, and only a handful of stray games for 1998 (2 of 158), 1999 (1 of 203), 2001 (2 of 274) and 2002 (1 of 273) — those build into a well-formed 3-6 row frame that looks like a season and is not one, so they are deliberately not published. From 2004 coverage is complete: every game carries its three officials (240 of 240 games in 2004). The floor is enforced by `first_season` on the dataset registry entry, so a build for an earlier season is refused rather than silently shipped.
 
 ## Columns
 
@@ -31,13 +35,6 @@ WNBA Stats Officials from wehoop data repository — `boxscoresummaryv2` (game-l
 
 | season | games built | games known |
 |---:|---:|---:|
-| 1997 | 115 | 115 |
-| 1998 | 158 | 158 |
-| 1999 | 203 | 203 |
-| 2000 | 272 | 272 |
-| 2001 | 274 | 274 |
-| 2002 | 273 | 273 |
-| 2003 | 257 | 257 |
 | 2004 | 240 | 240 |
 | 2005 | 238 | 238 |
 | 2006 | 257 | 257 |
@@ -61,3 +58,5 @@ WNBA Stats Officials from wehoop data repository — `boxscoresummaryv2` (game-l
 | 2024 | 262 | 262 |
 | 2025 | 310 | 310 |
 | 2026 | 202 | 202 |
+
+_Seasons before 2004 are not built or published; see Caveats._

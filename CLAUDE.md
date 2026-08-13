@@ -30,7 +30,10 @@ python -m wnba_data_build --root <wehoop-wnba-stats-raw> \
     --seasons 2025 --out wnba_stats --publish                       # direct
 python -m wnba_data_build --root <...> --seasons 2025 --out wnba_stats
                                                      # omit --publish = dry run
-bash scripts/leaguedash_backfill.sh                  # checkpointed backfill
+bash scripts/leaguedash_backfill.sh                  # league-dash cube, BUILD-ONLY
+bash scripts/leaguedash_backfill.sh -s 2026 -e 2026 -n   # ...plan uploads, upload nothing
+python -m wnba_data_build.leaguedash_cli --seasons 2026 --publish   # publish (deliberate)
+bash scripts/backfill_historical_seasons.sh          # raw-backed families, all seasons
 bash scripts/run_v3_backfill.sh -s 1997 -e 2026      # Program V v3 backfill (resumable)
 bash scripts/run_v3_cutover.sh -s 1997 -e 2026       # D26d cutover -- DRY RUN by default
 Rscript ops/init/0000_create_wehoop_releases_init.R  # one-off: create release tags
@@ -38,6 +41,20 @@ Rscript ops/init/0001_push_existing_release_data.R   # one-off: re-push on-disk 
 ```
 Seasons are **calendar years** here (no October rollover — the NBA sibling's
 end-year span convention does not apply).
+
+**Backfill scripts build; they do not publish.** `leaguedash_backfill.sh` and
+`backfill_historical_seasons.sh` both write under `build_out/` and upload only
+when `leaguedash_backfill.sh` is given `-p` (`-n` plans a publish without
+uploading). `leaguedash_backfill.sh` previously passed `--publish`
+unconditionally, leaving a live release one stray invocation away from a
+rewrite — the same hazard as the R creation stages that overwrote three WNBA
+2025 tags.
+
+**Era floors live in the registry, not in a runbook.** A dataset whose upstream
+coverage starts late carries `first_season` in `datasets.py` (today: `officials`
+= 2004), and the CLI refuses earlier seasons. This exists because those seasons
+build a *valid* 3-6 row frame that looks like a season and is not one — the
+failure mode a "just don't build it" note in a doc does not prevent.
 
 `scripts/run_v3_cutover.sh` (`python -m wnba_data_build.v3_cutover`) is the
 Program V (design §9, D26d) cutover publisher: it moves the staged `v3_staging/`
@@ -185,9 +202,9 @@ Upstream SDK: <https://github.com/sportsdataverse/wehoop> · ESPN sister: `wehoo
 | [`python/wnba_stats_05_rosters_creation.py`](python/wnba_stats_05_rosters_creation.py) | [`rosters`](docs/datasets/rosters.md) | [`wnba_stats_rosters`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_rosters) | 2026-07-29 |
 | [`python/wnba_stats_06_coaches_creation.py`](python/wnba_stats_06_coaches_creation.py) | [`coaches`](docs/datasets/coaches.md) | [`wnba_stats_coaches`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_coaches) | 2026-07-29 |
 | [`python/wnba_stats_07_draft_creation.py`](python/wnba_stats_07_draft_creation.py) | [`draft`](docs/datasets/draft.md) | [`wnba_stats_draft`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_draft) | 2026-08-12 |
-| [`python/wnba_stats_08_schedules_creation.py`](python/wnba_stats_08_schedules_creation.py) | [`schedules`](docs/datasets/schedules.md) | [`wnba_stats_schedules`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_schedules) | 2026-07-29 |
+| [`python/wnba_stats_08_schedules_creation.py`](python/wnba_stats_08_schedules_creation.py) | [`schedules`](docs/datasets/schedules.md) | [`wnba_stats_schedules`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_schedules) | 2026-08-12 |
 | [`python/wnba_stats_09_player_game_logs_creation.py`](python/wnba_stats_09_player_game_logs_creation.py) | [`player_game_logs`](docs/datasets/player_game_logs.md) | [`wnba_stats_player_game_logs`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_player_game_logs) | 2026-07-29 |
-| [`python/wnba_stats_10_pbp_creation.py`](python/wnba_stats_10_pbp_creation.py) | [`pbp`](docs/datasets/pbp.md) | [`wnba_stats_pbp`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_pbp) | 2026-07-29 |
+| [`python/wnba_stats_10_pbp_creation.py`](python/wnba_stats_10_pbp_creation.py) | [`pbp`](docs/datasets/pbp.md) | [`wnba_stats_pbp`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_pbp) | 2026-08-12 |
 | [`python/wnba_stats_11_game_rosters_creation.py`](python/wnba_stats_11_game_rosters_creation.py) | [`game_rosters`](docs/datasets/game_rosters.md) | [`wnba_stats_game_rosters`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_game_rosters) | 2026-07-29 |
 | [`python/wnba_stats_12_officials_creation.py`](python/wnba_stats_12_officials_creation.py) | [`officials`](docs/datasets/officials.md) | [`wnba_stats_officials`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_officials) | 2026-07-29 |
 | [`python/wnba_stats_13_player_boxscores_creation.py`](python/wnba_stats_13_player_boxscores_creation.py) | [`player_boxscores`](docs/datasets/player_boxscores.md) | [`wnba_stats_player_boxscores`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_player_boxscores) | 2026-07-29 |
