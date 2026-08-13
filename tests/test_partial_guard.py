@@ -115,9 +115,22 @@ def test_officials_page_does_not_advertise_pre_floor_seasons(monkeypatch, with_m
     present and a release-link sentence when it is not. CI has no manifest, so
     the second branch is the one that actually ships there -- a floor stated on
     only one of them is a page that omits it exactly where nobody looks.
+
+    BOTH cases are pinned rather than left to the environment: reading the
+    manifest off disk made the "with" case silently exercise the "without"
+    branch wherever the file is absent, which is exactly where the bug lived.
     """
-    if not with_manifest:
-        monkeypatch.setattr("wnba_data_build.docs._games_in_repo", lambda: None)
+    manifest = (
+        pl.DataFrame(
+            {
+                "season": ["1997", "2003", "2004", "2005"],
+                "in_officials": [True, True, True, True],
+            }
+        )
+        if with_manifest
+        else None
+    )
+    monkeypatch.setattr("wnba_data_build.docs._games_in_repo", lambda: manifest)
 
     page = dataset_page("officials", live=False)
 
