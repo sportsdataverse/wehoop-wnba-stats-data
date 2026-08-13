@@ -30,6 +30,7 @@ from typing import Optional
 import polars as pl
 
 from .io import write_release_formats
+from .manifest import check_tags
 from .publish import upload_artifacts
 from .scrape.leaguedash import LeagueDashClient, build_mega, megas, variants
 from .scrape.proxy import RoundRobin, load_proxies
@@ -81,9 +82,7 @@ def build(
                 continue
             frames[v.table] = df
             _write(out, v.table, season, df)
-            written[f"{_TAG}/{v.table}"] = (
-                written.get(f"{_TAG}/{v.table}", 0) + df.height
-            )
+            written[f"{_TAG}/{v.table}"] = written.get(f"{_TAG}/{v.table}", 0) + df.height
             logger.info(
                 "leaguedash_write table=%s season=%s rows=%s",
                 v.table,
@@ -115,9 +114,7 @@ def build(
 
 
 def _parser() -> argparse.ArgumentParser:
-    ap = argparse.ArgumentParser(
-        description="Build + publish WNBA league-dash season datasets."
-    )
+    ap = argparse.ArgumentParser(description="Build + publish WNBA league-dash season datasets.")
     ap.add_argument(
         "--seasons",
         type=int,
@@ -127,20 +124,14 @@ def _parser() -> argparse.ArgumentParser:
     )
     ap.add_argument("--out", default="build_out/leaguedash", help="output directory")
     ap.add_argument("--repo", default=_REPO, help="release repo")
-    ap.add_argument(
-        "--publish", action="store_true", help="upload the league dir to its release"
-    )
-    ap.add_argument(
-        "--dry-run", action="store_true", help="plan publish without uploading"
-    )
+    ap.add_argument("--publish", action="store_true", help="upload the league dir to its release")
+    ap.add_argument("--dry-run", action="store_true", help="plan publish without uploading")
     return ap
 
 
 def main(argv: Optional[list[str]] = None) -> int:
     # long proxied job: make per-table progress visible in the redirected log
-    logging.basicConfig(
-        level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s"
-    )
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     args = _parser().parse_args(argv)
     out = Path(args.out)
     written = build(args.seasons, out)
@@ -151,10 +142,18 @@ def main(argv: Optional[list[str]] = None) -> int:
             out / _TAG, _TAG, args.repo, seasons=args.seasons, dry_run=args.dry_run
         )
         if result["failed"]:
-            print(
-                f"WARNING: {len(result['failed'])} file(s) failed to publish: {result['failed']}"
-            )
+            print(f"WARNING: {len(result['failed'])} file(s) failed to publish: {result['failed']}")
             return 1
+        # Season assets do not carry the manifest with them -- see manifest.py.
+        if args.publish and not args.dry_run:
+            if problems := check_tags([_TAG], args.repo):
+                for msg in problems:
+                    print(f"MANIFEST DRIFT: {msg}")
+                print(
+                    "assets uploaded, but the manifest is now stale. Refresh it with: "
+                    f"python -m wnba_data_build.manifest build --tags {_TAG} --publish"
+                )
+                return 1
     return 0
 
 

@@ -26,6 +26,7 @@ are passed.
 from __future__ import annotations
 
 import argparse
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
@@ -35,6 +36,7 @@ import polars as pl
 from . import build as _build
 from .datasets import BY_KEY, DATASETS, Dataset
 from .io import write_release_formats
+from .manifest import check_tags
 from .publish import upload_artifacts
 
 _REPO = "sportsdataverse/sportsdataverse-data"
@@ -155,6 +157,21 @@ def main(argv: Optional[list[str]] = None) -> int:
                 out / tag, tag, args.repo, seasons=seasons, dry_run=args.dry_run
             )
             print(f"publish {tag}: {result}")
+        # Uploading season assets does NOT refresh `<tag>_in_data_repo.csv`, which
+        # wehoop's load_*_manifest() reads to discover published seasons. That is
+        # how seven tags ended up serving full history behind a one-row manifest.
+        # Publishing stays upload-only; this makes the resulting drift loud.
+        if args.publish and not args.dry_run:
+            if problems := check_tags(sorted(built_tags), args.repo):
+                for msg in problems:
+                    print(f"MANIFEST DRIFT: {msg}", file=sys.stderr)
+                print(
+                    "assets uploaded, but the manifest is now stale. Refresh it with: "
+                    "python -m wnba_data_build.manifest build --tags "
+                    f"{' '.join(sorted(built_tags))} --publish",
+                    file=sys.stderr,
+                )
+                return 1
     else:
         print("no --publish/--dry-run: artifacts written locally, nothing uploaded")
     return 0
