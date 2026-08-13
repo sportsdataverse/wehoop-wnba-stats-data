@@ -107,16 +107,28 @@ def test_cli_refuses_officials_before_the_floor(tmp_path, capsys, season):
 # and the same page advertising 1997 coverage two sections later.
 
 
-def test_officials_page_does_not_advertise_pre_floor_seasons():
+@pytest.mark.parametrize("with_manifest", [True, False])
+def test_officials_page_does_not_advertise_pre_floor_seasons(monkeypatch, with_manifest):
+    """Holds on both coverage branches.
+
+    ``coverage_table`` renders per-season counts when the committed manifest is
+    present and a release-link sentence when it is not. CI has no manifest, so
+    the second branch is the one that actually ships there -- a floor stated on
+    only one of them is a page that omits it exactly where nobody looks.
+    """
+    if not with_manifest:
+        monkeypatch.setattr("wnba_data_build.docs._games_in_repo", lambda: None)
+
     page = dataset_page("officials", live=False)
 
     assert "Officials coverage begins in 2004" in page, "caveat missing"
-    assert "not built or published" in page, "coverage table should name the floor"
+    assert "not built or published" in page, "coverage should name the floor on both branches"
     for season in ("1997", "1999", "2001", "2003"):
         assert f"| {season} |" not in page, (
             f"{season} is listed as built coverage but the floor is 2004"
         )
-    assert "| 2004 |" in page, "2004 must still be listed"
+    if with_manifest:
+        assert "| 2004 |" in page, "2004 must still be listed when counts render"
 
 
 def test_player_game_logs_page_matches_builder_output():

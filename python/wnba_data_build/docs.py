@@ -229,10 +229,19 @@ def coverage_table(dataset: str) -> str:
         return f"_{games.height:,} games across {seasons} seasons (committed)._\n"
     spec = BY_KEY[dataset]
     flag = f"in_{dataset}"
+    # The floor belongs on the page regardless of which coverage rendering runs.
+    # CI has no committed manifest, so the early return below is the branch that
+    # actually renders there -- omitting the note from it published a page whose
+    # only statement about coverage was the release link.
+    floor_note = (
+        f"\n_Seasons before {spec.first_season} are not built or published; see Caveats._\n"
+        if spec.first_season is not None
+        else ""
+    )
     if spec.level != "game" or games is None or flag not in games.columns:
         return (
             f"_Coverage is tracked per release asset on "
-            f"[`{spec.release_tag}`]({RELEASE_URL}/{spec.release_tag})._\n"
+            f"[`{spec.release_tag}`]({RELEASE_URL}/{spec.release_tag})._\n" + floor_note
         )
     counts = (
         games.group_by("season")
@@ -244,11 +253,7 @@ def coverage_table(dataset: str) -> str:
     lines = ["| season | games built | games known |", "|---:|---:|---:|"]
     for row in counts.to_dicts():
         lines.append(f"| {row['season']} | {row['games']:,} | {row['of']:,} |")
-    floor = BY_KEY[dataset].first_season
-    if floor is not None:
-        lines.append("")
-        lines.append(f"_Seasons before {floor} are not built or published; see Caveats._")
-    return "\n".join(lines) + "\n"
+    return "\n".join(lines) + "\n" + floor_note
 
 
 def _available(dataset: str, seasons: pl.Series) -> pl.Series:
