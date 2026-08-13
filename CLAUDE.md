@@ -43,9 +43,10 @@ Seasons are **calendar years** here (no October rollover — the NBA sibling's
 end-year span convention does not apply).
 
 **Backfill scripts build; they do not publish.** `leaguedash_backfill.sh` and
-`backfill_historical_seasons.sh` both write under `build_out/` and upload only
-when `leaguedash_backfill.sh` is given `-p` (`-n` plans a publish without
-uploading). `leaguedash_backfill.sh` previously passed `--publish`
+`backfill_historical_seasons.sh` both write under `build_out/` and have **no
+upload path at all** -- `leaguedash_backfill.sh` rejects `-p` with exit 2, and
+`-n` plans a publish without uploading. Publishing is a deliberate, separate
+invocation of the builder module with `--publish`. `leaguedash_backfill.sh` previously passed `--publish`
 unconditionally, leaving a live release one stray invocation away from a
 rewrite — the same hazard as the R creation stages that overwrote three WNBA
 2025 tags.
