@@ -36,6 +36,8 @@ python -m wnba_data_build.leaguedash_cli --seasons 2026 --publish   # publish (d
 bash scripts/backfill_historical_seasons.sh          # raw-backed families, all seasons
 bash scripts/run_v3_backfill.sh -s 1997 -e 2026      # Program V v3 backfill (resumable)
 bash scripts/run_v3_cutover.sh -s 1997 -e 2026       # D26d cutover -- DRY RUN by default
+python -m wnba_data_build.manifest check              # do the tags' manifests match their assets?
+python -m wnba_data_build.manifest build --tags wnba_stats_shots --publish  # refresh one
 Rscript ops/init/0000_create_wehoop_releases_init.R  # one-off: create release tags
 Rscript ops/init/0001_push_existing_release_data.R   # one-off: re-push on-disk artifacts
 ```
@@ -50,6 +52,23 @@ invocation of the builder module with `--publish`. `leaguedash_backfill.sh` prev
 unconditionally, leaving a live release one stray invocation away from a
 rewrite — the same hazard as the R creation stages that overwrote three WNBA
 2025 tags.
+
+**Uploading season assets does NOT refresh the tag's manifest.** Each tag carries
+a `<tag>_in_data_repo.csv` (`season`, `row_count`, `generated_at_utc`,
+`source_endpoint`) that `wehoop::load_wnba_stats_*_manifest()` reads to discover
+which seasons are published. It was written by the R chain
+(`R/manifest_upload_helper.R`); `publish.upload_artifacts` — what every Python
+build and backfill goes through — never carried that step over. On 2026-08-13
+that gap was found holding seven tags' full history behind a **one-row** manifest
+dated 2026-05-30, understating coverage by up to 29 seasons.
+
+Publishing stays upload-only, so the manifest is a **separate deliberate
+invocation** of `wnba_data_build.manifest build --publish`. What is automatic is
+the *detection*: both CLIs run the read-only `check_tags()` after uploading and
+**exit 1** when a tag's asset seasons and its manifest disagree. Rows are derived
+from what is actually on the tag (asset list + each parquet's footer + GitHub's
+`updatedAt`), never from a local build dir, and `source_endpoint` is inherited
+verbatim from the published manifest so a rebuild never invents provenance.
 
 **Era floors live in the registry, not in a runbook.** A dataset whose upstream
 coverage starts late carries `first_season` in `datasets.py` (today: `officials`

@@ -122,7 +122,14 @@ def season_assets(
 
 
 def read_manifest(tag: str, repo: str) -> Optional[pl.DataFrame]:
-    """The manifest currently on *tag*, or None when the tag has no manifest asset."""
+    """The manifest currently on *tag*, or None when the tag has no manifest asset.
+
+    ``releases/download/`` is CDN-cached and can serve the previous body for a
+    minute or so after an upload — verified during the 2026-08-13 refresh, where
+    two freshly-clobbered manifests read back at their old size while the release
+    API already reported the new one. Confirm a just-uploaded manifest against
+    ``gh release view --json assets`` (size/updatedAt), not this reader.
+    """
     try:
         return pl.read_csv(_asset_url(tag, manifest_asset(tag), repo))
     except Exception:
