@@ -16,6 +16,10 @@ WNBA Stats Rosters from wehoop data repository — `commonteamroster` (season-le
 
 `.github/workflows/daily_wnba_stats.yml` — nightly scrape + build + publish (draft additionally refreshes annually via `annual_wnba_stats_draft.yml`). Runs `scripts/daily_wnba_stats_python_processor.sh`; the stage-99 schedule master is restamped at the end of every run.
 
+## Caveats
+
+**Ignore the `season_type` column here — it is a mislabelled copy of `team_id`.** `commonteamroster` is captured one file per team, and the builder names a capture's variant fields positionally from the filename (`{season_type}_{measure_type}_{per_mode}`), which is right for the season-type-partitioned endpoints and wrong for this one: the team id lands in `season_type`. Upstream ships no season type on this endpoint at all. The column is present in the published assets, so it is documented rather than silently dropped; removing it changes the published shape and is tracked as its own change.
+
 ## Columns
 
 | col_name | type | description |
@@ -37,7 +41,7 @@ WNBA Stats Rosters from wehoop data repository — `commonteamroster` (season-le
 | `player_id` | Int64 | stats.wnba.com person id of the player (Int64); joins rosters, boxscores, game logs and pbp (`person_id`). |
 | `how_acquired` | String |  |
 | `supplemental_status` | Int64 |  |
-| `season_type` | String | Season type the capture was made under ("Regular Season", "Playoffs", ...). |
+| `season_type` | String | First underscore-separated field of the raw capture's filename, which for a season-type-partitioned endpoint IS the season type: "regular-season" or "playoffs" (lower-case and hyphenated, not "Regular Season"). On rosters and coaches the captures are partitioned by TEAM, so this column repeats team_id and carries no season-type meaning -- a known defect, see those pages. |
 
 ## Coverage
 

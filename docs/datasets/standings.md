@@ -113,7 +113,7 @@ WNBA Stats League Standings V3 from wehoop data repository — `leaguestandingsv
 | `clinched_post_season` | Int64 |  |
 | `neutral` | String |  |
 | `season` | Int64 | Season the row belongs to, as a BARE calendar year ("2023") — the WNBA season fits one calendar year, unlike the NBA span form. |
-| `season_type` | String | Season type the capture was made under ("Regular Season", "Playoffs", ...). |
+| `season_type` | String | First underscore-separated field of the raw capture's filename, which for a season-type-partitioned endpoint IS the season type: "regular-season" or "playoffs" (lower-case and hyphenated, not "Regular Season"). On rosters and coaches the captures are partitioned by TEAM, so this column repeats team_id and carries no season-type meaning -- a known defect, see those pages. |
 
 ## Coverage
 

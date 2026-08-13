@@ -101,6 +101,20 @@ AUTOMATION = (
 )
 
 
+#: rosters and coaches both come from the team-partitioned commonteamroster
+#: capture, so they inherit the same mislabelled column.
+_TEAM_PARTITIONED_SEASON_TYPE = (
+    "**Ignore the `season_type` column here — it is a mislabelled copy of "
+    "`team_id`.** `commonteamroster` is captured one file per team, and the "
+    "builder names a capture's variant fields positionally from the filename "
+    "(`{season_type}_{measure_type}_{per_mode}`), which is right for the "
+    "season-type-partitioned endpoints and wrong for this one: the team id "
+    "lands in `season_type`. Upstream ships no season type on this endpoint at "
+    "all. The column is present in the published assets, so it is documented "
+    "rather than silently dropped; removing it changes the published shape and "
+    "is tracked as its own change."
+)
+
 #: Dataset key -> what a consumer needs to know before trusting the frame.
 #: Only for facts a reader cannot see from the column table or the coverage
 #: counts -- an era boundary, or a row population that is not what the dataset
@@ -121,6 +135,8 @@ CAVEATS: dict[str, str] = {
         "than new; splitting the team rows into their own dataset would be a "
         "breaking change and is tracked as a follow-up, not done here."
     ),
+    "rosters": _TEAM_PARTITIONED_SEASON_TYPE,
+    "coaches": _TEAM_PARTITIONED_SEASON_TYPE,
     "officials": (
         "**Officials coverage begins in 2004.** stats.wnba.com publishes no "
         "officiating crew for 1997, 2000 or 2003 at all, and only a handful of "
@@ -223,10 +239,31 @@ def coverage_table(dataset: str) -> str:
         .agg(pl.col(flag).sum().alias("games"), pl.len().alias("of"))
         .sort("season")
     )
+    keep = set(_available(dataset, counts["season"]).to_list())
+    counts = counts.filter(pl.col("season").is_in(list(keep)))
     lines = ["| season | games built | games known |", "|---:|---:|---:|"]
     for row in counts.to_dicts():
         lines.append(f"| {row['season']} | {row['games']:,} | {row['of']:,} |")
+    floor = BY_KEY[dataset].first_season
+    if floor is not None:
+        lines.append("")
+        lines.append(f"_Seasons before {floor} are not built or published; see Caveats._")
     return "\n".join(lines) + "\n"
+
+
+def _available(dataset: str, seasons: pl.Series) -> pl.Series:
+    """Drop seasons the registry refuses to build (``first_season``).
+
+    The manifest records raw-capture presence, which for ``officials`` runs back
+    to 1997 even though nothing before 2004 is buildable or published. Without
+    this filter the page reports a coverage the release does not have -- and
+    ``Seasons built`` is one of the volatile fields the drift gate skips, so
+    nothing else would catch it.
+    """
+    floor = BY_KEY[dataset].first_season if dataset in BY_KEY else None
+    if floor is None:
+        return seasons
+    return seasons.filter(seasons.cast(pl.Utf8).str.slice(0, 4).cast(pl.Int32) >= floor)
 
 
 def _seasons_built(dataset: str) -> str:
@@ -235,6 +272,7 @@ def _seasons_built(dataset: str) -> str:
     if games is None or flag not in games.columns:
         return ""
     seasons = games.filter(pl.col(flag) == True)["season"].unique().sort()  # noqa: E712
+    seasons = _available(dataset, seasons)
     if seasons.is_empty():
         return ""
     count = len(seasons)

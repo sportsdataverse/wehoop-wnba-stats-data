@@ -22,7 +22,11 @@ season_id: >-
   stats.wnba.com composite season id: season-type digit + year
   ("22023" = 2023 regular season).
 season_type: >-
-  Season type the capture was made under ("Regular Season", "Playoffs", ...).
+  First underscore-separated field of the raw capture's filename, which for a
+  season-type-partitioned endpoint IS the season type: "regular-season" or
+  "playoffs" (lower-case and hyphenated, not "Regular Season"). On rosters and
+  coaches the captures are partitioned by TEAM, so this column repeats team_id
+  and carries no season-type meaning -- a known defect, see those pages.
 season_type_id: >-
   Leading digit of season_id encoding the season type (2 = regular season,
   4 = playoffs).
@@ -126,8 +130,10 @@ plus_minus: >-
 fantasy_pts: >-
   WNBA fantasy points for the player log row (null on team rows).
 measure_type: >-
-  Grain marker of the yearly schedule file's mixed leaguegamelog capture:
-  "t" rows are the two per-team game rows, "p" rows are player game logs.
+  Grain marker of the mixed leaguegamelog capture: "p" marks player game-log
+  rows; the per-team rows come from a capture with no measure suffix and so
+  carry NULL here, not "t". Filter on player_id.is_not_null() rather than on
+  this column if you want player rows only.
 
 # --- schedule master / games_in_data_repo (D34) -------------------------------
 in_pbp: >-

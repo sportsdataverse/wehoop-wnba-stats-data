@@ -67,8 +67,8 @@ WNBA Stats Team Season Stats from wehoop data repository — `leaguedashteamstat
 | `pace_rank` | Int64 |  |
 | `pie_rank` | Int64 |  |
 | `season` | Int64 | Season the row belongs to, as a BARE calendar year ("2023") — the WNBA season fits one calendar year, unlike the NBA span form. |
-| `season_type` | String | Season type the capture was made under ("Regular Season", "Playoffs", ...). |
-| `measure_type` | String | Grain marker of the yearly schedule file's mixed leaguegamelog capture: "t" rows are the two per-team game rows, "p" rows are player game logs. |
+| `season_type` | String | First underscore-separated field of the raw capture's filename, which for a season-type-partitioned endpoint IS the season type: "regular-season" or "playoffs" (lower-case and hyphenated, not "Regular Season"). On rosters and coaches the captures are partitioned by TEAM, so this column repeats team_id and carries no season-type meaning -- a known defect, see those pages. |
+| `measure_type` | String | Grain marker of the mixed leaguegamelog capture: "p" marks player game-log rows; the per-team rows come from a capture with no measure suffix and so carry NULL here, not "t". Filter on player_id.is_not_null() rather than on this column if you want player rows only. |
 | `per_mode` | String |  |
 | `fgm` | Float64 | Field goals made. |
 | `fga` | Float64 | Field goals attempted. |
