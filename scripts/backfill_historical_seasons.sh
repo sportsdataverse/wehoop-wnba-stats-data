@@ -20,10 +20,22 @@ LAST_SEASON="${LAST_SEASON:-2026}"
 # Interpreter by absolute path (house style, see
 # daily_wnba_stats_python_processor.sh), resolved against THIS checkout so a
 # clone or a worktree does not silently drive another repo's venv.
-PY="${WEHOOP_WNBA_STATS_PYBIN:-$HERE/.venv/bin/python}"
-[ -x "$PY" ] || PY="$HERE/.venv/Scripts/python.exe"
-if [ ! -x "$PY" ]; then
-    echo "::error ::python venv not found under $HERE/.venv (checked bin/python and" \
+# An explicit override is honoured strictly: if it is set and not executable we
+# fail rather than quietly falling back, since silently running a DIFFERENT
+# interpreter than the one asked for is how a build ends up reporting success
+# against the wrong environment.
+if [ -n "${WEHOOP_WNBA_STATS_PYBIN:-}" ]; then
+    PY="${WEHOOP_WNBA_STATS_PYBIN}"
+    if [ ! -x "$PY" ]; then
+        echo "::error ::WEHOOP_WNBA_STATS_PYBIN=$PY is not executable" >&2
+        exit 1
+    fi
+elif [ -x "$HERE/.venv/bin/python" ]; then          # unix layout
+    PY="$HERE/.venv/bin/python"
+elif [ -x "$HERE/.venv/Scripts/python.exe" ]; then  # windows layout
+    PY="$HERE/.venv/Scripts/python.exe"
+else
+    echo "::error ::no venv interpreter under $HERE/.venv (checked bin/python and" \
          "Scripts/python.exe) -- run 'uv sync', or set WEHOOP_WNBA_STATS_PYBIN" >&2
     exit 1
 fi

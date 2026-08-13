@@ -59,10 +59,20 @@ mkdir -p "$(dirname "${LOG}")" "${OUT_DIR}"
 # Venv interpreter by absolute path, not `uv run`: matches
 # daily_wnba_stats_python_processor.sh, and keeps an orchestrator-launched run
 # from re-locking uv.lock as a side effect.
-PYBIN="${WEHOOP_WNBA_STATS_PYBIN:-${REPO_DIR}/.venv/bin/python}"
-[ -x "${PYBIN}" ] || PYBIN="${REPO_DIR}/.venv/Scripts/python.exe"
-if [ ! -x "${PYBIN}" ]; then
-    echo "::error ::python venv not found at ${PYBIN} -- run 'uv sync' in ${REPO_DIR}" >&2
+# An explicit override is honoured strictly (see backfill_historical_seasons.sh):
+# falling back from a bad override would run a different interpreter than asked.
+if [ -n "${WEHOOP_WNBA_STATS_PYBIN:-}" ]; then
+    PYBIN="${WEHOOP_WNBA_STATS_PYBIN}"
+    if [ ! -x "${PYBIN}" ]; then
+        echo "::error ::WEHOOP_WNBA_STATS_PYBIN=${PYBIN} is not executable" >&2
+        exit 1
+    fi
+elif [ -x "${REPO_DIR}/.venv/bin/python" ]; then          # unix layout
+    PYBIN="${REPO_DIR}/.venv/bin/python"
+elif [ -x "${REPO_DIR}/.venv/Scripts/python.exe" ]; then  # windows layout
+    PYBIN="${REPO_DIR}/.venv/Scripts/python.exe"
+else
+    echo "::error ::no venv interpreter under ${REPO_DIR}/.venv -- run 'uv sync'" >&2
     exit 1
 fi
 
