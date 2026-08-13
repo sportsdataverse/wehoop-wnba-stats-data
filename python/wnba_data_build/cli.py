@@ -129,6 +129,12 @@ def main(argv: Optional[list[str]] = None) -> int:
         if {"pbp", "shots"} & want_keys:
             pbp = _build.build_pbp(root, season)
         for dataset in datasets:
+            if dataset.first_season is not None and season < dataset.first_season:
+                print(
+                    f"skip {dataset.key} {season}: before first_season "
+                    f"{dataset.first_season} (upstream coverage starts there)"
+                )
+                continue
             df = build_dataset(root, dataset, season, _pbp=pbp)
             if df.is_empty():
                 print(f"skip {dataset.key} {season}: no rows")
@@ -141,9 +147,7 @@ def main(argv: Optional[list[str]] = None) -> int:
                 timestamp=stamp,
             )
             built_tags.add(dataset.release_tag)
-            print(
-                f"built {dataset.key} {season}: {df.height} rows -> {paths['parquet'].name}"
-            )
+            print(f"built {dataset.key} {season}: {df.height} rows -> {paths['parquet'].name}")
 
     if args.publish or args.dry_run:
         for tag in sorted(built_tags):

@@ -24,6 +24,9 @@ from wnba_data_build.models import check_stem
 
 # The R producers stamp `make_wehoop_data()` before saveRDS, so the rds carries
 # the wehoop S3 chain — mirror it exactly (same vector as wehoop-wnba-data).
+#: Suffix write_rds stages under before its atomic rename. Never publishable.
+PARTIAL_SUFFIX = ".partial"
+
 RDS_CLASS: tuple[str, ...] = (
     "wehoop_data",
     "tbl_df",
@@ -62,14 +65,40 @@ def write_release_formats(
     df.write_parquet(parquet_path)
     # The R producers stamp make_wehoop_data(type, timestamp) before saveRDS, and
     # print.wehoop_data renders both -- an rds without them prints a blank header.
-    write_rds(
-        df,
-        rds_path,
-        cls=RDS_CLASS,
-        attributes={
-            "wehoop_timestamp": timestamp or datetime.now(timezone.utc),
-            "wehoop_type": wehoop_type or stem,
-        },
-    )
+    #
+    # write_rds stages to `.{stem}.rds.{hash}.partial` and renames. On Windows
+    # that rename intermittently loses to an AV/indexer file lock
+    # (PermissionError); the observed failure leaves the .partial behind in a
+    # directory that is also the publish source. Sweep our own stem's leftovers
+    # either way so a release dir never accumulates half-written files.
+    try:
+        write_rds(
+            df,
+            rds_path,
+            cls=RDS_CLASS,
+            attributes={
+                "wehoop_timestamp": timestamp or datetime.now(timezone.utc),
+                "wehoop_type": wehoop_type or stem,
+            },
+        )
+    finally:
+        _sweep_partials(dest_dir, stem)
     df.write_csv(csv_path)
     return {"parquet": parquet_path, "rds": rds_path, "csv": csv_path}
+
+
+def _sweep_partials(dest_dir: Path, stem: str) -> list[Path]:
+    """Delete leftover ``.{stem}.*.partial`` staging files; return what went.
+
+    Scoped to *stem* so a concurrent build of another season is never raced.
+    """
+    removed = []
+    for leftover in dest_dir.glob(f".{stem}.*{PARTIAL_SUFFIX}"):
+        try:
+            leftover.unlink()
+            removed.append(leftover)
+        except OSError:
+            # Still locked by whatever beat us to it -- plan_uploads refuses
+            # these by suffix regardless, so leaving it is not a publish risk.
+            pass
+    return removed
