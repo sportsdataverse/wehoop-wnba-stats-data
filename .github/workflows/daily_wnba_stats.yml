@@ -9,6 +9,19 @@ name: Update WNBA Stats Data
 # coverage, spec D34) is committed by the step below. The retired R
 # chain (10 wnba_stats_*.R creation scripts + R processor) scraped live from
 # CI; the python registry covers all 15 datasets it produced.
+# Serialize every workflow in this repo that commits to it. Two runs in flight put
+# one of them behind origin and its push is rejected -- and because the git calls
+# are swallowed with no rc check, that lands as a GREEN job that published
+# nothing. Observed here on 2026-08-19: runs 32204419012 and 32204417571 started
+# in the same minute from two repository_dispatch events, and the first hit
+# "! [rejected] main -> main (non-fast-forward)" while reporting success.
+#
+# cancel-in-progress is FALSE on purpose -- these runs also upload release
+# assets, and cancelling mid-upload leaves a tag half-updated. Queue instead.
+concurrency:
+  group: ${{ github.repository }}-commit
+  cancel-in-progress: false
+
 on:
   schedule:
     - cron: "0 7 * 5-9 *" # May - September daily
