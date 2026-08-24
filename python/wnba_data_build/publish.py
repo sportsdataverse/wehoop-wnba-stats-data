@@ -32,19 +32,31 @@ def _gh_runner(args: list[str]) -> str:
 
 
 def _gh_release_exists(tag: str, repo: str) -> bool:
+    """True when ``tag`` exists on ``repo``.
+
+    Only a genuine "not found" answer from ``gh`` counts as absence -- a rate
+    limit / auth / network failure must never be read as "release missing"
+    (that misreading is what makes the caller run ``release create`` on a tag
+    that already exists and crash the whole publish run, as happened during a
+    GitHub GraphQL rate-limit window on 2026-08-23).
+    """
     try:
         subprocess.run(
             ["gh", "release", "view", tag, "--repo", repo],
             check=True,
             capture_output=True,
+            text=True,
             timeout=_GH_TIMEOUT,
         )
         return True
-    except subprocess.CalledProcessError:
+    except subprocess.CalledProcessError as exc:
         # subprocess.TimeoutExpired is intentionally NOT caught here — a spurious
         # False would trigger a `gh release create` that then fails because the
         # release already exists.
-        return False
+        stderr = (exc.stderr or "").strip()
+        if "not found" in stderr.lower():
+            return False
+        raise RuntimeError(f"gh release view {tag} --repo {repo} failed: {stderr}") from exc
 
 
 def _publishable(path: Path) -> bool:
@@ -156,19 +168,28 @@ def upload_artifacts(
     if dry_run:
         return {"uploaded": 0, "failed": [], "files": [f.name for f in files]}
     if not exists(tag, repo):
-        run(
-            [
-                "release",
-                "create",
-                tag,
-                "--repo",
-                repo,
-                "--title",
-                tag,
-                "--notes",
-                notes or f"{tag} datasets (WNBA model zoo)",
-            ]
-        )
+        try:
+            run(
+                [
+                    "release",
+                    "create",
+                    tag,
+                    "--repo",
+                    repo,
+                    "--title",
+                    tag,
+                    "--notes",
+                    notes or f"{tag} datasets (WNBA model zoo)",
+                ]
+            )
+        except subprocess.CalledProcessError as exc:
+            # Belt-and-suspenders for the race exists() didn't catch (e.g. a
+            # concurrent run created the tag between the check and here).
+            stderr = (exc.stderr or "").lower() if isinstance(exc.stderr, str) else ""
+            if "already exists" in stderr:
+                print(f"release {tag} already exists on {repo} -- continuing", file=sys.stderr)
+            else:
+                raise
     uploaded: list[str] = []
     failed: list[str] = []
     for f in files:
