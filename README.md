@@ -95,3 +95,17 @@ to the WNBA Stats API.
 | [`python/wnba_stats_99_schedule_master_creation.py`](python/wnba_stats_99_schedule_master_creation.py) | [`schedule_master`](docs/datasets/schedule_master.md) | `wnba_stats/wnba_stats_schedule_master.parquet` (committed) | — |
 | [`python/wnba_stats_99_schedule_master_creation.py`](python/wnba_stats_99_schedule_master_creation.py) | [`games_in_data_repo`](docs/datasets/games_in_data_repo.md) | `wnba_stats/wnba_stats_games_in_data_repo.parquet` (committed) | — |
 <!-- END GENERATED: datasets -->
+
+## Automation & status
+
+<!-- BEGIN GENERATED: status -->
+
+| workflow | schedule | last run |
+|---|---|---|
+| [![annual_wnba_stats_draft.yml](https://github.com/sportsdataverse/wehoop-wnba-stats-data/actions/workflows/annual_wnba_stats_draft.yml/badge.svg)](https://github.com/sportsdataverse/wehoop-wnba-stats-data/actions/workflows/annual_wnba_stats_draft.yml) | day 15 08:00 UTC in Apr; day 16 08:00 UTC in Apr | 2026-05-30 |
+| [![daily_wnba_stats.yml](https://github.com/sportsdataverse/wehoop-wnba-stats-data/actions/workflows/daily_wnba_stats.yml/badge.svg)](https://github.com/sportsdataverse/wehoop-wnba-stats-data/actions/workflows/daily_wnba_stats.yml) | daily 07:00 UTC in May-Sep; days 1-20 07:00 UTC in Oct | 2026-08-27 |
+| [![orphan_scripts.yml](https://github.com/sportsdataverse/wehoop-wnba-stats-data/actions/workflows/orphan_scripts.yml/badge.svg)](https://github.com/sportsdataverse/wehoop-wnba-stats-data/actions/workflows/orphan_scripts.yml) | on push / PR / dispatch | 2026-08-27 |
+| [![tests.yml](https://github.com/sportsdataverse/wehoop-wnba-stats-data/actions/workflows/tests.yml/badge.svg)](https://github.com/sportsdataverse/wehoop-wnba-stats-data/actions/workflows/tests.yml) | on push / PR / dispatch | 2026-08-27 |
+| [![wnba_models.yml](https://github.com/sportsdataverse/wehoop-wnba-stats-data/actions/workflows/wnba_models.yml/badge.svg)](https://github.com/sportsdataverse/wehoop-wnba-stats-data/actions/workflows/wnba_models.yml) | on push / PR / dispatch | never run |
+
+<!-- END GENERATED: status -->
