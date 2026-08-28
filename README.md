@@ -42,14 +42,19 @@ under `R/`.
 
 ### Cron schedule (UTC)
 
-The workflow runs once a day at **08:00 UTC**, offset one hour from the parallel
-ESPN workflow in `wehoop-wnba-data` so the two jobs do not contend for the same
-proxy pool. Four cron entries cover the WNBA calendar:
+`daily_wnba_stats.yml` runs once a day at **07:00 UTC**. Two cron entries cover
+the WNBA calendar:
 
-- `0 8 18-31 10 *` — daily, October 18 through 31 (preseason / season tip-off).
-- `0 8 * 11-12 *` — daily, every day in November and December.
-- `0 8 * 1-6 *`   — daily, every day from January through June (regular season).
-- `0 8 1-12 7 *` — daily, July 1 through 12 (lead-up to the All-Star break).
+- `0 7 * 5-9 *` — daily, May through September (preseason through playoffs).
+- `0 7 1-20 10 *` — daily, October 1 through 20 (playoffs tail).
+
+`annual_wnba_stats_draft.yml` runs twice at 08:00 UTC, on April 15 and 16 — the
+second pass catches picks entered late on draft night.
+
+**Known contention:** the parallel ESPN workflow in `wehoop-wnba-data` also fires
+at 07:00 UTC, so the two jobs currently share the proxy pool rather than being
+offset. That repo's windows (Oct-Jul) also track the NBA calendar rather than the
+WNBA one. Neither is fixed here; both are worth a look.
 
 ### Triggers
 
@@ -104,8 +109,29 @@ to the WNBA Stats API.
 |---|---|---|
 | [![annual_wnba_stats_draft.yml](https://github.com/sportsdataverse/wehoop-wnba-stats-data/actions/workflows/annual_wnba_stats_draft.yml/badge.svg)](https://github.com/sportsdataverse/wehoop-wnba-stats-data/actions/workflows/annual_wnba_stats_draft.yml) | day 15 08:00 UTC in Apr; day 16 08:00 UTC in Apr | 2026-05-30 |
 | [![daily_wnba_stats.yml](https://github.com/sportsdataverse/wehoop-wnba-stats-data/actions/workflows/daily_wnba_stats.yml/badge.svg)](https://github.com/sportsdataverse/wehoop-wnba-stats-data/actions/workflows/daily_wnba_stats.yml) | daily 07:00 UTC in May-Sep; days 1-20 07:00 UTC in Oct | 2026-08-27 |
-| [![orphan_scripts.yml](https://github.com/sportsdataverse/wehoop-wnba-stats-data/actions/workflows/orphan_scripts.yml/badge.svg)](https://github.com/sportsdataverse/wehoop-wnba-stats-data/actions/workflows/orphan_scripts.yml) | on push / PR / dispatch | 2026-08-27 |
-| [![tests.yml](https://github.com/sportsdataverse/wehoop-wnba-stats-data/actions/workflows/tests.yml/badge.svg)](https://github.com/sportsdataverse/wehoop-wnba-stats-data/actions/workflows/tests.yml) | on push / PR / dispatch | 2026-08-27 |
-| [![wnba_models.yml](https://github.com/sportsdataverse/wehoop-wnba-stats-data/actions/workflows/wnba_models.yml/badge.svg)](https://github.com/sportsdataverse/wehoop-wnba-stats-data/actions/workflows/wnba_models.yml) | on push / PR / dispatch | never run |
+| [![orphan_scripts.yml](https://github.com/sportsdataverse/wehoop-wnba-stats-data/actions/workflows/orphan_scripts.yml/badge.svg)](https://github.com/sportsdataverse/wehoop-wnba-stats-data/actions/workflows/orphan_scripts.yml) | on push / dispatch | 2026-08-27 |
+| [![tests.yml](https://github.com/sportsdataverse/wehoop-wnba-stats-data/actions/workflows/tests.yml/badge.svg)](https://github.com/sportsdataverse/wehoop-wnba-stats-data/actions/workflows/tests.yml) | on push / PR / dispatch | 2026-08-28 |
+| [![wnba_models.yml](https://github.com/sportsdataverse/wehoop-wnba-stats-data/actions/workflows/wnba_models.yml/badge.svg)](https://github.com/sportsdataverse/wehoop-wnba-stats-data/actions/workflows/wnba_models.yml) | on dispatch | never run |
+
+| release tag | assets | size | last publish |
+|---|---:|---:|---|
+| [`wnba_stats_coaches`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_coaches) | 92 | 0.2 MB | 2026-08-13 |
+| [`wnba_stats_draft`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_draft) | 95 | 0.3 MB | 2026-08-13 |
+| [`wnba_stats_game_lineups`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_game_lineups) | 91 | 6.2 MB | 2026-08-12 |
+| [`wnba_stats_game_rosters`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_game_rosters) | 95 | 0.5 MB | 2026-08-13 |
+| [`wnba_stats_leaguedash`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_leaguedash) | 769 | 252.3 MB | 2026-08-13 |
+| [`wnba_stats_lineups`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_lineups) | 8 | 14.7 MB | 2026-07-29 |
+| [`wnba_stats_officials`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_officials) | 74 | 0.9 MB | 2026-08-13 |
+| [`wnba_stats_pbp`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_pbp) | 99 | 189.4 MB | 2026-08-13 |
+| [`wnba_stats_player_boxscores`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_player_boxscores) | 4 | 0.9 MB | 2026-08-13 |
+| [`wnba_stats_player_game_logs`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_player_game_logs) | 95 | 30.2 MB | 2026-08-13 |
+| [`wnba_stats_player_season_stats`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_player_season_stats) | 8 | 1.5 MB | 2026-07-29 |
+| [`wnba_stats_possessions`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_possessions) | 91 | 37.2 MB | 2026-08-12 |
+| [`wnba_stats_rosters`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_rosters) | 95 | 1.1 MB | 2026-08-13 |
+| [`wnba_stats_schedules`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_schedules) | 105 | 1.6 MB | 2026-08-13 |
+| [`wnba_stats_shots`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_shots) | 95 | 147.9 MB | 2026-08-13 |
+| [`wnba_stats_standings`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_standings) | 8 | 0.0 MB | 2026-07-29 |
+| [`wnba_stats_team_boxscores`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_team_boxscores) | 4 | 0.1 MB | 2026-08-13 |
+| [`wnba_stats_team_season_stats`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_team_season_stats) | 8 | 0.1 MB | 2026-07-29 |
 
 <!-- END GENERATED: status -->
