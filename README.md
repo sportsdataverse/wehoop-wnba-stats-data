@@ -250,3 +250,41 @@ to the WNBA Stats API.
 | [`wnba_stats_team_season_stats`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_team_season_stats) | 8 | 0.1 MB | 2026-07-29 |
 
 <!-- END GENERATED: status -->
+
+## Consumers
+
+The packages that read what this repo produces:
+
+- **R:** [wehoop](https://wehoop.sportsdataverse.org) — docs at <https://wehoop.sportsdataverse.org>
+- **Python:** [`sportsdataverse.wnba (wnba_stats + load_wnba_*)`](https://github.com/sportsdataverse/sportsdataverse-py) — docs at <https://py.sportsdataverse.org>
+
+## Stage inventory
+
+Every numbered pipeline stage in `python/` (auto-listed; run subsets with the `scripts/*.sh` drivers by number or name):
+
+- `python/wnba_model_01_possessions.py`
+- `python/wnba_model_02_rapm.py`
+- `python/wnba_model_03_spm.py`
+- `python/wnba_model_04_adj_rapm.py`
+- `python/wnba_model_05_bpm.py`
+- `python/wnba_model_06_war.py`
+- `python/wnba_model_07_darko.py`
+- `python/wnba_model_08_impact.py`
+- `python/wnba_stats_01_standings_creation.py`
+- `python/wnba_stats_02_player_season_stats_creation.py`
+- `python/wnba_stats_03_team_season_stats_creation.py`
+- `python/wnba_stats_04_lineups_creation.py`
+- `python/wnba_stats_05_rosters_creation.py`
+- `python/wnba_stats_06_coaches_creation.py`
+- `python/wnba_stats_07_draft_creation.py`
+- `python/wnba_stats_08_schedules_creation.py`
+- `python/wnba_stats_09_player_game_logs_creation.py`
+- `python/wnba_stats_10_pbp_creation.py`
+- `python/wnba_stats_11_game_rosters_creation.py`
+- `python/wnba_stats_12_officials_creation.py`
+- `python/wnba_stats_13_player_boxscores_creation.py`
+- `python/wnba_stats_14_team_boxscores_creation.py`
+- `python/wnba_stats_15_shots_creation.py`
+- `python/wnba_stats_99_schedule_master_creation.py`
+
+Model release tags published from here: `wnba_player_impact`
