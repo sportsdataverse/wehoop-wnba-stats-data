@@ -180,6 +180,90 @@ the `WNBA_STATS_PROXY_LIST` GitHub Actions secret (CSV body with columns
 `ip,port,login,password`). Set the secret on the repo to enable proxied calls
 to the WNBA Stats API.
 
+## Repository layout
+
+<!-- BEGIN GENERATED: layout -->
+
+```
+wehoop-wnba-stats-data/
+├── R/   # R pipeline stages and publish toolchain
+│   ├── manifest_upload_helper.R
+│   ├── minify_json_folders.R
+│   └── utils.R
+├── build_out/
+│   ├── wnba_stats_draft/
+│   ├── wnba_stats_pbp/
+│   ├── wnba_stats_player_boxscores/
+│   ├── wnba_stats_schedules/
+│   └── wnba_stats_team_boxscores/
+├── docs/   # explainers, model reports and dataset docs
+│   ├── datasets/
+│   └── models/
+├── logs/   # per-run logs (gitignored where large)
+├── models/   # model artifacts, cards and the registry
+├── ops/   # cron definitions and runbooks
+│   ├── init/
+│   └── oneoff/
+├── python/   # Python pipeline stages, numbered in build order
+│   ├── build_out/
+│   ├── wehoop_wnba_stats_data_build.egg-info/
+│   ├── wnba_data_build/
+│   ├── wnba_model_publish/
+│   ├── wnba_model_01_possessions.py
+│   ├── wnba_model_02_rapm.py
+│   ├── wnba_model_03_spm.py
+│   ├── wnba_model_04_adj_rapm.py
+│   ├── wnba_model_05_bpm.py
+│   ├── wnba_model_06_war.py
+│   ├── wnba_model_07_darko.py
+│   ├── wnba_model_08_impact.py
+│   ├── wnba_stats_01_standings_creation.py
+│   ├── wnba_stats_02_player_season_stats_creation.py
+│   ├── wnba_stats_03_team_season_stats_creation.py
+│   ├── wnba_stats_04_lineups_creation.py
+│   └── … 12 more
+├── scripts/   # bash drivers (the daily/weekly entry points)
+│   ├── backfill_historical_seasons.sh
+│   ├── daily_wnba_stats_python_processor.sh
+│   ├── leaguedash_backfill.sh
+│   ├── render_model_docs.sh
+│   ├── run_v3_backfill.sh
+│   ├── run_v3_cutover.sh
+│   └── wnba_models.sh
+├── tests/   # test suite
+│   ├── fixtures/
+│   ├── test_build.py
+│   ├── test_cli.py
+│   ├── test_docs.py
+│   ├── test_from_raw.py
+│   ├── test_from_raw_offline.py
+│   ├── test_impact_stages.py
+│   ├── test_manifest.py
+│   ├── test_model_manifest.py
+│   ├── test_model_matches_loader_schema.py
+│   ├── test_model_publish_cli.py
+│   ├── test_model_registry.py
+│   ├── test_models.py
+│   ├── test_partial_guard.py
+│   ├── test_publish.py
+│   ├── test_raw.py
+│   └── … 7 more
+├── v3_staging/
+│   └── _release_build/
+└── wnba_stats/
+    ├── coaches/
+    ├── draft/
+    ├── game_rosters/
+    ├── lineups/
+    ├── officials/
+    ├── pbp/
+    ├── player_boxscores/
+    ├── player_game_logs/
+    └── … 7 more
+```
+
+<!-- END GENERATED: layout -->
+
 ## Datasets
 
 <!-- BEGIN GENERATED: datasets -->
