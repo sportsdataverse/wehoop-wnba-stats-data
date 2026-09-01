@@ -1,6 +1,109 @@
 # wehoop-wnba-stats-data
 
 
+## wehoop WNBA Stats workflow diagram
+
+```mermaid
+  graph LR;
+    S[stats.wnba.com]-->A[wehoop-wnba-stats-raw];
+    A[wehoop-wnba-stats-raw]-->B[wehoop-wnba-stats-data];
+    A[wehoop-wnba-stats-raw]-->D[wnba-stats-raw-json season bundles];
+    B[wehoop-wnba-stats-data]-->C1[wnba_stats_schedules];
+    B[wehoop-wnba-stats-data]-->C2[wnba_stats_pbp];
+    B[wehoop-wnba-stats-data]-->C3[wnba_stats_possessions];
+    B[wehoop-wnba-stats-data]-->C4[wnba_stats_game_lineups];
+    B[wehoop-wnba-stats-data]-->C5[wnba_stats_lineups];
+    B[wehoop-wnba-stats-data]-->C6[wnba_stats_shots];
+    B[wehoop-wnba-stats-data]-->C7[wnba_stats_player_boxscores];
+    B[wehoop-wnba-stats-data]-->C8[wnba_stats_team_boxscores];
+    B[wehoop-wnba-stats-data]-->C9[wnba_stats_player_game_logs];
+    B[wehoop-wnba-stats-data]-->C10[wnba_stats_player_season_stats];
+    B[wehoop-wnba-stats-data]-->C11[wnba_stats_team_season_stats];
+    B[wehoop-wnba-stats-data]-->C12[wnba_stats_game_rosters];
+    B[wehoop-wnba-stats-data]-->C13[wnba_stats_rosters];
+    B[wehoop-wnba-stats-data]-->C14[wnba_stats_standings];
+    B[wehoop-wnba-stats-data]-->C15[wnba_stats_officials];
+    B[wehoop-wnba-stats-data]-->C16[wnba_stats_coaches];
+    B[wehoop-wnba-stats-data]-->C17[wnba_stats_draft];
+    B[wehoop-wnba-stats-data]-->C18[wnba_stats_leaguedash];
+```
+
+```mermaid
+flowchart TB;
+    subgraph A[wehoop-wnba-stats-raw];
+        direction TB;
+        A0[scripts/daily_refresh.sh]-->A1[python/wnba_stats_01_season_endpoints.py];
+        A1[python/wnba_stats_01_season_endpoints.py]-->A2[python/wnba_stats_02_game_endpoints.py];
+        A2[python/wnba_stats_02_game_endpoints.py]-->A3[python/wnba_stats_03_period_boxscores.py];
+        A3[python/wnba_stats_03_period_boxscores.py]-->A4[python/wnba_stats_10_leaguegamelog_player_topup.py];
+        A4[python/wnba_stats_10_leaguegamelog_player_topup.py]-->A5[python/wnba_stats_20_refill_empty.py];
+        A5[python/wnba_stats_20_refill_empty.py]-->A6[python/wnba_stats_99_schedule_master_creation.py];
+        A6[python/wnba_stats_99_schedule_master_creation.py]-->A7[ops/publish_season_bundles.sh];
+    end;
+
+    subgraph B[wehoop-wnba-stats-data];
+        direction TB;
+        B0[scripts/daily_wnba_stats_python_processor.sh]-->B1[python/wnba_stats_01_standings_creation.py];
+        B1[python/wnba_stats_01_standings_creation.py]-->B2[python/wnba_stats_02_player_season_stats_creation.py];
+        B2[python/wnba_stats_02_player_season_stats_creation.py]-->B3[python/wnba_stats_03_team_season_stats_creation.py];
+        B3[python/wnba_stats_03_team_season_stats_creation.py]-->B4[python/wnba_stats_04_lineups_creation.py];
+        B4[python/wnba_stats_04_lineups_creation.py]-->B5[python/wnba_stats_05_rosters_creation.py];
+        B5[python/wnba_stats_05_rosters_creation.py]-->B6[python/wnba_stats_06_coaches_creation.py];
+        B6[python/wnba_stats_06_coaches_creation.py]-->B7[python/wnba_stats_07_draft_creation.py];
+        B7[python/wnba_stats_07_draft_creation.py]-->B8[python/wnba_stats_08_schedules_creation.py];
+        B8[python/wnba_stats_08_schedules_creation.py]-->B9[python/wnba_stats_09_player_game_logs_creation.py];
+        B9[python/wnba_stats_09_player_game_logs_creation.py]-->B10[python/wnba_stats_10_pbp_creation.py];
+        B10[python/wnba_stats_10_pbp_creation.py]-->B11[python/wnba_stats_11_game_rosters_creation.py];
+        B11[python/wnba_stats_11_game_rosters_creation.py]-->B12[python/wnba_stats_12_officials_creation.py];
+    end;
+
+    subgraph C[sportsdataverse-data Releases];
+        direction TB;
+        C1[wnba_stats_schedules];
+        C2[wnba_stats_pbp];
+        C3[wnba_stats_possessions];
+        C4[wnba_stats_game_lineups];
+        C5[wnba_stats_lineups];
+        C6[wnba_stats_shots];
+        C7[wnba_stats_player_boxscores];
+        C8[wnba_stats_team_boxscores];
+        C9[wnba_stats_player_game_logs];
+        C10[wnba_stats_player_season_stats];
+        C11[wnba_stats_team_season_stats];
+        C12[wnba_stats_game_rosters];
+        C13[wnba_stats_rosters];
+        C14[wnba_stats_standings];
+        C15[wnba_stats_officials];
+        C16[wnba_stats_coaches];
+        C17[wnba_stats_draft];
+        C18[wnba_stats_leaguedash];
+    end;
+
+    A-->B;
+    B-->C;
+```
+
+`scripts/daily_refresh.sh` (raw) and `scripts/daily_wnba_stats_python_processor.sh`
+(data) are the drivers; the raw side also publishes whole-season JSON bundles to
+its own `wnba-stats-raw-json` release. Stage numbers are intended build order,
+not run order.
+
+[wehoop-wbb-raw repository (source: ESPN)](https://github.com/sportsdataverse/wehoop-wbb-raw)
+
+[wehoop-wbb-data repository (source: ESPN)](https://github.com/sportsdataverse/wehoop-wbb-data)
+
+[wehoop-wnba-raw repository (source: ESPN)](https://github.com/sportsdataverse/wehoop-wnba-raw)
+
+[wehoop-wnba-data repository (source: ESPN)](https://github.com/sportsdataverse/wehoop-wnba-data)
+
+[wehoop-wnba-stats-raw repository (source: WNBA Stats)](https://github.com/sportsdataverse/wehoop-wnba-stats-raw)
+
+[wehoop-wnba-stats-data repository (source: WNBA Stats)](https://github.com/sportsdataverse/wehoop-wnba-stats-data)
+
+[ncaa-wbb-hoops-raw repository (source: stats.ncaa.org)](https://github.com/sportsdataverse/ncaa-wbb-hoops-raw)
+
+[ncaa-wbb-hoops-data repository (source: stats.ncaa.org)](https://github.com/sportsdataverse/ncaa-wbb-hoops-data)
+
 ## Women's Basketball Data Releases
 
 [ESPN Women's College Basketball Schedules](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/espn_womens_college_basketball_schedules)
