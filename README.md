@@ -211,7 +211,7 @@ to the WNBA Stats API.
 | Report | What it is | Last updated |
 |---|---|---|
 | [Model registry](models/REGISTRY.md) | model | artifact | gates | retrain, one row per published model | 2026-09-01 |
-| [Model reports & cards](docs/models/) | 1 files, one per item | uncommitted |
+| [Model reports & cards](docs/models/) | 1 files, one per item | 2026-09-01 |
 | [Dataset docs (column-level, generated)](docs/datasets/) | 17 files, one per item | 2026-08-13 |
 
 <!-- END GENERATED: reports -->
