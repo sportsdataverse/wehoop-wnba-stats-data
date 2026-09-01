@@ -75,7 +75,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.SDV_GH_TOKEN }}
         run: |
-          uv run --no-sync python -m wnba_model_01_player_impact \
+          uv run --no-sync python -m wnba_model_08_impact \
             --seasons "$SEASONS" \
             --out out/wnba_player_impact \
             --raw-store-dir "$WNBA_RAW_STORE" \

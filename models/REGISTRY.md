@@ -21,3 +21,4 @@ Known data caveats (inherited, recorded so nobody rediscovers them):
 - `models/manifest.yaml` — single home for the model/stage list (guarded by `tests/test_model_manifest.py`).
 - One model = one numbered pipeline, flat in `python/` beside the data stages; run subsets with `scripts/wnba_models.sh`.
 - Compute-on-demand / enrichment surfaces: no fitted artifacts to commit, no fingerprint skip (living upstream inputs), card sidecars carry per-publish metadata.
+- Engine individualization (2026-09-01): stages `wnba_model_01_possessions` … `wnba_model_07_darko` run ONE engine each with parquet handoffs (`build_out/impact_engines/`); `wnba_model_08_impact` is the consolidated build+publish and remains the production path.

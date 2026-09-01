@@ -15,9 +15,22 @@ suites:
   impact:
     models:
       player_impact:
-        stage: python/wnba_model_01_player_impact.py
+        stage: python/wnba_model_08_impact.py
         wraps: wnba_model_publish impact
         wraps_token: '"impact"'
         release_tag: wnba_player_impact
         wired_via: .github/workflows/wnba_models.yml
         notes: "Dispatch-only BY DESIGN (rate-budgeted; stats.wnba.com hangs on datacenter IPs — multi-season runs go residential)."
+    # Per-engine pipelines (individualization directive 2026-09-01): parquet
+    # handoffs under build_out/impact_engines/{season}/; stage 08 is the
+    # consolidated build+publish (production CI path + schema authority).
+    # Hermetic stubs validate both paths at the builders seam
+    # (tests/test_impact_stages.py).
+    engine_stages:
+      possessions: python/wnba_model_01_possessions.py
+      rapm: python/wnba_model_02_rapm.py
+      spm: python/wnba_model_03_spm.py
+      adj_rapm: python/wnba_model_04_adj_rapm.py
+      bpm: python/wnba_model_05_bpm.py
+      war: python/wnba_model_06_war.py
+      darko: python/wnba_model_07_darko.py

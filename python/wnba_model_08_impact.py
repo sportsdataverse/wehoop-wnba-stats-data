@@ -1,11 +1,11 @@
-"""Stage 01 — WNBA player-impact suite (RAPM / adj-RAPM / SPM / BPM / DARKO / WAR).
+"""Stage 08 — WNBA player-impact suite (RAPM / adj-RAPM / SPM / BPM / DARKO / WAR).
 
 Thin numbered entry over ``wnba_model_publish impact``; args forward verbatim (injects the ``impact`` subcommand).
 Dispatch-only BY DESIGN (rate-budgeted; stats.wnba.com hangs on datacenter IPs — multi-season runs go residential).
 Usage::
 
-    python -m wnba_model_01_player_impact --seasons 2026 --dry-run
-    scripts/wnba_models.sh 01
+    python -m wnba_model_08_impact --seasons 2026 --dry-run
+    scripts/wnba_models.sh 08
 """
 from __future__ import annotations
 
