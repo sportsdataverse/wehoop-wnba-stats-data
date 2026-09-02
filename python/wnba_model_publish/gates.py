@@ -46,11 +46,20 @@ FLOORS: dict[str, Optional[float]] = {
 
 
 def _pearson(df: pl.DataFrame, a: str, b: str) -> Optional[float]:
+    """Pearson r; ``None`` when the pair cannot support one, NaN when it is degenerate.
+
+    The two are NOT the same and must not be folded together. ``None`` means "not
+    measurable" and is reported SKIPPED; NaN means the pair had enough rows but a
+    column was CONSTANT, which is a real defect. Returning None for a constant
+    column let ``_min_of`` drop the season and ``gate_report`` mark the gate
+    SKIPPED -- and since ``check_publish_floors`` blocks only on FAIL, a constant
+    ``spm`` or ``adj_rapm`` could publish under a gate that never ran.
+    """
     sub = df.select(a, b).drop_nulls()
     if sub.height < 3:
         return None
     r = sub.select(pl.corr(a, b)).item()
-    return None if r is None or math.isnan(r) else float(r)
+    return float("nan") if r is None else float(r)
 
 
 def _rs(frame: pl.DataFrame) -> pl.DataFrame:
@@ -91,8 +100,17 @@ def internal_metrics(frames: dict[int, pl.DataFrame]) -> dict[str, dict]:
 
 
 def _min_of(values: Iterable[Optional[float]]) -> Optional[float]:
+    """Minimum over the measurable values; a single degenerate season poisons it.
+
+    NaN propagates deliberately so the gate FAILs rather than quietly reporting
+    the minimum of the seasons that happened to be well-behaved.
+    """
     vals = [v for v in values if v is not None]
-    return min(vals) if vals else None
+    if not vals:
+        return None
+    if any(isinstance(v, float) and math.isnan(v) for v in vals):
+        return float("nan")
+    return min(vals)
 
 
 def gate_report(frames: dict[int, pl.DataFrame]) -> dict:
@@ -123,6 +141,9 @@ def gate_report(frames: dict[int, pl.DataFrame]) -> dict:
         observed = summary.get(gate)
         if floor is None or observed is None:
             status = "SKIPPED"
+        elif isinstance(observed, float) and math.isnan(observed):
+            # Degenerate (constant column), not unmeasurable: never SKIPPED.
+            status = "FAIL"
         else:
             status = "PASS" if observed >= floor else "FAIL"
         checks.append({"gate": gate, "floor": floor, "observed": observed, "status": status})
@@ -152,10 +173,20 @@ def load_frames_from_release(seasons: Iterable[int]) -> dict[int, pl.DataFrame]:
     import requests
 
     frames = {}
+    missing: list[str] = []
     for s in seasons:
         r = requests.get(f"{RELEASE_BASE}/{TAG}_{s}.parquet", timeout=120)
         if r.status_code == 200:
             frames[int(s)] = pl.read_parquet(io.BytesIO(r.content))
+        else:
+            missing.append(f"{s} (HTTP {r.status_code})")
+    # Refuse a PARTIAL read. Silently dropping a season let `gates` pass on the
+    # seasons that happened to download and `spm-coefficients` write records for
+    # only those -- a floor measured on an unknown subset is not a measurement.
+    if missing:
+        raise SystemExit(
+            "gates: refusing a partial release read; missing " + ", ".join(missing)
+        )
     if not frames:
         raise SystemExit("gates: no release assets found for the requested seasons")
     return frames

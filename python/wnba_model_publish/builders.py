@@ -505,6 +505,18 @@ def spm_coefficient_record(
 def write_spm_coefficients(out_dir: Path, records: Sequence[dict], *, name: str = SPM_SIDECAR_NAME) -> Path:
     """Write the SPM coefficient sidecar (additive; never rewrites a data column)."""
     path = Path(out_dir) / name
+    # A one-season build must not truncate a multi-season sidecar: the publish
+    # step uploads whatever this file holds, so writing only `records` would drop
+    # every season this run did not rebuild. Merge by season; the current run wins.
+    merged: dict[int, dict] = {}
+    if path.is_file():
+        try:
+            prior = json.loads(path.read_text(encoding="utf-8")).get("records") or []
+        except (json.JSONDecodeError, OSError, AttributeError):
+            prior = []
+        merged = {int(r["season"]): r for r in prior if isinstance(r, dict) and "season" in r}
+    merged.update({int(r["season"]): r for r in records})
+    records = list(merged.values())
     path.write_text(
         json.dumps(
             {

@@ -129,3 +129,31 @@ def test_spm_sidecar_round_trips_with_the_fields_the_writeup_reads(tmp_path):
         == len(got["feature_names"])
         == len(got["feature_sd"])
     )
+
+
+def test_a_constant_column_fails_the_gate_it_cannot_skip_it():
+    """A degenerate correlation is a DEFECT, not an unmeasurable metric.
+
+    ``pl.corr`` returns NaN when a column is constant. Folding that into the
+    ``None``/SKIPPED bucket meant a build whose ``spm`` collapsed to a single
+    value sailed through ``check_publish_floors``, which blocks only on FAIL.
+    """
+    frames = {2024: _season(2024), 2025: _season(2025)}
+    frames[2025] = frames[2025].with_columns(pl.lit(1.0).alias("spm"))
+    report = G.gate_report(frames)
+    spm = next(c for c in report["checks"] if c["gate"] == "r_spm_rapm_min")
+    assert spm["status"] == "FAIL", report["checks"]
+    # and a genuinely unmeasurable metric is still SKIPPED, not FAIL
+    one = G.gate_report({2024: _season(2024)})
+    assert next(c for c in one["checks"] if c["gate"] == "r_rapm_yoy_min")["status"] == "SKIPPED"
+
+
+def test_the_sidecar_keeps_seasons_this_run_did_not_rebuild(tmp_path):
+    """A one-season refit must not truncate a multi-season sidecar."""
+    write_spm_coefficients(tmp_path, [{"season": 2024, "coef": [1.0]}, {"season": 2025, "coef": [2.0]}])
+    write_spm_coefficients(tmp_path, [{"season": 2025, "coef": [9.9]}])
+    payload = json.loads((tmp_path / SPM_SIDECAR_NAME).read_text(encoding="utf-8"))
+    assert payload["seasons"] == [2024, 2025]
+    by_season = {r["season"]: r for r in payload["records"]}
+    assert by_season[2024]["coef"] == [1.0]   # preserved
+    assert by_season[2025]["coef"] == [9.9]   # current run wins

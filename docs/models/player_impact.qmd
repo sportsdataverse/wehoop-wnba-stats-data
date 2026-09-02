@@ -202,10 +202,14 @@ The sidecar is reproducible from the published data itself: refitting each
 season on its released `o_rapm`/`d_rapm` target plus the same committed box
 logs — through the same early-era team-log repair the build applies, without
 which the pre-2005 per-100 features are garbage — recovers the published
-`spm` column **exactly in all 30 seasons** (maximum absolute difference 0.0).
-That check is stored per record as
-`reproduces_published_spm_r`, so a refit that did *not* reproduce the release
-would show up in the artifact instead of passing silently.
+`spm` column **to floating-point precision in all 30 seasons** (the largest
+per-season maximum absolute difference is on the order of 1e-15, e.g. 2021 at
+5.55e-15; exact zero is not the claim and would not be a meaningful one for a
+refit ridge solve). Both halves of the check are stored per record —
+`reproduces_published_spm_r` (correlation) and
+`reproduces_published_spm_max_abs_diff` (the level check the correlation alone
+cannot make: r = 1.0 survives any affine rescale) — so a refit that did *not*
+reproduce the release would show up in the artifact instead of passing silently.
 
 
 ```{python}
