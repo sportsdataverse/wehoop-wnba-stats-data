@@ -1,0 +1,32 @@
+{
+  "dataset": "wnba_player_impact",
+  "description": "Consolidated per-season WNBA player-impact table: RAPM, adj-RAPM, SPM, BPM 2.0, WAR, and DARKO forecasts joined on player_id. One parquet per season, one row per player-season-season_type. Base population = players with possession lineup data (RAPM-rated).",
+  "grain": [
+    "player_id",
+    "season",
+    "season_type"
+  ],
+  "season_types": [
+    "Regular Season"
+  ],
+  "source": "stats.wnba.com (playbyplayv3 / gamerotation / boxscoretraditionalv3 / leaguegamelog / playerindex / leaguedashplayerbiostats)",
+  "producer": "wehoop-wnba-stats-data/python/wnba_model_publish",
+  "season_convention": "WNBA seasons are single calendar years (2024 = the 2024 summer season); the season column, filenames, and the raw-store keys all use that same year.",
+  "models": {
+    "rapm": "sportsdataverse.nba.nba_rapm (single-season ridge; league-agnostic core fed WNBA possessions)",
+    "adj_rapm": "sportsdataverse.nba.nba_adj_rapm. Within a season, the Playoffs fit takes that season's Regular Season SPM as its prior -- that anchor is what makes a short playoff sample usable. Across seasons the prior is the possession-weighted blend of the season's Regular Season + Playoffs SPM, so a thin playoff sample never overrides a full regular season (empty for the first season of an invocation).",
+    "spm": "sportsdataverse.nba.train_spm + nba_spm. Coefficients are trained ONCE per season, on the Regular Season box features + RAPM target, and reused for the Playoffs pass -- re-fitting on a short playoff sample would train noise on noise. Playoff figures are therefore on the same scale as regular-season ones but rest on far fewer possessions; treat them as directional.",
+    "bpm": "sportsdataverse.nba.nba_bpm (BPM 2.0, season granularity)",
+    "war": "sportsdataverse.nba.nba_war on the RAPM rating; pts_per_win calibrated ONCE per season from Regular Season team game logs (OLS wins ~ total margin) and reused for the Playoffs pass; replacement_level = -2.0 per 100 (basketball-reference VORP convention)",
+    "darko": "sportsdataverse.nba.nba_darko on a SEASON-GRANULAR panel: one row per player-season whose rating is the possession-weighted blend of Regular Season + Playoffs (DARKO's aging curve and process variance are per-season quantities, so playoffs enter as a blend, not a second time step). DARKO projects the NEXT season, so both season_type rows carry the same projection; darko_* columns are null until the panel spans >= 2 seasons"
+  },
+  "possession_pipeline_version": 4,
+  "lineup_source": "auto",
+  "seasons": [
+    {
+      "season": 2026,
+      "rows": 231
+    }
+  ],
+  "generated_at": "2026-09-02T05:42:17+00:00"
+}
