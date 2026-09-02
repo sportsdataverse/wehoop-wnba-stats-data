@@ -23,7 +23,9 @@ jobs:
           sparse-checkout: |
             python
             tests
+            .github
             scripts
+            models
             docs
             README.md
             CLAUDE.md

@@ -25,13 +25,18 @@ job can run against a sibling clone on disk or read the tree straight from GitHu
 from __future__ import annotations
 
 import json
+import os
+import re
 import urllib.error
+import urllib.parse
 import urllib.request
 from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
 
-RAW_BASE = "https://raw.githubusercontent.com/sportsdataverse/wehoop-wnba-stats-raw/main/wnba_stats/json"
+RAW_BASE = (
+    "https://raw.githubusercontent.com/sportsdataverse/wehoop-wnba-stats-raw/main/wnba_stats/json"
+)
 
 # Per-game endpoints live under the game-keyed store; season-level ones do not.
 GAME_ENDPOINTS = (
@@ -42,17 +47,78 @@ GAME_ENDPOINTS = (
 )
 
 
+# ``Path("https://x")`` collapses the ``//`` after the scheme (``https:/x`` on POSIX,
+# ``https:\x`` on Windows). The CLI wraps ``--root`` in ``Path``, so a URL root arrived
+# here mangled, failed the ``startswith("https://")`` test, and was read as a local
+# directory that does not exist -- every family "skipped: no rows" and the run was
+# green. Accept the mangled form and repair it at the one place URLs are built.
+_URL_SCHEME = re.compile(r"^(https?):[\\/]+")
+
+
 def _is_url(root: str | Path) -> bool:
-    return str(root).startswith(("http://", "https://"))
+    return bool(_URL_SCHEME.match(str(root)))
+
+
+def _url_base(root: str | Path) -> str:
+    """``scheme://host/path`` with no trailing slash, whether ``root`` is a str or a Path."""
+    return _URL_SCHEME.sub(r"\1://", str(root)).replace("\\", "/").rstrip("/")
+
+
+#: The only origins that ever receive the token. ``root`` is caller-supplied, so a
+#: typo'd or hostile root must not be handed a credential.
+_GITHUB_AUTH_HOSTS = frozenset({"raw.githubusercontent.com", "api.github.com"})
+
+
+def _auth_headers(url: str) -> dict[str, str]:
+    """``Authorization`` for ``url`` -- empty unless it is an HTTPS GitHub endpoint.
+
+    ``wehoop-wnba-stats-raw`` is a PRIVATE repo, and the raw host answers an
+    unauthenticated read with 404 -- indistinguishable from "never captured", so the
+    daily workflow (which exports both tokens but never sent them) read every family
+    as empty. Either name the actions runner sets is accepted.
+
+    The scheme + host test keeps the token off any other destination: plaintext HTTP
+    would put it on the wire, and a non-GitHub host has no business receiving it.
+    """
+    parts = urllib.parse.urlsplit(url)
+    if parts.scheme != "https" or parts.hostname not in _GITHUB_AUTH_HOSTS:
+        return {}
+    tok = os.environ.get("GITHUB_PAT") or os.environ.get("GH_TOKEN") or ""
+    return {"Authorization": f"token {tok}"} if tok else {}
+
+
+class _StripAuthOnCrossHostRedirect(urllib.request.HTTPRedirectHandler):
+    """Drop ``Authorization`` when a redirect leaves the host it was minted for.
+
+    urllib copies request headers onto the redirected request, so without this a
+    302 to another origin would forward the token to whoever served the redirect.
+    """
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):  # type: ignore[no-untyped-def]
+        new = super().redirect_request(req, fp, code, msg, headers, newurl)
+        if new is not None and (
+            urllib.parse.urlsplit(newurl).hostname != urllib.parse.urlsplit(req.full_url).hostname
+        ):
+            new.headers.pop("Authorization", None)
+            new.unredirected_hdrs.pop("Authorization", None)
+        return new
+
+
+_OPENER = urllib.request.build_opener(_StripAuthOnCrossHostRedirect)
+
+
+def _urlopen(req: urllib.request.Request, timeout: int = 60) -> Any:
+    """Single HTTP seam: redirect-safe opener, and the one place tests patch."""
+    return _OPENER.open(req, timeout=timeout)
 
 
 def _read_json(root: str | Path, rel: str) -> Any | None:
     """Load ``rel`` under ``root`` from disk or over HTTP; ``None`` when absent."""
     if _is_url(root):
         try:
-            with urllib.request.urlopen(
-                f"{str(root).rstrip('/')}/{rel}", timeout=60
-            ) as resp:
+            url = f"{_url_base(root)}/{rel}"
+            req = urllib.request.Request(url, headers=_auth_headers(url))
+            with _urlopen(req) as resp:
                 return json.loads(resp.read())
         except (urllib.error.URLError, TimeoutError, json.JSONDecodeError):
             return None
@@ -79,12 +145,7 @@ def season_of(game_id: str) -> int:
 
 def game_payload_path(root: str | Path, endpoint: str, game_id: str) -> Path:
     """On-disk path of a per-game payload (local roots only)."""
-    return (
-        Path(root)
-        / endpoint
-        / str(season_of(game_id))
-        / f"{str(game_id).zfill(10)}.json"
-    )
+    return Path(root) / endpoint / str(season_of(game_id)) / f"{str(game_id).zfill(10)}.json"
 
 
 def read_game(root: str | Path, endpoint: str, game_id: str) -> Any | None:
@@ -101,11 +162,7 @@ def read_season(
     ``variant`` matches the raw repo's slug (``advanced_playoffs``, ``regular-season``,
     a team id for ``commonteamroster``); omit it for unparameterized endpoints.
     """
-    rel = (
-        f"{endpoint}/{season}/{variant}.json"
-        if variant
-        else f"{endpoint}/{season}.json"
-    )
+    rel = f"{endpoint}/{season}/{variant}.json" if variant else f"{endpoint}/{season}.json"
     return _read_json(root, rel)
 
 
@@ -116,9 +173,7 @@ def available_games(root: str | Path, endpoint: str, season: int) -> list[str]:
     so callers working against RAW_BASE should drive from :func:`season_game_ids`.
     """
     if _is_url(root):
-        raise ValueError(
-            "available_games needs a local root; use season_game_ids for URLs"
-        )
+        raise ValueError("available_games needs a local root; use season_game_ids for URLs")
     d = Path(root) / endpoint / str(season)
     if not d.is_dir():
         return []
@@ -147,6 +202,41 @@ def season_game_ids(root: str | Path, season: int) -> list[str]:
     return sorted(out)
 
 
+_RAW_GITHUB = re.compile(r"^https://raw\.githubusercontent\.com/([^/]+)/([^/]+)/([^/]+)/(.+)$")
+
+
+def season_variants(root: str | Path, endpoint: str, season: int) -> list[str]:
+    """Variant stems captured under ``{endpoint}/{season}/`` (``regular-season``,
+    ``advanced_playoffs``, a team id for ``commonteamroster``).
+
+    A local root globs the directory. raw.githubusercontent.com serves files, not
+    listings, so a raw-GitHub root asks the contents API for the same directory with
+    the same token; any other URL host yields ``[]``.
+    """
+    if not _is_url(root):
+        d = Path(root) / endpoint / str(season)
+        return sorted(p.stem for p in d.glob("*.json")) if d.is_dir() else []
+    m = _RAW_GITHUB.match(_url_base(root))
+    if not m:
+        return []
+    owner, repo, ref, path = m.groups()
+    api = (
+        f"https://api.github.com/repos/{owner}/{repo}/contents/{path}/{endpoint}/{season}?ref={ref}"
+    )
+    req = urllib.request.Request(
+        api, headers={"Accept": "application/vnd.github+json", **_auth_headers(api)}
+    )
+    try:
+        with _urlopen(req) as resp:
+            listing = json.loads(resp.read())
+    except (urllib.error.URLError, TimeoutError, json.JSONDecodeError):
+        return []
+    if not isinstance(listing, list):
+        return []
+    names = (str(e.get("name", "")) for e in listing if isinstance(e, dict))
+    return sorted(n[:-5] for n in names if n.endswith(".json"))
+
+
 def iter_game_payloads(
     root: str | Path, endpoint: str, game_ids: list[str]
 ) -> Iterator[tuple[str, Any]]:
@@ -161,9 +251,7 @@ def iter_game_payloads(
             yield gid, payload
 
 
-def result_set(
-    payload: Any, name: str | None = None
-) -> tuple[list[str], list[list[Any]]]:
+def result_set(payload: Any, name: str | None = None) -> tuple[list[str], list[list[Any]]]:
     """``(headers, rows)`` from a stats.com ``resultSets`` envelope.
 
     Returns the named set, or the first non-empty one when ``name`` is omitted.
