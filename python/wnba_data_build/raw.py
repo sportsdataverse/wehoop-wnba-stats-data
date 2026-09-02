@@ -25,6 +25,7 @@ job can run against a sibling clone on disk or read the tree straight from GitHu
 from __future__ import annotations
 
 import json
+import os
 import re
 import urllib.error
 import urllib.request
@@ -62,11 +63,24 @@ def _url_base(root: str | Path) -> str:
     return _URL_SCHEME.sub(r"\1://", str(root)).replace("\\", "/").rstrip("/")
 
 
+def _auth_headers() -> dict[str, str]:
+    """``Authorization`` for raw.githubusercontent.com.
+
+    ``wehoop-wnba-stats-raw`` is a PRIVATE repo, and the raw host answers an
+    unauthenticated read with 404 -- indistinguishable from "never captured", so the
+    daily workflow (which exports both tokens but never sent them) read every family
+    as empty. Either name the actions runner sets is accepted.
+    """
+    tok = os.environ.get("GITHUB_PAT") or os.environ.get("GH_TOKEN") or ""
+    return {"Authorization": f"token {tok}"} if tok else {}
+
+
 def _read_json(root: str | Path, rel: str) -> Any | None:
     """Load ``rel`` under ``root`` from disk or over HTTP; ``None`` when absent."""
     if _is_url(root):
         try:
-            with urllib.request.urlopen(f"{_url_base(root)}/{rel}", timeout=60) as resp:
+            req = urllib.request.Request(f"{_url_base(root)}/{rel}", headers=_auth_headers())
+            with urllib.request.urlopen(req, timeout=60) as resp:
                 return json.loads(resp.read())
         except (urllib.error.URLError, TimeoutError, json.JSONDecodeError):
             return None
