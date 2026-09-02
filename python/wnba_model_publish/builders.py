@@ -426,6 +426,147 @@ def _write_model_card(
     return path
 
 
+def _store_only(endpoint: str, raw_store_dir: str) -> Callable[..., Any]:
+    """Store-backed season fetch that RAISES on a miss — offline by contract.
+
+    ``_store_backed`` falls through to the live API on a miss, which is right for
+    a build that may legitimately need a season the store lacks. The sidecar
+    refit is a documentation/verification path over ALREADY-published seasons:
+    a miss there means the store is incomplete, and silently going live would
+    both hit a host that hangs on datacenter IPs and make the artifact
+    irreproducible. Fail loudly instead.
+    """
+
+    def _f(*args: Any, **kwargs: Any) -> Any:
+        variant = _store_variant(endpoint, kwargs)
+        season = _season_store_year(kwargs.get("season"))
+        frame = (
+            nba_raw_store_season_frame(endpoint, season, variant or None, raw_store_dir=raw_store_dir)
+            if variant is not None and season is not None
+            else None
+        )
+        if frame is None:
+            raise SystemExit(
+                f"spm-coefficients: {endpoint} season={kwargs.get('season')!r} "
+                f"variant={variant!r} is not in the raw store ({raw_store_dir}) — "
+                "this path is offline by contract; capture the season first"
+            )
+        return frame
+
+    return _f
+
+
+#: Additive per-retrain sidecar: the fitted SPM coefficient vectors (one record
+#: per season) that the release otherwise left inside the build directory.
+SPM_SIDECAR_NAME = "wnba_player_impact_spm_coefficients.json"
+
+
+def spm_coefficient_record(
+    season: int,
+    coef,
+    box_features_frame: pl.DataFrame,
+    spm: pl.DataFrame,
+    rapm: pl.DataFrame,
+) -> dict:
+    """One sidecar record: the fitted vectors plus how well they fit their own target.
+
+    ``feature_sd`` is the fit population's per-100 standard deviation for each
+    feature, so a reader can rank features by ``|coef| * sd`` (points per 100
+    per 1-SD move) instead of by raw coefficient magnitude, which is only
+    comparable when the features share a scale.
+    """
+    import inspect
+
+    # Read the ridge alpha off the REAL fitter's signature, not this module's
+    # (possibly stubbed) name, so the record always states the alpha the
+    # published coefficients were actually fit with.
+    from sportsdataverse.nba.nba_spm import train_spm as _fitter
+
+    fit = spm.join(rapm.select("player_id", "rapm"), on="player_id", how="inner").drop_nulls(["spm", "rapm"])
+    r = fit.select(pl.corr("spm", "rapm")).item() if fit.height >= 3 else None
+    mae = fit.select((pl.col("spm") - pl.col("rapm")).abs().mean()).item() if fit.height else None
+    sd = box_features_frame.select(coef.feature_names).std().row(0)
+    return {
+        "season": int(season),  # WNBA seasons are single calendar years
+        "fit_on": "Regular Season",
+        "n_players_fit": int(fit.height),
+        "ridge_alpha": float(inspect.signature(_fitter).parameters["alpha"].default),
+        "feature_names": list(coef.feature_names),
+        "feature_sd": [None if v is None else float(v) for v in sd],
+        "o_coef": [float(v) for v in coef.o_coef],
+        "d_coef": [float(v) for v in coef.d_coef],
+        "o_intercept": float(coef.o_intercept),
+        "d_intercept": float(coef.d_intercept),
+        "train_r_spm_vs_rapm": None if r is None else float(r),
+        "train_mae_spm_vs_rapm": None if mae is None else float(mae),
+    }
+
+
+def write_spm_coefficients(out_dir: Path, records: Sequence[dict], *, name: str = SPM_SIDECAR_NAME) -> Path:
+    """Write the SPM coefficient sidecar (additive; never rewrites a data column)."""
+    path = Path(out_dir) / name
+    path.write_text(
+        json.dumps(
+            {
+                "dataset": "wnba_player_impact",
+                "artifact": "spm_coefficients",
+                "description": (
+                    "Fitted SPM coefficient vectors, one record per season. Offense/defense "
+                    "ridge coefficients over the per-100 box features, with the fit "
+                    "population's feature SDs so importance can be read as |coef| * sd."
+                ),
+                "model": "sportsdataverse.nba.train_spm (Ridge, fit ONCE per season on Regular Season box features + that season's RAPM target)",
+                "generated_at": _dt.datetime.now(_dt.timezone.utc).isoformat(timespec="seconds"),
+                "seasons": sorted(int(r["season"]) for r in records),
+                "records": sorted(records, key=lambda r: r["season"]),
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    return path
+
+
+def spm_coefficients_from_frames(
+    frames: dict,
+    *,
+    raw_store_dir: str,
+    season_types: Sequence[str] = ("Regular Season",),
+) -> list[dict]:
+    """Refit the sidecar records from published impact frames + the committed raw store.
+
+    The build fits SPM on ``(box_features, that season's RAPM)`` — both of which a
+    published season already pins: ``o_rapm``/``d_rapm`` ARE the fit target, and the
+    box logs come from the same committed capture (through the same
+    ``_repair_team_logs`` correction the build applies, without which the per-100
+    features of the early seasons are garbage). So this reproduces the published
+    coefficients without recompiling possessions, and each record carries
+    ``reproduces_published_spm_r`` / ``_max_abs_diff`` proving it did (a refit that
+    did NOT reproduce the release would show up there rather than pass silently).
+    """
+    fetch = _store_only("leaguegamelog", raw_store_dir)
+    out: list[dict] = []
+    for season in sorted(frames):
+        rs = frames[season].filter(pl.col("season_type") == season_types[0])
+        if rs.height == 0:
+            continue
+        logs = nba_box_logs(_season_str(season), league_id=_WNBA_LEAGUE_ID, season_type=season_types[0], fetch=fetch)
+        logs["team"] = _repair_team_logs(logs["team"], logs["player"])
+        bf = box_features(logs["player"], logs["team"])
+        coef = train_spm(bf, rs.select("player_id", "o_rapm", "d_rapm"))
+        spm = nba_spm(bf, coef)
+        rec = spm_coefficient_record(season, coef, bf, spm, rs.select("player_id", "rapm"))
+        check = spm.join(rs.select("player_id", pl.col("spm").alias("published_spm")), on="player_id", how="inner").drop_nulls()
+        rec["reproduces_published_spm_r"] = (
+            float(check.select(pl.corr("spm", "published_spm")).item()) if check.height >= 3 else None
+        )
+        rec["reproduces_published_spm_max_abs_diff"] = (
+            float(check.select((pl.col("spm") - pl.col("published_spm")).abs().max()).item()) if check.height else None
+        )
+        out.append(rec)
+    return out
+
+
 def _proxied(wrapper: Callable[..., Any], provider: Optional[ProxyProvider]) -> Callable[..., Any]:
     """Wrap a ``wnba_stats_*`` callable so each call draws a fresh proxy from *provider*.
 
@@ -622,6 +763,7 @@ def build_wnba_player_impact(
     out_dir.mkdir(parents=True, exist_ok=True)
 
     results: list[dict] = []
+    spm_records: list[dict] = []
     prev_spm: Optional[pl.DataFrame] = None
     panel_frames: list[pl.DataFrame] = []
     age_frames: list[pl.DataFrame] = []
@@ -722,6 +864,10 @@ def build_wnba_player_impact(
                 prior = AdjRapmModel.from_spm(spm_rs).prior if spm_rs is not None else {}
 
             spm = nba_spm(bf, coef)
+            if stype == "Regular Season":
+                spm_records.append(
+                    spm_coefficient_record(season, coef, bf, spm, rapm.select("player_id", "rapm"))
+                )
 
             # BPM 2.0 off the same logs + listed positions (fetched once above).
             bpm = nba_bpm(logs["player"], logs["team"], positions)
@@ -890,4 +1036,7 @@ def build_wnba_player_impact(
             season_types=actual_season_types,
         )
         print(f"impact: model card -> {card_path}")
+        if spm_records:
+            spm_path = write_spm_coefficients(out_dir, spm_records)
+            print(f"impact: spm coefficients -> {spm_path}")
     return results
