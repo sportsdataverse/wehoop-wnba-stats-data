@@ -28,6 +28,7 @@ import json
 import os
 import re
 import urllib.error
+import urllib.parse
 import urllib.request
 from collections.abc import Iterator
 from pathlib import Path
@@ -63,24 +64,61 @@ def _url_base(root: str | Path) -> str:
     return _URL_SCHEME.sub(r"\1://", str(root)).replace("\\", "/").rstrip("/")
 
 
-def _auth_headers() -> dict[str, str]:
-    """``Authorization`` for raw.githubusercontent.com.
+#: The only origins that ever receive the token. ``root`` is caller-supplied, so a
+#: typo'd or hostile root must not be handed a credential.
+_GITHUB_AUTH_HOSTS = frozenset({"raw.githubusercontent.com", "api.github.com"})
+
+
+def _auth_headers(url: str) -> dict[str, str]:
+    """``Authorization`` for ``url`` -- empty unless it is an HTTPS GitHub endpoint.
 
     ``wehoop-wnba-stats-raw`` is a PRIVATE repo, and the raw host answers an
     unauthenticated read with 404 -- indistinguishable from "never captured", so the
     daily workflow (which exports both tokens but never sent them) read every family
     as empty. Either name the actions runner sets is accepted.
+
+    The scheme + host test keeps the token off any other destination: plaintext HTTP
+    would put it on the wire, and a non-GitHub host has no business receiving it.
     """
+    parts = urllib.parse.urlsplit(url)
+    if parts.scheme != "https" or parts.hostname not in _GITHUB_AUTH_HOSTS:
+        return {}
     tok = os.environ.get("GITHUB_PAT") or os.environ.get("GH_TOKEN") or ""
     return {"Authorization": f"token {tok}"} if tok else {}
+
+
+class _StripAuthOnCrossHostRedirect(urllib.request.HTTPRedirectHandler):
+    """Drop ``Authorization`` when a redirect leaves the host it was minted for.
+
+    urllib copies request headers onto the redirected request, so without this a
+    302 to another origin would forward the token to whoever served the redirect.
+    """
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):  # type: ignore[no-untyped-def]
+        new = super().redirect_request(req, fp, code, msg, headers, newurl)
+        if new is not None and (
+            urllib.parse.urlsplit(newurl).hostname != urllib.parse.urlsplit(req.full_url).hostname
+        ):
+            new.headers.pop("Authorization", None)
+            new.unredirected_hdrs.pop("Authorization", None)
+        return new
+
+
+_OPENER = urllib.request.build_opener(_StripAuthOnCrossHostRedirect)
+
+
+def _urlopen(req: urllib.request.Request, timeout: int = 60) -> Any:
+    """Single HTTP seam: redirect-safe opener, and the one place tests patch."""
+    return _OPENER.open(req, timeout=timeout)
 
 
 def _read_json(root: str | Path, rel: str) -> Any | None:
     """Load ``rel`` under ``root`` from disk or over HTTP; ``None`` when absent."""
     if _is_url(root):
         try:
-            req = urllib.request.Request(f"{_url_base(root)}/{rel}", headers=_auth_headers())
-            with urllib.request.urlopen(req, timeout=60) as resp:
+            url = f"{_url_base(root)}/{rel}"
+            req = urllib.request.Request(url, headers=_auth_headers(url))
+            with _urlopen(req) as resp:
                 return json.loads(resp.read())
         except (urllib.error.URLError, TimeoutError, json.JSONDecodeError):
             return None
@@ -186,10 +224,10 @@ def season_variants(root: str | Path, endpoint: str, season: int) -> list[str]:
         f"https://api.github.com/repos/{owner}/{repo}/contents/{path}/{endpoint}/{season}?ref={ref}"
     )
     req = urllib.request.Request(
-        api, headers={"Accept": "application/vnd.github+json", **_auth_headers()}
+        api, headers={"Accept": "application/vnd.github+json", **_auth_headers(api)}
     )
     try:
-        with urllib.request.urlopen(req, timeout=60) as resp:
+        with _urlopen(req) as resp:
             listing = json.loads(resp.read())
     except (urllib.error.URLError, TimeoutError, json.JSONDecodeError):
         return []

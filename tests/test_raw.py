@@ -176,7 +176,7 @@ def test_url_root_survives_path_wrapping(monkeypatch: pytest.MonkeyPatch) -> Non
         seen.append((req.full_url, req.get_header("Authorization")))
         return _Resp()
 
-    monkeypatch.setattr(raw.urllib.request, "urlopen", _urlopen)
+    monkeypatch.setattr(raw, "_urlopen", _urlopen)
     monkeypatch.delenv("GITHUB_PAT", raising=False)
     monkeypatch.delenv("GH_TOKEN", raising=False)
     rel = "leaguestandingsv3/2026/regular-season.json"
@@ -216,7 +216,7 @@ def test_season_variants_lists_a_raw_github_root_via_the_contents_api(
         seen.append((req.full_url, req.get_header("Authorization"), req.get_header("Accept")))
         return _Resp()
 
-    monkeypatch.setattr(raw.urllib.request, "urlopen", _urlopen)
+    monkeypatch.setattr(raw, "_urlopen", _urlopen)
     monkeypatch.setenv("GITHUB_PAT", "ghp_test")
     got = raw.season_variants(Path(raw.RAW_BASE), "leaguestandingsv3", 2026)
     assert got == ["playoffs", "regular-season"]
@@ -232,3 +232,36 @@ def test_season_variants_lists_a_raw_github_root_via_the_contents_api(
     _write(tmp_path, "leaguestandingsv3/2026/regular-season.json", {})
     assert raw.season_variants(tmp_path, "leaguestandingsv3", 2026) == ["regular-season"]
     assert raw.season_variants("https://example.com/x", "leaguestandingsv3", 2026) == []
+
+
+def test_token_only_goes_to_https_github_hosts(monkeypatch: pytest.MonkeyPatch) -> None:
+    """`root` is caller-supplied, so the credential must be bound to its origin.
+
+    Plaintext HTTP would put the token on the wire and a non-GitHub host has no
+    business receiving it, so `_auth_headers` returns nothing for either.
+    """
+    monkeypatch.setenv("GITHUB_PAT", "ghp_test")
+    assert raw._auth_headers(f"{raw.RAW_BASE}/x.json") == {"Authorization": "token ghp_test"}
+    assert raw._auth_headers("https://api.github.com/repos/o/r/contents/p") == {
+        "Authorization": "token ghp_test"
+    }
+    assert raw._auth_headers("http://raw.githubusercontent.com/x.json") == {}
+    assert raw._auth_headers("https://evil.example.com/x.json") == {}
+    assert raw._auth_headers("https://raw.githubusercontent.com.evil.example/x") == {}
+
+
+def test_authorization_is_dropped_on_a_cross_host_redirect() -> None:
+    """urllib copies headers onto the redirected request, so a 302 to another origin
+    would otherwise forward the token to whoever served the redirect."""
+    handler = raw._StripAuthOnCrossHostRedirect()
+    req = raw.urllib.request.Request(
+        f"{raw.RAW_BASE}/x.json", headers={"Authorization": "token ghp_test"}
+    )
+
+    same = handler.redirect_request(
+        req, None, 302, "Found", {}, "https://raw.githubusercontent.com/other.json"
+    )
+    assert same is not None and same.get_header("Authorization") == "token ghp_test"
+
+    cross = handler.redirect_request(req, None, 302, "Found", {}, "https://evil.example.com/x")
+    assert cross is not None and cross.get_header("Authorization") is None
