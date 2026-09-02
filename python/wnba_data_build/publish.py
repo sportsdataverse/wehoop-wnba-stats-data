@@ -228,10 +228,11 @@ def upload_artifacts(
         except subprocess.CalledProcessError as exc:
             print(f"WARNING: upload failed for {f.name}: {exc}", file=sys.stderr)
             failed.append(f.name)
-    # stamp LAST so the timestamp describes a finished upload, and only when
-    # something actually uploaded -- a stamp on a no-op run would claim data
-    # moved when it did not
-    if uploaded:
+    # stamp LAST so the timestamp describes a finished upload, and only when a DATA
+    # asset actually uploaded -- a stamp on a no-op run would claim data moved when it
+    # did not, and `uploaded` also counts custom-pattern artifacts (a model card is not
+    # a data refresh), so gate on the same default selection plan_uploads branches on.
+    if uploaded and pattern == "*.parquet":
         upload_release_sidecars(tag, runner=run, pkg_function=PKG_FUNCTION.get(tag), repo=repo)
     return {
         "uploaded": len(uploaded),

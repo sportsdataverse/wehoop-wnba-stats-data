@@ -120,5 +120,35 @@ def test_every_mapping_reaches_the_sidecar_verbatim(tmp_path, tag, expected):
         exists_check=lambda t, r: True,
     )
 
-    assert seen["package_function.txt"].strip() == expected
+    # Exact content, not .strip(): the sidecar IS the published contract. The trailing
+    # newline is part of it -- sportsdataverse.release writes pkg_function + \n
+    # for parity with R upload.R L62-80 -- so pin it rather than let .strip() hide it.
+    assert seen["package_function.txt"] == expected + "\n"
     assert json.loads(seen["package_function.json"])["package_function"] == expected
+
+
+def test_a_custom_pattern_upload_does_not_stamp_the_data_sidecars(tmp_path):
+    """A model card is not a data refresh.
+
+    ``uploaded`` counts every file that went up, including a custom-pattern artifact,
+    so an unguarded stamp would move ``timestamp.*`` on a run where no data asset
+    changed -- telling consumers the tag refreshed when it did not.
+    """
+    stage = _stage(tmp_path)
+    (Path(stage) / "wnba_player_impact_2025_card.json").write_text("{}", encoding="utf-8")
+    calls: list[list[str]] = []
+
+    upload_artifacts(
+        stage,
+        tag="wnba_player_impact",
+        repo="r/r",
+        runner=lambda argv: calls.append(argv),
+        exists_check=lambda t, r: True,
+        pattern="*_card.json",
+    )
+
+    uploaded = [Path(c[3]).name for c in calls if c[:2] == ["release", "upload"]]
+    assert "wnba_player_impact_2025_card.json" in uploaded
+    assert not [n for n in uploaded if n.startswith(("timestamp.", "package_function."))], (
+        "a custom-pattern upload must not stamp the data sidecars"
+    )
