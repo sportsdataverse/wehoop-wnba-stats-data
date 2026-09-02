@@ -12,13 +12,15 @@ jupyter: python3
 ```{python}
 #| output: false
 import io
+import json
 import numpy as np
 import polars as pl
 import requests
 from pathlib import Path
 from plotnine import (
     ggplot, aes, geom_point, geom_histogram, geom_line, geom_abline, geom_tile,
-    geom_text, labs, theme_minimal, facet_wrap, scale_fill_gradient2,
+    geom_text, geom_col, coord_flip, labs, theme_minimal, facet_wrap,
+    scale_fill_gradient2,
 )
 from great_tables import GT
 from IPython.display import HTML, display
@@ -137,9 +139,78 @@ The engines are linear models (ridge, regression, Kalman), so attribution is
 native: each engine's O/D split *is* its decomposition, and the published
 columns carry it (`o_rapm`/`d_rapm`, `ospm`/`dspm`, `obpm`/`dbpm`,
 `o_adj_rapm`/`d_adj_rapm`). No SHAP approximation is needed — the columns
-are the exact attributions. What the release does *not* carry is the SPM
-coefficient vector itself (it lives in the build artifacts under
-`build_out/impact_engines/`), an omission recorded in the avenues below.
+are the exact attributions.
+
+The SPM coefficient vector itself now ships as an additive sidecar,
+`wnba_player_impact_spm_coefficients.json`: one record per season with the
+offense and defense ridge coefficients, the feature names, the fit
+population's per-100 feature standard deviations, and the train-time fit
+metrics. So this section shows the fitted model rather than describing where
+it lives.
+
+```{python}
+#| output: false
+def _load_coefficients():
+    r = requests.get(f"{BASE}/{TAG}_spm_coefficients.json", timeout=60)
+    if r.status_code == 200:
+        return json.loads(r.text), "release sidecar"
+    for candidate in (Path(f"{TAG}_spm_coefficients.json"),
+                      Path("docs/models") / f"{TAG}_spm_coefficients.json"):
+        if candidate.is_file():
+            return json.loads(candidate.read_text(encoding="utf-8")), f"repo copy ({candidate})"
+    raise FileNotFoundError("SPM coefficient sidecar not found on the release or in the repo")
+
+coef_doc, coef_src = _load_coefficients()
+rec = {r["season"]: r for r in coef_doc["records"]}[latest]
+coef_tbl = pl.DataFrame({
+    "feature": rec["feature_names"],
+    "o_coef": rec["o_coef"],
+    "d_coef": rec["d_coef"],
+    "sd": rec["feature_sd"],
+}).with_columns(
+    # A coefficient's size is only comparable across features once it is put on
+    # a common scale: points per 100 for a 1-SD move in that feature.
+    (pl.col("o_coef").abs() * pl.col("sd")).alias("o_importance"),
+    (pl.col("d_coef").abs() * pl.col("sd")).alias("d_importance"),
+).sort("o_importance", descending=True)
+```
+
+```{python}
+gt_show(
+    GT(coef_tbl.select("feature", "o_coef", "d_coef", "sd", "o_importance", "d_importance").to_pandas())
+    .tab_header(title=f"Fitted SPM coefficients — {latest} (ridge, alpha = {rec['ridge_alpha']:.0f})",
+                subtitle=f"source: {coef_src}; fit on {rec['n_players_fit']} regular-season players, "
+                         f"train r(spm, rapm) = {rec['train_r_spm_vs_rapm']:.3f}")
+    .fmt_number(columns=["o_coef", "d_coef", "sd", "o_importance", "d_importance"], decimals=3)
+    .cols_label(sd="feature SD", o_importance="|o_coef|×SD", d_importance="|d_coef|×SD")
+)
+```
+
+```{python}
+#| fig-cap: "Offensive SPM importance — points per 100 attributable to a 1-SD move in each per-100 box feature."
+(
+    ggplot(coef_tbl.to_pandas(), aes("reorder(feature, o_importance)", "o_importance"))
+    + geom_col(fill="#2a6f97")
+    + coord_flip()
+    + labs(x="", y="|coefficient| × feature SD (points / 100 poss)",
+           title=f"SPM offensive coefficient importance — {latest}")
+    + theme_minimal()
+)
+```
+
+The sidecar is reproducible from the published data itself: refitting each
+season on its released `o_rapm`/`d_rapm` target plus the same committed box
+logs — through the same early-era team-log repair the build applies, without
+which the pre-2005 per-100 features are garbage — recovers the published
+`spm` column **to floating-point precision in all 30 seasons** (the largest
+per-season maximum absolute difference is on the order of 1e-15, e.g. 2021 at
+5.55e-15; exact zero is not the claim and would not be a meaningful one for a
+refit ridge solve). Both halves of the check are stored per record —
+`reproduces_published_spm_r` (correlation) and
+`reproduces_published_spm_max_abs_diff` (the level check the correlation alone
+cannot make: r = 1.0 survives any affine rescale) — so a refit that did *not*
+reproduce the release would show up in the artifact instead of passing silently.
+
 
 ```{python}
 #| fig-cap: "adj-RAPM vs RAPM, latest regular season — the SPM prior shrinks, it does not overwrite."
@@ -217,10 +288,93 @@ gt_show(
 
 The forward-r is honest but modest, and the reliability row is why: DARKO
 cannot correlate with next-season RAPM more than next-season RAPM correlates
-with anything stable. The engines were additionally proxy-validated against
-the published oracle CSVs at build time (beating the minutes-played
-baseline by ~10%); numeric publish-blocking floors remain a recorded TODO in
-`models/REGISTRY.md`.
+with anything stable.
+
+### Separating projection error from target noise
+
+A single season of RAPM is a noisy realization of a player's true level, so a
+low forward correlation confounds *the projection being wrong* with *the
+target being noisy*. Averaging the target over more post-projection seasons
+(possession-weighted) reduces the target's noise without touching the
+projection. Restricting all three rows to the **same** player-seasons keeps
+the comparison honest — a longer target window would otherwise also change
+the population:
+
+```{python}
+fw = rs.select("player_id", "season", "rapm", "darko_projected_rating",
+               (pl.col("off_poss") + pl.col("def_poss")).alias("poss"))
+
+def blended_target(k: int) -> pl.DataFrame:
+    "Possession-weighted mean RAPM over seasons t+1 … t+k, keyed on t."
+    parts = [
+        fw.select("player_id", (pl.col("season") - i).alias("season"),
+                  (pl.col("rapm") * pl.col("poss")).alias("num"), pl.col("poss").alias("den"))
+        for i in range(1, k + 1)
+    ]
+    return (
+        pl.concat(parts)
+        .group_by(["player_id", "season"], maintain_order=True)
+        .agg(pl.col("num").sum(), pl.col("den").sum(), pl.len().alias("k_seasons"))
+        .filter((pl.col("den") > 0) & (pl.col("k_seasons") == k))
+        .select("player_id", "season", (pl.col("num") / pl.col("den")).alias("target"))
+    )
+
+common = blended_target(3).select("player_id", "season")   # the 3-season population
+ceiling = []
+for k in (1, 2, 3):
+    m = (fw.join(blended_target(k), on=["player_id", "season"], how="inner")
+           .join(common, on=["player_id", "season"], how="inner").drop_nulls())
+    ceiling.append({
+        "target": f"{k}-season RAPM" if k > 1 else "next season only",
+        "n": m.height,
+        "r_darko": float(m.select(pl.corr("darko_projected_rating", "target")).item()),
+        "r_carry_forward": float(m.select(pl.corr("rapm", "target")).item()),
+        "MAE_darko": float(m.select((pl.col("darko_projected_rating") - pl.col("target")).abs().mean()).item()),
+        "MAE_carry_forward": float(m.select((pl.col("rapm") - pl.col("target")).abs().mean()).item()),
+        "sd_target": float(m["target"].std()),
+    })
+gt_show(
+    GT(pl.DataFrame(ceiling).to_pandas())
+    .tab_header(title="DARKO against a multi-season blended target",
+                subtitle="same player-seasons in every row; only the target's noise changes")
+    .fmt_number(columns=["r_darko", "r_carry_forward", "MAE_darko", "MAE_carry_forward", "sd_target"], decimals=3)
+    .cols_label(r_darko="r (DARKO)", r_carry_forward="r (carry-forward RAPM)",
+                MAE_darko="MAE (DARKO)", MAE_carry_forward="MAE (carry-forward)")
+)
+```
+
+Two readings, both worth stating plainly:
+
+- **Part of the "modest" forward-r is target noise, but less of it than in
+  the NBA.** Holding the projection and the population fixed and only widening
+  the target window lifts the correlation from ≈0.26 to ≈0.29 (the NBA twin,
+  measured the same way, moves ≈0.37 → ≈0.44). Averaging more WNBA seasons
+  removes less noise because there are fewer possessions in each of them and
+  because rosters turn over faster — so a WNBA player's three-season blend is
+  a blurrier picture of "the same player" than an NBA player's is.
+- **The projection is not beating simple persistence on rank.** Carrying
+  season-*t* RAPM forward unchanged correlates with every target slightly
+  better than the DARKO projection does. Where the projection earns its keep
+  is **level**: its MAE is lower against every target, which is what shrinkage
+  toward the aging-curve mean buys. Treat `darko_projected_rating` as a
+  better-calibrated magnitude, not a better ordering — and the gap to
+  persistence is the honest measure of what the Kalman step adds.
+
+**The publish floors.** The five internal diagnostics above are now frozen as
+**publish-blocking floors** in `models/REGISTRY.md` and
+`wnba_model_publish/gates.py`, each set strictly below the value observed on
+the 2026-07-29 release across all 30 published seasons; the gate runs on every
+`impact` invocation and writes its report into the card sidecar under
+`publish_gates`. The floors were **re-measured on WNBA data rather than
+inherited from the NBA twin** — the forward ones land at roughly half the
+NBA's, because a ~40-game season leaves less signal in each RAPM fit. The one
+gate family the twin has and this repo does not is the oracle pair: no public
+WNBA player-impact metric comparable to Ryan Davis RAPM or Dunks & Threes EPM
+is available here, so instead of an always-skipped gate that could be mistaken
+for coverage, concurrent validity is simply **not currently gated for the
+WNBA** — the earlier claim that these engines were proxy-validated against
+published oracle CSVs was inherited from the NBA writeup and did not hold for
+this league.
 
 ## Results
 
@@ -267,16 +421,31 @@ gt_show(
 
 ## Avenues for improvement & open issues
 
-- **Encode the numeric publish floors** — the registry states them as TODO;
-  the proxy-validation deltas are exactly the values to freeze.
-- **Publish the SPM coefficient vector** — the release carries the engine
-  outputs but not the fitted coefficients; shipping them (or a per-retrain
-  meta sidecar) would let this document show real coefficient importance
-  instead of describing where it lives.
-- **Uncertainty** — none of the engines ships an interval; a
-  cluster-respecting resample (games, not rows) is the recorded standard.
-- **DARKO ceiling** — the forward-r is capped by RAPM noise in the target;
-  validating against a multi-season blended target would separate projection
-  error from target noise.
+**Resolved (2026-09-01, PR #15):**
+
+- **Numeric publish floors are encoded** — five gates in
+  `wnba_model_publish/gates.py`, each floor strictly below the value observed
+  on the 2026-07-29 release across all 30 seasons, evaluated on every build and
+  recorded in the card sidecar. The table (floor, observation, what it catches)
+  lives in `models/REGISTRY.md`. Measured on WNBA data, not ported from the
+  NBA twin.
+- **The SPM coefficient vector ships** as the additive
+  `wnba_player_impact_spm_coefficients.json` sidecar, and the Attribution
+  section above shows real coefficient importance from it.
+- **DARKO ceiling quantified** — the multi-season blended-target comparison
+  separates projection error from target noise and states the projection's
+  standing against a carry-forward baseline.
+
+Still open:
+
+- **Uncertainty** — no engine ships an interval. The NBA twin's prototype
+  (cluster bootstrap by GAME, never by row) measured a median RAPM standard
+  error *wider than the cross-sectional spread of RAPM itself* on a full
+  1,230-game season; a WNBA season is a third the size, so the same resample
+  here should be expected to be wider still, and the prototype has not yet
+  been run on this league's possessions. Shipping it means B ≥ 200 replicates,
+  an additive `rapm_se` column, and a floor on the interval's own stability.
+- **No public concurrent-validity oracle** for WNBA player impact. If one
+  becomes available, the NBA twin's oracle gate pair ports over directly.
 - **PlayIn season type is unsupported** by design; revisit if the sample
   ever justifies it.
