@@ -158,3 +158,33 @@ def test_available_games_rejects_url_roots() -> None:
     """GitHub serves files, not listings — fail loudly rather than return nothing."""
     with pytest.raises(ValueError, match="local root"):
         raw.available_games(raw.RAW_BASE, "playbyplayv3", 2025)
+
+
+def test_url_root_survives_path_wrapping(monkeypatch: pytest.MonkeyPatch) -> None:
+    """The CLI wraps ``--root`` in ``Path``, which collapses ``https://`` to ``https:/``.
+
+    For 33 days the daily workflow passed the raw.githubusercontent root that way,
+    the mangled root failed the URL test, was read as a local directory, and every
+    family "skipped: no rows" on a green run. A Path-wrapped URL must still fetch.
+    """
+    seen: list[str] = []
+
+    class _Resp:
+        def __enter__(self) -> "_Resp":
+            return self
+
+        def __exit__(self, *exc: object) -> bool:
+            return False
+
+        def read(self) -> bytes:
+            return b'{"ok": 1}'
+
+    def _urlopen(url: str, timeout: int = 60) -> _Resp:
+        seen.append(url)
+        return _Resp()
+
+    monkeypatch.setattr(raw.urllib.request, "urlopen", _urlopen)
+    for root in (raw.RAW_BASE, Path(raw.RAW_BASE)):
+        assert raw._is_url(root)
+        assert raw._read_json(root, "leaguestandingsv3/2026/regular-season.json") == {"ok": 1}
+    assert seen == [f"{raw.RAW_BASE}/leaguestandingsv3/2026/regular-season.json"] * 2

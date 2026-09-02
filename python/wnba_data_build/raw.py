@@ -25,13 +25,16 @@ job can run against a sibling clone on disk or read the tree straight from GitHu
 from __future__ import annotations
 
 import json
+import re
 import urllib.error
 import urllib.request
 from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
 
-RAW_BASE = "https://raw.githubusercontent.com/sportsdataverse/wehoop-wnba-stats-raw/main/wnba_stats/json"
+RAW_BASE = (
+    "https://raw.githubusercontent.com/sportsdataverse/wehoop-wnba-stats-raw/main/wnba_stats/json"
+)
 
 # Per-game endpoints live under the game-keyed store; season-level ones do not.
 GAME_ENDPOINTS = (
@@ -42,17 +45,28 @@ GAME_ENDPOINTS = (
 )
 
 
+# ``Path("https://x")`` collapses the ``//`` after the scheme (``https:/x`` on POSIX,
+# ``https:\x`` on Windows). The CLI wraps ``--root`` in ``Path``, so a URL root arrived
+# here mangled, failed the ``startswith("https://")`` test, and was read as a local
+# directory that does not exist -- every family "skipped: no rows" and the run was
+# green. Accept the mangled form and repair it at the one place URLs are built.
+_URL_SCHEME = re.compile(r"^(https?):[\\/]+")
+
+
 def _is_url(root: str | Path) -> bool:
-    return str(root).startswith(("http://", "https://"))
+    return bool(_URL_SCHEME.match(str(root)))
+
+
+def _url_base(root: str | Path) -> str:
+    """``scheme://host/path`` with no trailing slash, whether ``root`` is a str or a Path."""
+    return _URL_SCHEME.sub(r"\1://", str(root)).replace("\\", "/").rstrip("/")
 
 
 def _read_json(root: str | Path, rel: str) -> Any | None:
     """Load ``rel`` under ``root`` from disk or over HTTP; ``None`` when absent."""
     if _is_url(root):
         try:
-            with urllib.request.urlopen(
-                f"{str(root).rstrip('/')}/{rel}", timeout=60
-            ) as resp:
+            with urllib.request.urlopen(f"{_url_base(root)}/{rel}", timeout=60) as resp:
                 return json.loads(resp.read())
         except (urllib.error.URLError, TimeoutError, json.JSONDecodeError):
             return None
@@ -79,12 +93,7 @@ def season_of(game_id: str) -> int:
 
 def game_payload_path(root: str | Path, endpoint: str, game_id: str) -> Path:
     """On-disk path of a per-game payload (local roots only)."""
-    return (
-        Path(root)
-        / endpoint
-        / str(season_of(game_id))
-        / f"{str(game_id).zfill(10)}.json"
-    )
+    return Path(root) / endpoint / str(season_of(game_id)) / f"{str(game_id).zfill(10)}.json"
 
 
 def read_game(root: str | Path, endpoint: str, game_id: str) -> Any | None:
@@ -101,11 +110,7 @@ def read_season(
     ``variant`` matches the raw repo's slug (``advanced_playoffs``, ``regular-season``,
     a team id for ``commonteamroster``); omit it for unparameterized endpoints.
     """
-    rel = (
-        f"{endpoint}/{season}/{variant}.json"
-        if variant
-        else f"{endpoint}/{season}.json"
-    )
+    rel = f"{endpoint}/{season}/{variant}.json" if variant else f"{endpoint}/{season}.json"
     return _read_json(root, rel)
 
 
@@ -116,9 +121,7 @@ def available_games(root: str | Path, endpoint: str, season: int) -> list[str]:
     so callers working against RAW_BASE should drive from :func:`season_game_ids`.
     """
     if _is_url(root):
-        raise ValueError(
-            "available_games needs a local root; use season_game_ids for URLs"
-        )
+        raise ValueError("available_games needs a local root; use season_game_ids for URLs")
     d = Path(root) / endpoint / str(season)
     if not d.is_dir():
         return []
@@ -161,9 +164,7 @@ def iter_game_payloads(
             yield gid, payload
 
 
-def result_set(
-    payload: Any, name: str | None = None
-) -> tuple[list[str], list[list[Any]]]:
+def result_set(payload: Any, name: str | None = None) -> tuple[list[str], list[list[Any]]]:
     """``(headers, rows)`` from a stats.com ``resultSets`` envelope.
 
     Returns the named set, or the first non-empty one when ``name`` is omitted.
