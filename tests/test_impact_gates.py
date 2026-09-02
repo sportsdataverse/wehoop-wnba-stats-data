@@ -21,7 +21,6 @@ import pytest
 from wnba_model_publish import gates as G
 from wnba_model_publish.builders import SPM_SIDECAR_NAME, write_spm_coefficients
 
-
 _SKILL = np.random.default_rng(11).normal(0, 2.0, 160)
 
 
@@ -62,7 +61,9 @@ def _status(report: dict, gate: str) -> str:
 
 def test_a_healthy_build_passes_every_floor():
     report = G.gate_report(_frames())
-    assert [c["status"] for c in report["checks"]] == ["PASS"] * len(report["checks"]), report["checks"]
+    assert [c["status"] for c in report["checks"]] == ["PASS"] * len(report["checks"]), report[
+        "checks"
+    ]
 
 
 def test_a_degraded_engine_fails_rather_than_passing_quietly():
@@ -122,4 +123,9 @@ def test_spm_sidecar_round_trips_with_the_fields_the_writeup_reads(tmp_path):
     payload = json.loads(path.read_text(encoding="utf-8"))
     assert payload["seasons"] == [2024]
     got = payload["records"][0]
-    assert len(got["o_coef"]) == len(got["d_coef"]) == len(got["feature_names"]) == len(got["feature_sd"])
+    assert (
+        len(got["o_coef"])
+        == len(got["d_coef"])
+        == len(got["feature_names"])
+        == len(got["feature_sd"])
+    )
