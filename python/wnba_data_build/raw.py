@@ -73,10 +73,13 @@ _GITHUB_AUTH_HOSTS = frozenset({"raw.githubusercontent.com", "api.github.com"})
 def _auth_headers(url: str) -> dict[str, str]:
     """``Authorization`` for ``url`` -- empty unless it is an HTTPS GitHub endpoint.
 
-    ``wehoop-wnba-stats-raw`` is a PRIVATE repo, and the raw host answers an
-    unauthenticated read with 404 -- indistinguishable from "never captured", so the
-    daily workflow (which exports both tokens but never sent them) read every family
-    as empty. Either name the actions runner sets is accepted.
+    ``wehoop-wnba-stats-raw`` was PRIVATE until 2026-09-02, and the raw host answers
+    an unauthenticated read with 404 -- indistinguishable from "never captured", so
+    the daily workflow (which exports both tokens but never sent them) read every
+    family as empty. The repo is public now, so the token is no longer required to
+    read it; keep sending it anyway. It costs nothing, it lifts the contents-API
+    listing quota from 60/hour to 5,000, and it means the reader does not silently
+    break again if the repo is ever made private. Either name the runner sets works.
 
     The scheme + host test keeps the token off any other destination: plaintext HTTP
     would put it on the wire, and a non-GitHub host has no business receiving it.

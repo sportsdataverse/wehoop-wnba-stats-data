@@ -8,9 +8,9 @@ WNBA Stats Game Rosters from wehoop data repository — `boxscoresummaryv2` (gam
 | **Release tag** | [`wnba_stats_game_rosters`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_game_rosters) |
 | **File stem** | `game_rosters_{season}.{parquet,csv,rds}` |
 | **Seasons built** | 1997–2026 (30 seasons) |
-| **Last published** | 2026-07-29 (newest release asset) |
+| **Last published** | 2026-09-02 (newest release asset) |
 | **Tag created** | 2026-05-11 |
-| **Release assets** | 8 |
+| **Release assets** | 95 |
 
 ## Automation
 
@@ -64,4 +64,4 @@ WNBA Stats Game Rosters from wehoop data repository — `boxscoresummaryv2` (gam
 | 2023 | 260 | 260 |
 | 2024 | 262 | 262 |
 | 2025 | 310 | 310 |
-| 2026 | 202 | 202 |
+| 2026 | 267 | 300 |

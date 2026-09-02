@@ -8,9 +8,9 @@ WNBA Stats Player Game Logs from wehoop data repository — `leaguegamelog` (sea
 | **Release tag** | [`wnba_stats_player_game_logs`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_player_game_logs) |
 | **File stem** | `player_game_logs_{season}.{parquet,csv,rds}` |
 | **Seasons built** | — |
-| **Last published** | 2026-07-29 (newest release asset) |
+| **Last published** | 2026-09-02 (newest release asset) |
 | **Tag created** | 2026-05-12 |
-| **Release assets** | 11 |
+| **Release assets** | 95 |
 
 ## Automation
 

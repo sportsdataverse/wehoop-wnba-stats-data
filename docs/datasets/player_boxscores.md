@@ -8,9 +8,9 @@ WNBA Stats Player Boxscores from wehoop data repository — `boxscoretraditional
 | **Release tag** | [`wnba_stats_player_boxscores`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_player_boxscores) |
 | **File stem** | `player_boxscores_{season}.{parquet,csv,rds}` |
 | **Seasons built** | 1997–2026 (30 seasons) |
-| **Last published** | 2026-07-29 (newest release asset) |
+| **Last published** | 2026-09-02 (newest release asset) |
 | **Tag created** | 2023-04-03 |
-| **Release assets** | 3 |
+| **Release assets** | 4 |
 
 ## Automation
 
@@ -88,4 +88,4 @@ WNBA Stats Player Boxscores from wehoop data repository — `boxscoretraditional
 | 2023 | 260 | 260 |
 | 2024 | 262 | 262 |
 | 2025 | 310 | 310 |
-| 2026 | 202 | 202 |
+| 2026 | 300 | 300 |

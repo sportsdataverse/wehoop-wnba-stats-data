@@ -8,7 +8,7 @@ WNBA Stats Team Season Stats from wehoop data repository — `leaguedashteamstat
 | **Release tag** | [`wnba_stats_team_season_stats`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_team_season_stats) |
 | **File stem** | `team_season_stats_{season}.{parquet,csv,rds}` |
 | **Seasons built** | — |
-| **Last published** | 2026-07-29 (newest release asset) |
+| **Last published** | 2026-09-02 (newest release asset) |
 | **Tag created** | 2026-05-11 |
 | **Release assets** | 8 |
 

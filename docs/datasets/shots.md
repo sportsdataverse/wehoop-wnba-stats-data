@@ -8,9 +8,9 @@ WNBA Stats Shots from wehoop data repository — `derived` (derived-level).
 | **Release tag** | [`wnba_stats_shots`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_shots) |
 | **File stem** | `shots_{season}.{parquet,csv,rds}` |
 | **Seasons built** | — |
-| **Last published** | 2026-07-29 (newest release asset) |
+| **Last published** | 2026-09-02 (newest release asset) |
 | **Tag created** | 2026-05-11 |
-| **Release assets** | 8 |
+| **Release assets** | 95 |
 
 ## Automation
 

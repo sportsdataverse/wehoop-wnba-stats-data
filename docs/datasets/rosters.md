@@ -8,9 +8,9 @@ WNBA Stats Rosters from wehoop data repository — `commonteamroster` (season-le
 | **Release tag** | [`wnba_stats_rosters`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_rosters) |
 | **File stem** | `rosters_{season}.{parquet,csv,rds}` |
 | **Seasons built** | — |
-| **Last published** | 2026-07-29 (newest release asset) |
+| **Last published** | 2026-09-02 (newest release asset) |
 | **Tag created** | 2026-05-11 |
-| **Release assets** | 8 |
+| **Release assets** | 95 |
 
 ## Automation
 
