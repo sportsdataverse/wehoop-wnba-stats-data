@@ -178,6 +178,11 @@ uv run python -m wnba_model_publish impact \
 # Re-upload an already-built directory (no recompute):
 uv run python -m wnba_model_publish upload \
   --dir out/wnba_player_impact --tag wnba_player_impact --dry-run
+
+# The SCHEDULED path (droplet cron `30 10 * 5-10 *` ET, after the 09:00 stats-raw
+# refresh): current season only, local raw store, PROXY_* lifted from ~/.Renviron.
+bash scripts/nightly_wnba_impact.sh            # defaults to the current season
+bash scripts/nightly_wnba_impact.sh 2026 --dry-run
 ```
 
 **Dry-run discipline:** there is no `--publish` flag — publishing is the
@@ -187,19 +192,25 @@ the identical command without it. Seasons build earliest-to-latest so
 multi-season priors (adj-RAPM / DARKO) flow forward — for a single-season
 refresh pass a few trailing seasons (e.g. `2021:2026`).
 
-CI wrapper: `.github/workflows/wnba_models.yml` (workflow_dispatch ONLY, no
-cron; `dry_run` input defaults **true** so a stray dispatch publishes
-nothing). Caveat for CI runs: the player-variant leaguegamelog call still
-goes live and stats.wnba.com hangs on datacenter IPs — multi-season
-backfills belong on a residential IP, not a runner.
+Scheduled runs live on the DROPLET, not in CI: `scripts/nightly_wnba_impact.sh`
+(cron `30 10 * 5-10 *` ET) builds the current season off the local raw store,
+lifting `PROXY_*` from `~/.Renviron` — which cron does not load and only R reads.
+That placement is forced by the same caveat that keeps CI dispatch-only: the
+player-variant leaguegamelog call still goes live, and stats.wnba.com HANGS
+(never errors) on datacenter IPs. `.github/workflows/wnba_models.yml` stays
+workflow_dispatch-only with `dry_run` defaulting **true**, for backfills run
+from a residential IP.
 
 | Model | Artifact | Release tag | Training data | Fitting script | Cadence |
 |---|---|---|---|---|---|
-| `wnba_player_impact` (RAPM/adj-RAPM/SPM/BPM/DARKO/WAR) | `wnba_player_impact_{season}.parquet` + `*_card.json` | `wnba_player_impact` on `sportsdataverse-data` | 1997–2026 possessions + box logs (stats.wnba.com via the raw store) | `python/wnba_model_publish/builders.py` (`build_wnba_player_impact`) | manual |
+| `wnba_player_impact` (RAPM/adj-RAPM/SPM/BPM/DARKO/WAR) | `wnba_player_impact_{season}.parquet` + `*_card.json` | `wnba_player_impact` on `sportsdataverse-data` | 1997–2026 possessions + box logs (stats.wnba.com via the raw store) | `python/wnba_model_publish/builders.py` (`build_wnba_player_impact`) | nightly (droplet cron, current season); `wnba_models.yml` dispatch for backfills |
 
 ## Workflows & commits
-- `.github/workflows/daily_wnba_stats.yml` — cron over the WNBA window (`0 7 * 5-9 *`
-  + `0 7 1-20 10 *`), one season per run, shells to the daily processor. Draft is **excluded**
+- `.github/workflows/daily_wnba_stats.yml` — cron over the WNBA window (`0 14 * 5-9 *`
+  + `0 14 1-20 10 *`), one season per run, shells to the daily processor. It has **no
+  checkout of the raw store** and reads each JSON file over HTTP from
+  `WEHOOP_WNBA_STATS_RAW_ROOT`; 14:00 UTC = 10:00 ET puts it after the droplet's
+  09:00 ET stats-raw refresh (the old 07:00 UTC slot compiled yesterday's capture). Draft is **excluded**
   (annual `0 8 15 4 *` / `16` in `annual_wnba_stats_draft.yml`; draft endpoint defaults to
   `most_recent_wnba_season() - 1` since `Season=current` returns 0 rows). Auth via `SDV_GH_TOKEN`.
 - Each parser tees output to `logs/wehoop_wnba_stats_*_logfile_<year>.log`; the processor emits
