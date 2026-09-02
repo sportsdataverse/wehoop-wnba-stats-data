@@ -93,8 +93,9 @@ v3_staging/
 # so built parquet/csv/rds are never committed here. `--out` defaults to
 # build_out/; the glob also covers a per-run dir like build_out_draft/.
 build_out*/
-# out/ is the model side of the same rule: scripts/nightly_wnba_impact.sh writes
-# out/wnba_player_impact/ on every nightly cron run, and the impact tables ship
-# as release assets, not repo files.
+# out/ is the documented --out for MANUAL model runs (see CLAUDE.md). The
+# nightly driver builds into a mktemp dir instead and copies the parquet/rds it
+# means to keep into wnba_stats/player_impact/, so nothing here is ever the
+# artifact of record.
 out/
 .cutover_receipts.json
