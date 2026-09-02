@@ -12,6 +12,8 @@ import sys
 from pathlib import Path
 from typing import Callable, Iterable, Optional
 
+from sportsdataverse.release import upload_release_sidecars
+
 _GH_TIMEOUT = 600
 # Every released dataset ships all three formats to the tag.
 _RELEASE_EXTS: tuple[str, ...] = ("parquet", "rds", "csv")
@@ -70,6 +72,33 @@ def _publishable(path: Path) -> bool:
     """
     return not path.name.startswith(".") and not path.name.endswith(".partial")
 
+
+#: Release sidecar metadata: the loader a consumer reads each tag through.
+#: R's sportsdataverse_save() writes this as package_function.txt/.json beside
+#: every published asset; this repo's hand-rolled `gh release upload` dropped it
+#: along with the timestamp pair. Values that the R producer already published to
+#: a tag are reused verbatim; the rest name the wehoop/sdv-py loader. A tag that is not
+#: listed still gets its timestamp re-stamped -- it just ships no package_function,
+#: which leaves whatever is already on the release untouched.
+PKG_FUNCTION: dict[str, str] = {
+    "wnba_stats_coaches": "wehoop::load_wnba_stats_coaches_manifest()",
+    "wnba_stats_draft": "wehoop::load_wnba_stats_draft_manifest()",
+    "wnba_stats_game_lineups": "sportsdataverse.wnba.load_wnba_stats_game_lineups()",
+    "wnba_stats_game_rosters": "wehoop::load_wnba_stats_game_rosters_manifest()",
+    "wnba_stats_lineups": "wehoop::load_wnba_stats_lineups_manifest()",
+    "wnba_stats_officials": "wehoop::load_wnba_stats_officials_manifest()",
+    "wnba_stats_pbp": "wehoop::load_wnba_stats_pbp_manifest()",
+    "wnba_stats_player_boxscores": "sportsdataverse.wnba.load_wnba_stats_player_boxscores()",
+    "wnba_stats_player_game_logs": "wehoop::load_wnba_stats_player_game_logs()",
+    "wnba_stats_player_season_stats": "wehoop::load_wnba_stats_player_stats_manifest()",
+    "wnba_stats_possessions": "sportsdataverse.wnba.load_wnba_stats_possessions()",
+    "wnba_stats_rosters": "wehoop::load_wnba_stats_rosters_manifest()",
+    "wnba_stats_schedules": "wehoop::load_wnba_stats_schedule()",
+    "wnba_stats_shots": "wehoop::load_wnba_stats_shots_manifest()",
+    "wnba_stats_standings": "wehoop::load_wnba_stats_standings_manifest()",
+    "wnba_stats_team_boxscores": "sportsdataverse.wnba.load_wnba_stats_team_boxscores()",
+    "wnba_stats_team_season_stats": "wehoop::load_wnba_stats_team_stats_manifest()",
+}
 
 def plan_uploads(
     artifacts_dir: Path,
@@ -199,6 +228,11 @@ def upload_artifacts(
         except subprocess.CalledProcessError as exc:
             print(f"WARNING: upload failed for {f.name}: {exc}", file=sys.stderr)
             failed.append(f.name)
+    # stamp LAST so the timestamp describes a finished upload, and only when
+    # something actually uploaded -- a stamp on a no-op run would claim data
+    # moved when it did not
+    if uploaded:
+        upload_release_sidecars(tag, runner=run, pkg_function=PKG_FUNCTION.get(tag), repo=repo)
     return {
         "uploaded": len(uploaded),
         "failed": failed,
