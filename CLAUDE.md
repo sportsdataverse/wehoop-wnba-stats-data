@@ -181,8 +181,10 @@ uv run python -m wnba_model_publish upload \
 
 # The SCHEDULED path (droplet cron `30 10 * 5-10 *` ET, after the 09:00 stats-raw
 # refresh): current season only, local raw store, PROXY_* lifted from ~/.Renviron.
+# Builds into a mktemp dir, publishes, then commits parquet+rds+card into
+# wnba_stats/player_impact/ -- same tracked-tree contract as the data stages.
 bash scripts/nightly_wnba_impact.sh            # defaults to the current season
-bash scripts/nightly_wnba_impact.sh 2026 --dry-run
+bash scripts/nightly_wnba_impact.sh 2026 --dry-run   # builds only; no publish, no commit
 ```
 
 **Dry-run discipline:** there is no `--publish` flag — publishing is the
