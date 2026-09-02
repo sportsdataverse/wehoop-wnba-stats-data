@@ -178,6 +178,11 @@ uv run python -m wnba_model_publish impact \
 # Re-upload an already-built directory (no recompute):
 uv run python -m wnba_model_publish upload \
   --dir out/wnba_player_impact --tag wnba_player_impact --dry-run
+
+# The SCHEDULED path (droplet cron `30 10 * 5-10 *` ET, after the 09:00 stats-raw
+# refresh): current season only, local raw store, PROXY_* lifted from ~/.Renviron.
+bash scripts/nightly_wnba_impact.sh            # defaults to the current season
+bash scripts/nightly_wnba_impact.sh 2026 --dry-run
 ```
 
 **Dry-run discipline:** there is no `--publish` flag — publishing is the
@@ -187,19 +192,25 @@ the identical command without it. Seasons build earliest-to-latest so
 multi-season priors (adj-RAPM / DARKO) flow forward — for a single-season
 refresh pass a few trailing seasons (e.g. `2021:2026`).
 
-CI wrapper: `.github/workflows/wnba_models.yml` (workflow_dispatch ONLY, no
-cron; `dry_run` input defaults **true** so a stray dispatch publishes
-nothing). Caveat for CI runs: the player-variant leaguegamelog call still
-goes live and stats.wnba.com hangs on datacenter IPs — multi-season
-backfills belong on a residential IP, not a runner.
+Scheduled runs live on the DROPLET, not in CI: `scripts/nightly_wnba_impact.sh`
+(cron `30 10 * 5-10 *` ET) builds the current season off the local raw store,
+lifting `PROXY_*` from `~/.Renviron` — which cron does not load and only R reads.
+That placement is forced by the same caveat that keeps CI dispatch-only: the
+player-variant leaguegamelog call still goes live, and stats.wnba.com HANGS
+(never errors) on datacenter IPs. `.github/workflows/wnba_models.yml` stays
+workflow_dispatch-only with `dry_run` defaulting **true**, for backfills run
+from a residential IP.
 
 | Model | Artifact | Release tag | Training data | Fitting script | Cadence |
 |---|---|---|---|---|---|
-| `wnba_player_impact` (RAPM/adj-RAPM/SPM/BPM/DARKO/WAR) | `wnba_player_impact_{season}.parquet` + `*_card.json` | `wnba_player_impact` on `sportsdataverse-data` | 1997–2026 possessions + box logs (stats.wnba.com via the raw store) | `python/wnba_model_publish/builders.py` (`build_wnba_player_impact`) | manual |
+| `wnba_player_impact` (RAPM/adj-RAPM/SPM/BPM/DARKO/WAR) | `wnba_player_impact_{season}.parquet` + `*_card.json` | `wnba_player_impact` on `sportsdataverse-data` | 1997–2026 possessions + box logs (stats.wnba.com via the raw store) | `python/wnba_model_publish/builders.py` (`build_wnba_player_impact`) | nightly (droplet cron, current season); `wnba_models.yml` dispatch for backfills |
 
 ## Workflows & commits
-- `.github/workflows/daily_wnba_stats.yml` — cron over the WNBA window (`0 7 * 5-9 *`
-  + `0 7 1-20 10 *`), one season per run, shells to the daily processor. Draft is **excluded**
+- `.github/workflows/daily_wnba_stats.yml` — cron over the WNBA window (`0 14 * 5-9 *`
+  + `0 14 1-20 10 *`), one season per run, shells to the daily processor. It has **no
+  checkout of the raw store** and reads each JSON file over HTTP from
+  `WEHOOP_WNBA_STATS_RAW_ROOT`; 14:00 UTC = 10:00 ET puts it after the droplet's
+  09:00 ET stats-raw refresh (the old 07:00 UTC slot compiled yesterday's capture). Draft is **excluded**
   (annual `0 8 15 4 *` / `16` in `annual_wnba_stats_draft.yml`; draft endpoint defaults to
   `most_recent_wnba_season() - 1` since `Season=current` returns 0 rows). Auth via `SDV_GH_TOKEN`.
 - Each parser tees output to `logs/wehoop_wnba_stats_*_logfile_<year>.log`; the processor emits
@@ -215,21 +226,21 @@ Upstream SDK: <https://github.com/sportsdataverse/wehoop> · ESPN sister: `wehoo
 <!-- BEGIN GENERATED: datasets -->
 | Script | Dataset | Release tag | Last published |
 |---|---|---|---|
-| [`python/wnba_stats_01_standings_creation.py`](python/wnba_stats_01_standings_creation.py) | [`standings`](docs/datasets/standings.md) | [`wnba_stats_standings`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_standings) | 2026-07-29 |
-| [`python/wnba_stats_02_player_season_stats_creation.py`](python/wnba_stats_02_player_season_stats_creation.py) | [`player_season_stats`](docs/datasets/player_season_stats.md) | [`wnba_stats_player_season_stats`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_player_season_stats) | 2026-07-29 |
-| [`python/wnba_stats_03_team_season_stats_creation.py`](python/wnba_stats_03_team_season_stats_creation.py) | [`team_season_stats`](docs/datasets/team_season_stats.md) | [`wnba_stats_team_season_stats`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_team_season_stats) | 2026-07-29 |
-| [`python/wnba_stats_04_lineups_creation.py`](python/wnba_stats_04_lineups_creation.py) | [`lineups`](docs/datasets/lineups.md) | [`wnba_stats_lineups`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_lineups) | 2026-07-29 |
-| [`python/wnba_stats_05_rosters_creation.py`](python/wnba_stats_05_rosters_creation.py) | [`rosters`](docs/datasets/rosters.md) | [`wnba_stats_rosters`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_rosters) | 2026-07-29 |
-| [`python/wnba_stats_06_coaches_creation.py`](python/wnba_stats_06_coaches_creation.py) | [`coaches`](docs/datasets/coaches.md) | [`wnba_stats_coaches`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_coaches) | 2026-07-29 |
-| [`python/wnba_stats_07_draft_creation.py`](python/wnba_stats_07_draft_creation.py) | [`draft`](docs/datasets/draft.md) | [`wnba_stats_draft`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_draft) | 2026-08-12 |
-| [`python/wnba_stats_08_schedules_creation.py`](python/wnba_stats_08_schedules_creation.py) | [`schedules`](docs/datasets/schedules.md) | [`wnba_stats_schedules`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_schedules) | 2026-08-12 |
-| [`python/wnba_stats_09_player_game_logs_creation.py`](python/wnba_stats_09_player_game_logs_creation.py) | [`player_game_logs`](docs/datasets/player_game_logs.md) | [`wnba_stats_player_game_logs`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_player_game_logs) | 2026-07-29 |
-| [`python/wnba_stats_10_pbp_creation.py`](python/wnba_stats_10_pbp_creation.py) | [`pbp`](docs/datasets/pbp.md) | [`wnba_stats_pbp`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_pbp) | 2026-08-12 |
-| [`python/wnba_stats_11_game_rosters_creation.py`](python/wnba_stats_11_game_rosters_creation.py) | [`game_rosters`](docs/datasets/game_rosters.md) | [`wnba_stats_game_rosters`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_game_rosters) | 2026-07-29 |
-| [`python/wnba_stats_12_officials_creation.py`](python/wnba_stats_12_officials_creation.py) | [`officials`](docs/datasets/officials.md) | [`wnba_stats_officials`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_officials) | 2026-07-29 |
-| [`python/wnba_stats_13_player_boxscores_creation.py`](python/wnba_stats_13_player_boxscores_creation.py) | [`player_boxscores`](docs/datasets/player_boxscores.md) | [`wnba_stats_player_boxscores`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_player_boxscores) | 2026-07-29 |
-| [`python/wnba_stats_14_team_boxscores_creation.py`](python/wnba_stats_14_team_boxscores_creation.py) | [`team_boxscores`](docs/datasets/team_boxscores.md) | [`wnba_stats_team_boxscores`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_team_boxscores) | 2026-07-29 |
-| [`python/wnba_stats_15_shots_creation.py`](python/wnba_stats_15_shots_creation.py) | [`shots`](docs/datasets/shots.md) | [`wnba_stats_shots`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_shots) | 2026-07-29 |
+| [`python/wnba_stats_01_standings_creation.py`](python/wnba_stats_01_standings_creation.py) | [`standings`](docs/datasets/standings.md) | [`wnba_stats_standings`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_standings) | 2026-09-02 |
+| [`python/wnba_stats_02_player_season_stats_creation.py`](python/wnba_stats_02_player_season_stats_creation.py) | [`player_season_stats`](docs/datasets/player_season_stats.md) | [`wnba_stats_player_season_stats`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_player_season_stats) | 2026-09-02 |
+| [`python/wnba_stats_03_team_season_stats_creation.py`](python/wnba_stats_03_team_season_stats_creation.py) | [`team_season_stats`](docs/datasets/team_season_stats.md) | [`wnba_stats_team_season_stats`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_team_season_stats) | 2026-09-02 |
+| [`python/wnba_stats_04_lineups_creation.py`](python/wnba_stats_04_lineups_creation.py) | [`lineups`](docs/datasets/lineups.md) | [`wnba_stats_lineups`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_lineups) | 2026-09-02 |
+| [`python/wnba_stats_05_rosters_creation.py`](python/wnba_stats_05_rosters_creation.py) | [`rosters`](docs/datasets/rosters.md) | [`wnba_stats_rosters`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_rosters) | 2026-09-02 |
+| [`python/wnba_stats_06_coaches_creation.py`](python/wnba_stats_06_coaches_creation.py) | [`coaches`](docs/datasets/coaches.md) | [`wnba_stats_coaches`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_coaches) | 2026-09-02 |
+| [`python/wnba_stats_07_draft_creation.py`](python/wnba_stats_07_draft_creation.py) | [`draft`](docs/datasets/draft.md) | [`wnba_stats_draft`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_draft) | 2026-09-02 |
+| [`python/wnba_stats_08_schedules_creation.py`](python/wnba_stats_08_schedules_creation.py) | [`schedules`](docs/datasets/schedules.md) | [`wnba_stats_schedules`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_schedules) | 2026-09-02 |
+| [`python/wnba_stats_09_player_game_logs_creation.py`](python/wnba_stats_09_player_game_logs_creation.py) | [`player_game_logs`](docs/datasets/player_game_logs.md) | [`wnba_stats_player_game_logs`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_player_game_logs) | 2026-09-02 |
+| [`python/wnba_stats_10_pbp_creation.py`](python/wnba_stats_10_pbp_creation.py) | [`pbp`](docs/datasets/pbp.md) | [`wnba_stats_pbp`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_pbp) | 2026-09-02 |
+| [`python/wnba_stats_11_game_rosters_creation.py`](python/wnba_stats_11_game_rosters_creation.py) | [`game_rosters`](docs/datasets/game_rosters.md) | [`wnba_stats_game_rosters`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_game_rosters) | 2026-09-02 |
+| [`python/wnba_stats_12_officials_creation.py`](python/wnba_stats_12_officials_creation.py) | [`officials`](docs/datasets/officials.md) | [`wnba_stats_officials`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_officials) | 2026-09-02 |
+| [`python/wnba_stats_13_player_boxscores_creation.py`](python/wnba_stats_13_player_boxscores_creation.py) | [`player_boxscores`](docs/datasets/player_boxscores.md) | [`wnba_stats_player_boxscores`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_player_boxscores) | 2026-09-02 |
+| [`python/wnba_stats_14_team_boxscores_creation.py`](python/wnba_stats_14_team_boxscores_creation.py) | [`team_boxscores`](docs/datasets/team_boxscores.md) | [`wnba_stats_team_boxscores`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_team_boxscores) | 2026-09-02 |
+| [`python/wnba_stats_15_shots_creation.py`](python/wnba_stats_15_shots_creation.py) | [`shots`](docs/datasets/shots.md) | [`wnba_stats_shots`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_shots) | 2026-09-02 |
 | [`python/wnba_stats_99_schedule_master_creation.py`](python/wnba_stats_99_schedule_master_creation.py) | [`schedule_master`](docs/datasets/schedule_master.md) | `wnba_stats/wnba_stats_schedule_master.parquet` (committed) | — |
 | [`python/wnba_stats_99_schedule_master_creation.py`](python/wnba_stats_99_schedule_master_creation.py) | [`games_in_data_repo`](docs/datasets/games_in_data_repo.md) | `wnba_stats/wnba_stats_games_in_data_repo.parquet` (committed) | — |
 <!-- END GENERATED: datasets -->

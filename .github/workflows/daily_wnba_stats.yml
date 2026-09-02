@@ -23,9 +23,26 @@ concurrency:
   cancel-in-progress: false
 
 on:
+  # This job has NO checkout of the raw store: it reads each JSON file over HTTP
+  # from WEHOOP_WNBA_STATS_RAW_ROOT below. Three things had to be true for that
+  # to work and none were, so every run from 2026-07-29 to 09-02 went green and
+  # published nothing -- all fixed in #14 plus the repo going public:
+  #   1. the reader had to survive Path()-mangling of the root ("https://" ->
+  #      "https:/"), which made it read the URL as a local directory;
+  #   2. it had to send this job's token to the raw host, which 404s an
+  #      unauthenticated read (the repo was private; it is public now);
+  #   3. it had to ENUMERATE season variants over HTTP -- a Path.glob finds
+  #      nothing under a URL root, so every leaguedash/standings family built
+  #      empty even once the reads worked.
+  # If this ever reports "skip <dataset>: no rows" for EVERY dataset again,
+  # suspect the root resolving to nothing -- not an empty season.
+  # 14:00 UTC = 10:00 ET, deliberately: the droplet's stats-raw refresh starts
+  # 09:00 ET and takes ~45 min, so the old 07:00 UTC (03:00 ET) slot compiled
+  # yesterday's capture every day. This lands after the refresh pushes and
+  # before sdv-db ingests at 11:00 ET.
   schedule:
-    - cron: "0 7 * 5-9 *" # May - September daily
-    - cron: "0 7 1-20 10 *" # early October (regular season + playoffs tail)
+    - cron: "0 14 * 5-9 *" # May - September daily
+    - cron: "0 14 1-20 10 *" # early October (regular season + playoffs tail)
   workflow_dispatch:
     inputs:
       start_year:

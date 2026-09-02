@@ -52,9 +52,7 @@ def test_season_of_matches_the_writers_decoder_everywhere() -> None:
             gid = path.stem
             assert raw.season_of(gid) == int(season_dir.name), gid
             expected = _raw_store_path("playbyplayv3", gid, root=str(REAL_STORE))
-            assert raw.game_payload_path(REAL_STORE, "playbyplayv3", gid) == expected, (
-                gid
-            )
+            assert raw.game_payload_path(REAL_STORE, "playbyplayv3", gid) == expected, gid
             checked += 1
     assert checked > 500, f"expected a broad sample, only checked {checked}"
 
@@ -90,19 +88,13 @@ def test_corrupt_payload_returns_none(tmp_path: Path) -> None:
 def test_read_season_variant_paths(tmp_path: Path) -> None:
     _write(tmp_path, "leaguedashlineups/2025/base_playoffs.json", {"ok": 1})
     _write(tmp_path, "leaguestandingsv3/2025.json", {"ok": 2})
-    assert raw.read_season(tmp_path, "leaguedashlineups", 2025, "base_playoffs") == {
-        "ok": 1
-    }
+    assert raw.read_season(tmp_path, "leaguedashlineups", 2025, "base_playoffs") == {"ok": 1}
     assert raw.read_season(tmp_path, "leaguestandingsv3", 2025) == {"ok": 2}
 
 
 def test_season_game_ids_unions_both_season_types(tmp_path: Path) -> None:
     def log(ids):
-        return {
-            "resultSets": [
-                {"headers": ["GAME_ID", "X"], "rowSet": [[i, 1] for i in ids]}
-            ]
-        }
+        return {"resultSets": [{"headers": ["GAME_ID", "X"], "rowSet": [[i, 1] for i in ids]}]}
 
     _write(
         tmp_path,
@@ -129,9 +121,7 @@ def test_season_game_ids_zero_pads(tmp_path: Path) -> None:
 
 def test_iter_game_payloads_skips_misses(tmp_path: Path) -> None:
     _write(tmp_path, "playbyplayv3/2025/1022500001.json", {"a": 1})
-    got = list(
-        raw.iter_game_payloads(tmp_path, "playbyplayv3", ["1022500001", "1022500002"])
-    )
+    got = list(raw.iter_game_payloads(tmp_path, "playbyplayv3", ["1022500001", "1022500002"]))
     assert got == [("1022500001", {"a": 1})]
 
 
@@ -158,3 +148,193 @@ def test_available_games_rejects_url_roots() -> None:
     """GitHub serves files, not listings — fail loudly rather than return nothing."""
     with pytest.raises(ValueError, match="local root"):
         raw.available_games(raw.RAW_BASE, "playbyplayv3", 2025)
+
+
+def test_url_root_survives_path_wrapping(monkeypatch: pytest.MonkeyPatch) -> None:
+    """The CLI wraps ``--root`` in ``Path``, which collapses ``https://`` to ``https:/``.
+
+    For 33 days the daily workflow passed the raw.githubusercontent root that way,
+    the mangled root failed the URL test, was read as a local directory, and every
+    family "skipped: no rows" on a green run. A Path-wrapped URL must still fetch.
+
+    The second half of the same no-op: the raw repo is PRIVATE, so the raw host
+    404s an unauthenticated read. The token the workflow exports must be sent.
+    """
+    seen: list[tuple[str, str | None]] = []
+
+    class _Resp:
+        def __enter__(self) -> "_Resp":
+            return self
+
+        def __exit__(self, *exc: object) -> bool:
+            return False
+
+        def read(self) -> bytes:
+            return b'{"ok": 1}'
+
+    def _urlopen(req: raw.urllib.request.Request, timeout: int = 60) -> _Resp:
+        seen.append((req.full_url, req.get_header("Authorization")))
+        return _Resp()
+
+    monkeypatch.setattr(raw, "_urlopen", _urlopen)
+    monkeypatch.delenv("GITHUB_PAT", raising=False)
+    monkeypatch.delenv("GH_TOKEN", raising=False)
+    rel = "leaguestandingsv3/2026/regular-season.json"
+    for root in (raw.RAW_BASE, Path(raw.RAW_BASE)):
+        assert raw._is_url(root)
+        assert raw._read_json(root, rel) == {"ok": 1}
+    assert seen == [(f"{raw.RAW_BASE}/{rel}", None)] * 2
+
+    monkeypatch.setenv("GITHUB_PAT", "ghp_test")
+    assert raw._read_json(Path(raw.RAW_BASE), rel) == {"ok": 1}
+    assert seen[-1] == (f"{raw.RAW_BASE}/{rel}", "token ghp_test")
+
+
+def test_season_variants_lists_a_raw_github_root_via_the_contents_api(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """Season-level families discovered variants by globbing a local dir, so over HTTP
+    every one of them 'skipped: no rows'. A raw-GitHub root must list the same
+    directory through the contents API, with the same token."""
+    seen: list[tuple[str, str | None, str | None]] = []
+
+    class _Resp:
+        def __enter__(self) -> "_Resp":
+            return self
+
+        def __exit__(self, *exc: object) -> bool:
+            return False
+
+        def read(self) -> bytes:
+            return (
+                b'[{"name": "regular-season.json", "type": "file"},'
+                b' {"name": "playoffs.json", "type": "file"},'
+                b' {"name": "README.md", "type": "file"}]'
+            )
+
+    def _urlopen(req: raw.urllib.request.Request, timeout: int = 60) -> _Resp:
+        seen.append((req.full_url, req.get_header("Authorization"), req.get_header("Accept")))
+        return _Resp()
+
+    monkeypatch.setattr(raw, "_urlopen", _urlopen)
+    monkeypatch.setenv("GITHUB_PAT", "ghp_test")
+    got = raw.season_variants(Path(raw.RAW_BASE), "leaguestandingsv3", 2026)
+    assert got == ["playoffs", "regular-season"]
+    assert seen == [
+        (
+            "https://api.github.com/repos/sportsdataverse/wehoop-wnba-stats-raw/contents/"
+            "wnba_stats/json/leaguestandingsv3/2026?ref=main",
+            "token ghp_test",
+            "application/vnd.github+json",
+        )
+    ]
+    # a local root still globs, and an unknown host cannot list
+    _write(tmp_path, "leaguestandingsv3/2026/regular-season.json", {})
+    assert raw.season_variants(tmp_path, "leaguestandingsv3", 2026) == ["regular-season"]
+    assert raw.season_variants("https://example.com/x", "leaguestandingsv3", 2026) == []
+
+
+def test_token_only_goes_to_https_github_hosts(monkeypatch: pytest.MonkeyPatch) -> None:
+    """`root` is caller-supplied, so the credential must be bound to its origin.
+
+    Plaintext HTTP would put the token on the wire and a non-GitHub host has no
+    business receiving it, so `_auth_headers` returns nothing for either.
+    """
+    monkeypatch.setenv("GITHUB_PAT", "ghp_test")
+    assert raw._auth_headers(f"{raw.RAW_BASE}/x.json") == {"Authorization": "token ghp_test"}
+    assert raw._auth_headers("https://api.github.com/repos/o/r/contents/p") == {
+        "Authorization": "token ghp_test"
+    }
+    assert raw._auth_headers("http://raw.githubusercontent.com/x.json") == {}
+    assert raw._auth_headers("https://evil.example.com/x.json") == {}
+    assert raw._auth_headers("https://raw.githubusercontent.com.evil.example/x") == {}
+
+
+def test_authorization_is_dropped_on_a_cross_host_redirect() -> None:
+    """urllib copies headers onto the redirected request, so a 302 to another origin
+    would otherwise forward the token to whoever served the redirect."""
+    handler = raw._StripAuthOnCrossHostRedirect()
+    req = raw.urllib.request.Request(
+        f"{raw.RAW_BASE}/x.json", headers={"Authorization": "token ghp_test"}
+    )
+
+    same = handler.redirect_request(
+        req, None, 302, "Found", {}, "https://raw.githubusercontent.com/other.json"
+    )
+    assert same is not None and same.get_header("Authorization") == "token ghp_test"
+
+    cross = handler.redirect_request(req, None, 302, "Found", {}, "https://evil.example.com/x")
+    assert cross is not None and cross.get_header("Authorization") is None
+
+
+def _http_error(code: int) -> raw.urllib.error.HTTPError:
+    return raw.urllib.error.HTTPError(
+        "https://raw.githubusercontent.com/x", code, "boom", {}, None
+    )
+
+
+def test_a_404_is_absence_but_a_transient_is_not(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Absence and failure must stay distinguishable.
+
+    Mapping a 5xx / rate-limit / timeout to "never captured" is how a build
+    silently publishes a short season on a green run -- one blip in the ~1,800
+    reads a season needs is one game nobody notices missing. Only 404/410 may
+    return None; everything else retries and then raises.
+    """
+    monkeypatch.setattr(raw.time, "sleep", lambda _s: None)
+    monkeypatch.setenv("SDV_PY_HTTP_RETRIES", "2")
+
+    def _raise(code: int):
+        def _open(req, timeout: int = 60):
+            raise _http_error(code)
+
+        return _open
+
+    monkeypatch.setattr(raw, "_urlopen", _raise(404))
+    assert raw._read_json(raw.RAW_BASE, "playbyplayv3/2026/1022600001.json") is None
+
+    for code in (500, 502, 403):
+        monkeypatch.setattr(raw, "_urlopen", _raise(code))
+        with pytest.raises(raw.urllib.error.HTTPError):
+            raw._read_json(raw.RAW_BASE, "playbyplayv3/2026/1022600001.json")
+
+
+def test_a_transient_recovers_within_the_retry_budget(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(raw.time, "sleep", lambda _s: None)
+    monkeypatch.setenv("SDV_PY_HTTP_RETRIES", "3")
+    calls: list[int] = []
+
+    class _Resp:
+        def __enter__(self) -> "_Resp":
+            return self
+
+        def __exit__(self, *exc: object) -> bool:
+            return False
+
+        def read(self) -> bytes:
+            return b'{"ok": 1}'
+
+    def _flaky_then_ok(req, timeout: int = 60):
+        calls.append(1)
+        if len(calls) < 3:
+            raise _http_error(503)
+        return _Resp()
+
+    monkeypatch.setattr(raw, "_urlopen", _flaky_then_ok)
+    assert raw._read_json(raw.RAW_BASE, "leaguestandingsv3/2026.json") == {"ok": 1}
+    assert len(calls) == 3
+
+
+def test_season_variants_does_not_report_a_rate_limit_as_no_variants(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A 403 from the contents API is a rate limit, not "this season has none"."""
+    monkeypatch.setattr(raw.time, "sleep", lambda _s: None)
+    monkeypatch.setenv("SDV_PY_HTTP_RETRIES", "1")
+
+    def _rate_limited(req, timeout: int = 60):
+        raise _http_error(403)
+
+    monkeypatch.setattr(raw, "_urlopen", _rate_limited)
+    with pytest.raises(raw.urllib.error.HTTPError):
+        raw.season_variants(raw.RAW_BASE, "leaguedashplayerstats", 2026)

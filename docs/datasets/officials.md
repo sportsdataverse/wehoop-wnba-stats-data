@@ -8,9 +8,9 @@ WNBA Stats Officials from wehoop data repository — `boxscoresummaryv2` (game-l
 | **Release tag** | [`wnba_stats_officials`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_officials) |
 | **File stem** | `officials_{season}.{parquet,csv,rds}` |
 | **Seasons built** | 2004–2026 (23 seasons) |
-| **Last published** | 2026-07-29 (newest release asset) |
+| **Last published** | 2026-09-02 (newest release asset) |
 | **Tag created** | 2026-05-11 |
-| **Release assets** | 8 |
+| **Release assets** | 74 |
 
 ## Automation
 
@@ -57,6 +57,6 @@ WNBA Stats Officials from wehoop data repository — `boxscoresummaryv2` (game-l
 | 2023 | 260 | 260 |
 | 2024 | 262 | 262 |
 | 2025 | 310 | 310 |
-| 2026 | 202 | 202 |
+| 2026 | 300 | 300 |
 
 _Seasons before 2004 are not built or published; see Caveats._

@@ -8,7 +8,7 @@ WNBA Stats Lineups from wehoop data repository — `leaguedashlineups` (season-l
 | **Release tag** | [`wnba_stats_lineups`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_lineups) |
 | **File stem** | `lineups_{season}.{parquet,csv,rds}` |
 | **Seasons built** | — |
-| **Last published** | 2026-07-29 (newest release asset) |
+| **Last published** | 2026-09-02 (newest release asset) |
 | **Tag created** | 2026-05-11 |
 | **Release assets** | 8 |
 

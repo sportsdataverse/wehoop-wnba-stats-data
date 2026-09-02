@@ -8,7 +8,7 @@ WNBA Stats Schedule from wehoop data repository — `leaguegamelog` (season-leve
 | **Release tag** | [`wnba_stats_schedules`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_schedules) |
 | **File stem** | `wnba_stats_schedule_{season}.{parquet,csv,rds}` |
 | **Seasons built** | — |
-| **Last published** | 2026-08-12 (newest release asset) |
+| **Last published** | 2026-09-02 (newest release asset) |
 | **Tag created** | 2023-04-03 |
 | **Release assets** | 105 |
 

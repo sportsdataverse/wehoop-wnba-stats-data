@@ -35,4 +35,4 @@ Stage-99 schedule-master artifact (spec D34/D36): only games present in at least
 
 ## Coverage
 
-_6,871 games across 30 seasons (committed)._
+_6,969 games across 30 seasons (committed)._

@@ -93,4 +93,8 @@ v3_staging/
 # so built parquet/csv/rds are never committed here. `--out` defaults to
 # build_out/; the glob also covers a per-run dir like build_out_draft/.
 build_out*/
+# out/ is the model side of the same rule: scripts/nightly_wnba_impact.sh writes
+# out/wnba_player_impact/ on every nightly cron run, and the impact tables ship
+# as release assets, not repo files.
+out/
 .cutover_receipts.json
