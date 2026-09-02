@@ -23,6 +23,7 @@ jobs:
           sparse-checkout: |
             python
             tests
+            .github
             scripts
             models
             docs
