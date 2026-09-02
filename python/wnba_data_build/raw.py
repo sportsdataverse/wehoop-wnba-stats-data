@@ -27,6 +27,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -112,16 +113,53 @@ def _urlopen(req: urllib.request.Request, timeout: int = 60) -> Any:
     return _OPENER.open(req, timeout=timeout)
 
 
+def _http_retries() -> int:
+    """Transient-error attempts beyond the first. ``SDV_PY_HTTP_RETRIES`` bounds it."""
+    try:
+        return max(0, int(os.environ.get("SDV_PY_HTTP_RETRIES", "3")))
+    except ValueError:
+        return 3
+
+
+def _get_json(url: str, extra_headers: dict[str, str] | None = None) -> Any | None:
+    """GET ``url`` as JSON. ``None`` ONLY for a genuine 404/410; transients RAISE.
+
+    The one HTTP policy for this module, shared by the payload reader and the
+    contents-API listing so they cannot drift apart.
+
+    Absence and failure must stay distinguishable. A 404 means the store never
+    captured this file. Everything else — 5xx, a 403 rate-limit from the contents
+    API, a dropped connection, a timeout — is TRANSIENT, and mapping it to
+    "absent" is how a build silently publishes a short season on a green run: a
+    single season reads ~1,800 files, so one blip is one missing game nobody sees.
+    Both call sites used to swallow exactly these. Retry with backoff, then raise;
+    a failed build is recoverable, a quietly-truncated release is not.
+
+    ``SDV_PY_HTTP_RETRIES`` bounds the attempts (CI wants a small number: the
+    default 15x30s retry budget elsewhere in SDV is a hang, not resilience).
+    """
+    attempts = _http_retries() + 1
+    for attempt in range(1, attempts + 1):
+        try:
+            headers = {**_auth_headers(url), **(extra_headers or {})}
+            with _urlopen(urllib.request.Request(url, headers=headers)) as resp:
+                return json.loads(resp.read())
+        except urllib.error.HTTPError as exc:
+            if exc.code in (404, 410):
+                return None  # never captured; retrying cannot change the answer
+            if attempt == attempts:
+                raise
+        except (urllib.error.URLError, TimeoutError, json.JSONDecodeError):
+            if attempt == attempts:
+                raise
+        time.sleep(min(2 ** (attempt - 1), 8))
+    return None
+
+
 def _read_json(root: str | Path, rel: str) -> Any | None:
     """Load ``rel`` under ``root`` from disk or over HTTP; ``None`` when absent."""
     if _is_url(root):
-        try:
-            url = f"{_url_base(root)}/{rel}"
-            req = urllib.request.Request(url, headers=_auth_headers(url))
-            with _urlopen(req) as resp:
-                return json.loads(resp.read())
-        except (urllib.error.URLError, TimeoutError, json.JSONDecodeError):
-            return None
+        return _get_json(f"{_url_base(root)}/{rel}")
     path = Path(root) / rel
     if not path.exists():
         return None
@@ -223,14 +261,10 @@ def season_variants(root: str | Path, endpoint: str, season: int) -> list[str]:
     api = (
         f"https://api.github.com/repos/{owner}/{repo}/contents/{path}/{endpoint}/{season}?ref={ref}"
     )
-    req = urllib.request.Request(
-        api, headers={"Accept": "application/vnd.github+json", **_auth_headers(api)}
-    )
-    try:
-        with _urlopen(req) as resp:
-            listing = json.loads(resp.read())
-    except (urllib.error.URLError, TimeoutError, json.JSONDecodeError):
-        return []
+    # _get_json, not a bare try/except: a 403 rate-limit or a 5xx here used to
+    # return [] -- "this season has no variants" -- and every leaguedash/standings
+    # family then built zero rows on a green run. Only a real 404 is absence.
+    listing = _get_json(api, {"Accept": "application/vnd.github+json"})
     if not isinstance(listing, list):
         return []
     names = (str(e.get("name", "")) for e in listing if isinstance(e, dict))

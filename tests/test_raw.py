@@ -265,3 +265,76 @@ def test_authorization_is_dropped_on_a_cross_host_redirect() -> None:
 
     cross = handler.redirect_request(req, None, 302, "Found", {}, "https://evil.example.com/x")
     assert cross is not None and cross.get_header("Authorization") is None
+
+
+def _http_error(code: int) -> raw.urllib.error.HTTPError:
+    return raw.urllib.error.HTTPError(
+        "https://raw.githubusercontent.com/x", code, "boom", {}, None
+    )
+
+
+def test_a_404_is_absence_but_a_transient_is_not(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Absence and failure must stay distinguishable.
+
+    Mapping a 5xx / rate-limit / timeout to "never captured" is how a build
+    silently publishes a short season on a green run -- one blip in the ~1,800
+    reads a season needs is one game nobody notices missing. Only 404/410 may
+    return None; everything else retries and then raises.
+    """
+    monkeypatch.setattr(raw.time, "sleep", lambda _s: None)
+    monkeypatch.setenv("SDV_PY_HTTP_RETRIES", "2")
+
+    def _raise(code: int):
+        def _open(req, timeout: int = 60):
+            raise _http_error(code)
+
+        return _open
+
+    monkeypatch.setattr(raw, "_urlopen", _raise(404))
+    assert raw._read_json(raw.RAW_BASE, "playbyplayv3/2026/1022600001.json") is None
+
+    for code in (500, 502, 403):
+        monkeypatch.setattr(raw, "_urlopen", _raise(code))
+        with pytest.raises(raw.urllib.error.HTTPError):
+            raw._read_json(raw.RAW_BASE, "playbyplayv3/2026/1022600001.json")
+
+
+def test_a_transient_recovers_within_the_retry_budget(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(raw.time, "sleep", lambda _s: None)
+    monkeypatch.setenv("SDV_PY_HTTP_RETRIES", "3")
+    calls: list[int] = []
+
+    class _Resp:
+        def __enter__(self) -> "_Resp":
+            return self
+
+        def __exit__(self, *exc: object) -> bool:
+            return False
+
+        def read(self) -> bytes:
+            return b'{"ok": 1}'
+
+    def _flaky_then_ok(req, timeout: int = 60):
+        calls.append(1)
+        if len(calls) < 3:
+            raise _http_error(503)
+        return _Resp()
+
+    monkeypatch.setattr(raw, "_urlopen", _flaky_then_ok)
+    assert raw._read_json(raw.RAW_BASE, "leaguestandingsv3/2026.json") == {"ok": 1}
+    assert len(calls) == 3
+
+
+def test_season_variants_does_not_report_a_rate_limit_as_no_variants(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A 403 from the contents API is a rate limit, not "this season has none"."""
+    monkeypatch.setattr(raw.time, "sleep", lambda _s: None)
+    monkeypatch.setenv("SDV_PY_HTTP_RETRIES", "1")
+
+    def _rate_limited(req, timeout: int = 60):
+        raise _http_error(403)
+
+    monkeypatch.setattr(raw, "_urlopen", _rate_limited)
+    with pytest.raises(raw.urllib.error.HTTPError):
+        raw.season_variants(raw.RAW_BASE, "leaguedashplayerstats", 2026)
