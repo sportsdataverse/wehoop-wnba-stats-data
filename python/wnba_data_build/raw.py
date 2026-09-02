@@ -164,6 +164,41 @@ def season_game_ids(root: str | Path, season: int) -> list[str]:
     return sorted(out)
 
 
+_RAW_GITHUB = re.compile(r"^https://raw\.githubusercontent\.com/([^/]+)/([^/]+)/([^/]+)/(.+)$")
+
+
+def season_variants(root: str | Path, endpoint: str, season: int) -> list[str]:
+    """Variant stems captured under ``{endpoint}/{season}/`` (``regular-season``,
+    ``advanced_playoffs``, a team id for ``commonteamroster``).
+
+    A local root globs the directory. raw.githubusercontent.com serves files, not
+    listings, so a raw-GitHub root asks the contents API for the same directory with
+    the same token; any other URL host yields ``[]``.
+    """
+    if not _is_url(root):
+        d = Path(root) / endpoint / str(season)
+        return sorted(p.stem for p in d.glob("*.json")) if d.is_dir() else []
+    m = _RAW_GITHUB.match(_url_base(root))
+    if not m:
+        return []
+    owner, repo, ref, path = m.groups()
+    api = (
+        f"https://api.github.com/repos/{owner}/{repo}/contents/{path}/{endpoint}/{season}?ref={ref}"
+    )
+    req = urllib.request.Request(
+        api, headers={"Accept": "application/vnd.github+json", **_auth_headers()}
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            listing = json.loads(resp.read())
+    except (urllib.error.URLError, TimeoutError, json.JSONDecodeError):
+        return []
+    if not isinstance(listing, list):
+        return []
+    names = (str(e.get("name", "")) for e in listing if isinstance(e, dict))
+    return sorted(n[:-5] for n in names if n.endswith(".json"))
+
+
 def iter_game_payloads(
     root: str | Path, endpoint: str, game_ids: list[str]
 ) -> Iterator[tuple[str, Any]]:

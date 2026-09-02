@@ -188,3 +188,47 @@ def test_url_root_survives_path_wrapping(monkeypatch: pytest.MonkeyPatch) -> Non
     monkeypatch.setenv("GITHUB_PAT", "ghp_test")
     assert raw._read_json(Path(raw.RAW_BASE), rel) == {"ok": 1}
     assert seen[-1] == (f"{raw.RAW_BASE}/{rel}", "token ghp_test")
+
+
+def test_season_variants_lists_a_raw_github_root_via_the_contents_api(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """Season-level families discovered variants by globbing a local dir, so over HTTP
+    every one of them 'skipped: no rows'. A raw-GitHub root must list the same
+    directory through the contents API, with the same token."""
+    seen: list[tuple[str, str | None, str | None]] = []
+
+    class _Resp:
+        def __enter__(self) -> "_Resp":
+            return self
+
+        def __exit__(self, *exc: object) -> bool:
+            return False
+
+        def read(self) -> bytes:
+            return (
+                b'[{"name": "regular-season.json", "type": "file"},'
+                b' {"name": "playoffs.json", "type": "file"},'
+                b' {"name": "README.md", "type": "file"}]'
+            )
+
+    def _urlopen(req: raw.urllib.request.Request, timeout: int = 60) -> _Resp:
+        seen.append((req.full_url, req.get_header("Authorization"), req.get_header("Accept")))
+        return _Resp()
+
+    monkeypatch.setattr(raw.urllib.request, "urlopen", _urlopen)
+    monkeypatch.setenv("GITHUB_PAT", "ghp_test")
+    got = raw.season_variants(Path(raw.RAW_BASE), "leaguestandingsv3", 2026)
+    assert got == ["playoffs", "regular-season"]
+    assert seen == [
+        (
+            "https://api.github.com/repos/sportsdataverse/wehoop-wnba-stats-raw/contents/"
+            "wnba_stats/json/leaguestandingsv3/2026?ref=main",
+            "token ghp_test",
+            "application/vnd.github+json",
+        )
+    ]
+    # a local root still globs, and an unknown host cannot list
+    _write(tmp_path, "leaguestandingsv3/2026/regular-season.json", {})
+    assert raw.season_variants(tmp_path, "leaguestandingsv3", 2026) == ["regular-season"]
+    assert raw.season_variants("https://example.com/x", "leaguestandingsv3", 2026) == []

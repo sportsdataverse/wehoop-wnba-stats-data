@@ -76,26 +76,25 @@ def _variant_columns(variant: str | None) -> dict[str, str]:
     return {n: p for n, p in zip(names, parts)}
 
 
-def build_season_dataset(
-    root: str | Path, dataset: Dataset, season: int
-) -> pl.DataFrame:
+def build_season_dataset(root: str | Path, dataset: Dataset, season: int) -> pl.DataFrame:
     """One season-level dataset, binding every captured parameter variant."""
     if dataset.endpoint is None:
         raise ValueError(f"{dataset.key} is derived; build it with its own builder")
 
     frames: list[pl.DataFrame] = []
-    base = Path(root) / dataset.endpoint / str(season)
 
     # Unparameterized capture lives at {endpoint}/{season}.json
     single = raw.read_season(root, dataset.endpoint, season)
     variants: list[tuple[str | None, Any]] = []
     if single is not None:
         variants.append((None, single))
-    elif base.is_dir():
-        for path in sorted(base.glob("*.json")):
-            payload = raw.read_season(root, dataset.endpoint, season, path.stem)
+    else:
+        # Variants were discovered by globbing a local directory, which a URL root
+        # cannot do -- every season-level family "skipped: no rows" over HTTP.
+        for stem in raw.season_variants(root, dataset.endpoint, season):
+            payload = raw.read_season(root, dataset.endpoint, season, stem)
             if payload is not None:
-                variants.append((path.stem, payload))
+                variants.append((stem, payload))
 
     for variant, payload in variants:
         headers, rows = raw.result_set(payload, dataset.result_set)
@@ -130,9 +129,7 @@ def build_game_dataset(
         headers, rows = raw.result_set(payload, dataset.result_set)
         if not headers:
             continue
-        frames.append(
-            frame_from_result_set(headers, rows, {"season": season, "game_id": gid})
-        )
+        frames.append(frame_from_result_set(headers, rows, {"season": season, "game_id": gid}))
 
     if not frames:
         return pl.DataFrame()
@@ -150,6 +147,7 @@ def build(root: str | Path, dataset: Dataset, season: int) -> pl.DataFrame:
 #
 # playbyplayv3 does not use the resultSets envelope: its rows live under
 # game.actions as dicts, so it needs its own extractor rather than result_set().
+
 
 def pbp_rows(payload: Any) -> list[dict[str, Any]]:
     """Action rows from one captured ``playbyplayv3`` payload."""
@@ -184,9 +182,24 @@ def build_pbp(root: str | Path, season: int, game_ids: list[str] | None = None) 
 
 #: Field-goal actions carry shot geometry; everything else in pbp does not.
 _SHOT_COLUMNS = (
-    "game_id", "season", "period", "clock", "team_id", "team_tricode", "person_id",
-    "player_name", "action_type", "sub_type", "shot_result", "shot_value",
-    "shot_distance", "x_legacy", "y_legacy", "description", "score_home", "score_away",
+    "game_id",
+    "season",
+    "period",
+    "clock",
+    "team_id",
+    "team_tricode",
+    "person_id",
+    "player_name",
+    "action_type",
+    "sub_type",
+    "shot_result",
+    "shot_value",
+    "shot_distance",
+    "x_legacy",
+    "y_legacy",
+    "description",
+    "score_home",
+    "score_away",
 )
 
 
@@ -211,6 +224,7 @@ def build_shots(pbp: pl.DataFrame) -> pl.DataFrame:
 # a players[] list whose rows hold their counting stats in a `statistics` object.
 # Flattening lifts those onto the row so the published frame is one row per
 # player-game rather than a struct column no R consumer could read.
+
 
 def _flatten_stats(row: dict[str, Any]) -> dict[str, Any]:
     """Lift a nested ``statistics`` object onto its parent row."""
