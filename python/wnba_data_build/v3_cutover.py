@@ -586,7 +586,13 @@ def render_manifest(
                 f"| {_fmt_bytes(r['size'])} / {r['rows']:,} rows |"
             )
     else:
-        lines.append("_none -- every planned asset name is new on its tag._")
+        # "no REPLACE" is not "nothing exists": an UNCHANGED row means the asset
+        # name IS already on the tag, byte-identical, so nothing is overwritten.
+        # Saying every name is new told the operator the tag was empty of them.
+        lines.append(
+            "_none -- no planned asset is marked `REPLACE`; "
+            "existing planned assets remain `UNCHANGED`._"
+        )
 
     collisions = collisions or []
     lines += [
