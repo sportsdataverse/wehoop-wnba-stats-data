@@ -1,0 +1,12 @@
+[2026-08-12T14:44:01Z] legacy retirement (dry run): C:\Users\saiem\Documents\GitHub-Data\sdv-dev\wehoop-dev\wehoop-wnba-stats-data\v3_staging
+[2026-08-12T14:44:03Z] legacy retirement: 3 season(s) deletable (17.88 MB), 0 refused -- dry run, nothing deleted
+[2026-08-12T14:44:03Z]   would delete wnba_stats_schedules/wnba_stats_schedule_2025.csv
+[2026-08-12T14:44:03Z]   would delete wnba_stats_schedules/wnba_stats_schedule_2025.parquet
+[2026-08-12T14:44:03Z]   would delete wnba_stats_schedules/wnba_stats_schedule_2025.rds
+[2026-08-12T14:44:03Z]   would delete wnba_stats_schedules/wnba_stats_schedule_2026.csv
+[2026-08-12T14:44:03Z]   would delete wnba_stats_schedules/wnba_stats_schedule_2026.parquet
+[2026-08-12T14:44:03Z]   would delete wnba_stats_schedules/wnba_stats_schedule_2026.rds
+[2026-08-12T14:44:03Z]   would delete wnba_stats_pbp/play_by_play_2026.csv
+[2026-08-12T14:44:03Z]   would delete wnba_stats_pbp/play_by_play_2026.parquet
+[2026-08-12T14:44:03Z]   would delete wnba_stats_pbp/play_by_play_2026.rds
+EXIT=0

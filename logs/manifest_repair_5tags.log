@@ -1,0 +1,8 @@
+built wnba_stats_draft: 30 season(s) -> build_out\wnba_stats_draft\wnba_stats_draft_in_data_repo.csv
+publish wnba_stats_draft: {'uploaded': 1, 'failed': [], 'files': ['wnba_stats_draft_in_data_repo.csv']}
+built wnba_stats_schedules: 30 season(s) -> build_out\wnba_stats_schedules\wnba_stats_schedules_in_data_repo.csv
+publish wnba_stats_schedules: {'uploaded': 1, 'failed': [], 'files': ['wnba_stats_schedules_in_data_repo.csv']}
+built wnba_stats_pbp: 30 season(s) -> build_out\wnba_stats_pbp\wnba_stats_pbp_in_data_repo.csv
+publish wnba_stats_pbp: {'uploaded': 1, 'failed': [], 'files': ['wnba_stats_pbp_in_data_repo.csv']}
+wnba_stats_player_boxscores: no published manifest to inherit source_endpoint from; pass --source-endpoint
+--source-endpoint applies to a single --tags value

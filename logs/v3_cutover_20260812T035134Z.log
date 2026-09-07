@@ -1,0 +1,12 @@
+[2026-08-12T03:51:34Z] gate: seasons 1997-2026 staging=C:\Users\saiem\Documents\GitHub-Data\sdv-dev\wehoop-dev\wehoop-wnba-stats-data\v3_staging
+[2026-08-12T03:51:35Z] gate PASS (0 blocking, 6 allowlisted)
+[2026-08-12T03:51:35Z] deriving release formats (parquet, rds, csv.gz) + hashing -- rds is verified on write
+[2026-08-12T03:53:55Z] MANIFEST: C:\Users\saiem\Documents\GitHub-Data\sdv-dev\wehoop-dev\wehoop-wnba-stats-data\logs\v3_cutover_manifest_20260812T035355Z.md
+[2026-08-12T03:53:55Z]   NEW=360 REPLACE=0 UNCHANGED=0 upload_bytes=227.8MB shadowed=22 season_label_collisions=3
+[2026-08-12T03:53:55Z] README.md that --execute would upload to each tag (written locally, not sent):
+[2026-08-12T03:53:55Z]   would upload wnba_stats_game_lineups/README.md (1387 bytes) -- C:\Users\saiem\Documents\GitHub-Data\sdv-dev\wehoop-dev\wehoop-wnba-stats-data\v3_staging\_release_build\wnba_stats_game_lineups\README.md
+[2026-08-12T03:53:55Z]   would upload wnba_stats_pbp/README.md (1502 bytes) -- C:\Users\saiem\Documents\GitHub-Data\sdv-dev\wehoop-dev\wehoop-wnba-stats-data\v3_staging\_release_build\wnba_stats_pbp\README.md
+[2026-08-12T03:53:55Z]   would upload wnba_stats_possessions/README.md (1394 bytes) -- C:\Users\saiem\Documents\GitHub-Data\sdv-dev\wehoop-dev\wehoop-wnba-stats-data\v3_staging\_release_build\wnba_stats_possessions\README.md
+[2026-08-12T03:53:55Z]   would upload wnba_stats_schedules/README.md (1514 bytes) -- C:\Users\saiem\Documents\GitHub-Data\sdv-dev\wehoop-dev\wehoop-wnba-stats-data\v3_staging\_release_build\wnba_stats_schedules\README.md
+[2026-08-12T03:53:55Z] DRY RUN -- nothing uploaded. Review the manifest, then re-run with --execute.
+EXIT=0

@@ -1,0 +1,35 @@
+=== Building WNBA stats (python) for season 2026 ===
+=== season 2026 started 2026-07-29 07:25:17Z ===
+built standings 2026: 15 rows -> standings_2026.parquet
+built player_season_stats 2026: 2652 rows -> player_season_stats_2026.parquet
+built team_season_stats 2026: 180 rows -> team_season_stats_2026.parquet
+built lineups 2026: 28000 rows -> lineups_2026.parquet
+built rosters 2026: 206 rows -> rosters_2026.parquet
+built coaches 2026: 89 rows -> coaches_2026.parquet
+built draft 2026: 1201 rows -> draft_2026.parquet
+built schedules 2026: 4415 rows -> wnba_stats_schedule_2026.parquet
+built player_game_logs 2026: 4415 rows -> player_game_logs_2026.parquet
+built pbp 2026: 86784 rows -> play_by_play_2026.parquet
+built game_rosters 2026: 610 rows -> game_rosters_2026.parquet
+built officials 2026: 606 rows -> officials_2026.parquet
+built player_boxscores 2026: 4864 rows -> player_boxscores_2026.parquet
+built team_boxscores 2026: 404 rows -> team_boxscores_2026.parquet
+built shots 2026: 27606 rows -> shots_2026.parquet
+publish wnba_stats_coaches: {'uploaded': 3, 'failed': [], 'files': ['coaches_2026.csv', 'coaches_2026.parquet', 'coaches_2026.rds']}
+publish wnba_stats_draft: {'uploaded': 3, 'failed': [], 'files': ['draft_2026.csv', 'draft_2026.parquet', 'draft_2026.rds']}
+publish wnba_stats_game_rosters: {'uploaded': 3, 'failed': [], 'files': ['game_rosters_2026.csv', 'game_rosters_2026.parquet', 'game_rosters_2026.rds']}
+publish wnba_stats_lineups: {'uploaded': 3, 'failed': [], 'files': ['lineups_2026.csv', 'lineups_2026.parquet', 'lineups_2026.rds']}
+publish wnba_stats_officials: {'uploaded': 3, 'failed': [], 'files': ['officials_2026.csv', 'officials_2026.parquet', 'officials_2026.rds']}
+publish wnba_stats_pbp: {'uploaded': 3, 'failed': [], 'files': ['play_by_play_2026.csv', 'play_by_play_2026.parquet', 'play_by_play_2026.rds']}
+publish wnba_stats_player_boxscores: {'uploaded': 3, 'failed': [], 'files': ['player_boxscores_2026.csv', 'player_boxscores_2026.parquet', 'player_boxscores_2026.rds']}
+publish wnba_stats_player_game_logs: {'uploaded': 3, 'failed': [], 'files': ['player_game_logs_2026.csv', 'player_game_logs_2026.parquet', 'player_game_logs_2026.rds']}
+publish wnba_stats_player_season_stats: {'uploaded': 3, 'failed': [], 'files': ['player_season_stats_2026.csv', 'player_season_stats_2026.parquet', 'player_season_stats_2026.rds']}
+publish wnba_stats_rosters: {'uploaded': 3, 'failed': [], 'files': ['rosters_2026.csv', 'rosters_2026.parquet', 'rosters_2026.rds']}
+publish wnba_stats_schedules: {'uploaded': 3, 'failed': [], 'files': ['wnba_stats_schedule_2026.csv', 'wnba_stats_schedule_2026.parquet', 'wnba_stats_schedule_2026.rds']}
+publish wnba_stats_shots: {'uploaded': 3, 'failed': [], 'files': ['shots_2026.csv', 'shots_2026.parquet', 'shots_2026.rds']}
+publish wnba_stats_standings: {'uploaded': 3, 'failed': [], 'files': ['standings_2026.csv', 'standings_2026.parquet', 'standings_2026.rds']}
+publish wnba_stats_team_boxscores: {'uploaded': 3, 'failed': [], 'files': ['team_boxscores_2026.csv', 'team_boxscores_2026.parquet', 'team_boxscores_2026.rds']}
+publish wnba_stats_team_season_stats: {'uploaded': 3, 'failed': [], 'files': ['team_season_stats_2026.csv', 'team_season_stats_2026.parquet', 'team_season_stats_2026.rds']}
+EXIT=0
+=== season 2026 finished 2026-07-29 07:27:39Z ===
+EXIT=0

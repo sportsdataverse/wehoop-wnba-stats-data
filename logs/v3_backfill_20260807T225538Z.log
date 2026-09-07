@@ -1,0 +1,152 @@
+[2026-08-07T22:55:38Z] v3 backfill seasons 1997-2026 raw=C:\Users\saiem\Documents\GitHub-Data\sdv-dev\wehoop-dev\wehoop-wnba-stats-raw\wnba_stats\json staging=C:\Users\saiem\Documents\GitHub-Data\sdv-dev\wehoop-dev\wehoop-wnba-stats-data\v3_staging cache=C:\Users\saiem\Documents\GitHub-Data\sdv-dev\wehoop-dev\wehoop-wnba-stats-data\.wnba_pipeline_cache
+[2026-08-07T22:55:42Z]   season 1997: 50/115 games (0 failed)
+[2026-08-07T22:55:44Z]   season 1997: 100/115 games (0 failed)
+[2026-08-07T22:55:44Z] season 1997: {'season': 1997, 'status': 'built', 'games_indexed': 115, 'games_uncaptured': 0, 'games_failed': 0, 'games_processed': 115, 'games_with_lineups': 28, 'rows': {'schedule': 115, 'play_by_play': 47583, 'possessions': 17451, 'lineups': 11556}, 'secs': 5.8}
+[2026-08-07T22:55:45Z]   season 1998: 50/158 games (0 failed)
+[2026-08-07T22:55:47Z]   season 1998 game 1029800096 FAILED (engine returned no pbp)
+[2026-08-07T22:55:47Z]   season 1998: 100/158 games (1 failed)
+[2026-08-07T22:55:48Z]   season 1998: 150/158 games (1 failed)
+[2026-08-07T22:55:48Z] season 1998: {'season': 1998, 'status': 'built', 'games_indexed': 158, 'games_uncaptured': 0, 'games_failed': 1, 'games_processed': 157, 'games_with_lineups': 27, 'rows': {'schedule': 158, 'play_by_play': 63658, 'possessions': 23533, 'lineups': 10948}, 'secs': 4.0}
+[2026-08-07T22:55:50Z]   season 1999: 50/203 games (0 failed)
+[2026-08-07T22:55:51Z]   season 1999: 100/203 games (0 failed)
+[2026-08-07T22:55:52Z]   season 1999: 150/203 games (0 failed)
+[2026-08-07T22:55:54Z]   season 1999: 200/203 games (0 failed)
+[2026-08-07T22:55:54Z] season 1999: {'season': 1999, 'status': 'built', 'games_indexed': 203, 'games_uncaptured': 0, 'games_failed': 0, 'games_processed': 203, 'games_with_lineups': 43, 'rows': {'schedule': 203, 'play_by_play': 79679, 'possessions': 29027, 'lineups': 16909}, 'secs': 5.5}
+[2026-08-07T22:55:55Z]   season 2000: 50/272 games (0 failed)
+[2026-08-07T22:55:57Z]   season 2000: 100/272 games (0 failed)
+[2026-08-07T22:55:58Z]   season 2000: 150/272 games (0 failed)
+[2026-08-07T22:55:59Z]   season 2000: 200/272 games (0 failed)
+[2026-08-07T22:56:00Z]   season 2000: 250/272 games (0 failed)
+[2026-08-07T22:56:01Z] season 2000: {'season': 2000, 'status': 'built', 'games_indexed': 272, 'games_uncaptured': 0, 'games_failed': 0, 'games_processed': 272, 'games_with_lineups': 88, 'rows': {'schedule': 272, 'play_by_play': 105417, 'possessions': 38139, 'lineups': 34265}, 'secs': 7.2}
+[2026-08-07T22:56:02Z]   season 2001: 50/274 games (0 failed)
+[2026-08-07T22:56:04Z]   season 2001: 100/274 games (0 failed)
+[2026-08-07T22:56:05Z]   season 2001: 150/274 games (0 failed)
+[2026-08-07T22:56:06Z]   season 2001: 200/274 games (0 failed)
+[2026-08-07T22:56:07Z]   season 2001: 250/274 games (0 failed)
+[2026-08-07T22:56:08Z] season 2001: {'season': 2001, 'status': 'built', 'games_indexed': 274, 'games_uncaptured': 0, 'games_failed': 0, 'games_processed': 274, 'games_with_lineups': 59, 'rows': {'schedule': 274, 'play_by_play': 105957, 'possessions': 38039, 'lineups': 22667}, 'secs': 7.0}
+[2026-08-07T22:56:09Z]   season 2002: 50/273 games (0 failed)
+[2026-08-07T22:56:10Z]   season 2002: 100/273 games (0 failed)
+[2026-08-07T22:56:12Z]   season 2002: 150/273 games (0 failed)
+[2026-08-07T22:56:13Z]   season 2002: 200/273 games (0 failed)
+[2026-08-07T22:56:14Z]   season 2002: 250/273 games (0 failed)
+[2026-08-07T22:56:15Z] season 2002: {'season': 2002, 'status': 'built', 'games_indexed': 273, 'games_uncaptured': 0, 'games_failed': 0, 'games_processed': 273, 'games_with_lineups': 56, 'rows': {'schedule': 273, 'play_by_play': 105276, 'possessions': 38256, 'lineups': 21300}, 'secs': 7.1}
+[2026-08-07T22:56:16Z]   season 2003: 50/257 games (0 failed)
+[2026-08-07T22:56:18Z]   season 2003: 100/257 games (0 failed)
+[2026-08-07T22:56:19Z]   season 2003: 150/257 games (0 failed)
+[2026-08-07T22:56:20Z]   season 2003: 200/257 games (0 failed)
+[2026-08-07T22:56:22Z]   season 2003: 250/257 games (0 failed)
+[2026-08-07T22:56:22Z] season 2003: {'season': 2003, 'status': 'built', 'games_indexed': 257, 'games_uncaptured': 0, 'games_failed': 0, 'games_processed': 257, 'games_with_lineups': 47, 'rows': {'schedule': 257, 'play_by_play': 99349, 'possessions': 36082, 'lineups': 17955}, 'secs': 6.7}
+[2026-08-07T22:56:23Z]   season 2004: 50/240 games (0 failed)
+[2026-08-07T22:56:25Z]   season 2004: 100/240 games (0 failed)
+[2026-08-07T22:56:26Z]   season 2004: 150/240 games (0 failed)
+[2026-08-07T22:56:27Z]   season 2004: 200/240 games (0 failed)
+[2026-08-07T22:56:29Z] season 2004: {'season': 2004, 'status': 'built', 'games_indexed': 240, 'games_uncaptured': 0, 'games_failed': 0, 'games_processed': 240, 'games_with_lineups': 32, 'rows': {'schedule': 240, 'play_by_play': 92441, 'possessions': 33451, 'lineups': 12375}, 'secs': 6.7}
+[2026-08-07T22:56:30Z]   season 2005: 50/238 games (0 failed)
+[2026-08-07T22:56:32Z]   season 2005: 100/238 games (0 failed)
+[2026-08-07T22:56:33Z]   season 2005: 150/238 games (0 failed)
+[2026-08-07T22:56:35Z]   season 2005: 200/238 games (0 failed)
+[2026-08-07T22:56:36Z] season 2005: {'season': 2005, 'status': 'built', 'games_indexed': 238, 'games_uncaptured': 0, 'games_failed': 0, 'games_processed': 238, 'games_with_lineups': 40, 'rows': {'schedule': 238, 'play_by_play': 91502, 'possessions': 33290, 'lineups': 15656}, 'secs': 7.2}
+[2026-08-07T22:56:37Z]   season 2006: 50/257 games (0 failed)
+[2026-08-07T22:56:39Z]   season 2006: 100/257 games (0 failed)
+[2026-08-07T22:56:40Z]   season 2006 game 1020600130 FAILED (engine returned no pbp)
+[2026-08-07T22:56:40Z]   season 2006: 150/257 games (1 failed)
+[2026-08-07T22:56:42Z]   season 2006: 200/257 games (1 failed)
+[2026-08-07T22:56:43Z]   season 2006: 250/257 games (1 failed)
+[2026-08-07T22:56:43Z] season 2006: {'season': 2006, 'status': 'built', 'games_indexed': 257, 'games_uncaptured': 0, 'games_failed': 1, 'games_processed': 256, 'games_with_lineups': 41, 'rows': {'schedule': 257, 'play_by_play': 104864, 'possessions': 39384, 'lineups': 16832}, 'secs': 7.6}
+[2026-08-07T22:56:45Z]   season 2007: 50/241 games (0 failed)
+[2026-08-07T22:56:46Z]   season 2007: 100/241 games (0 failed)
+[2026-08-07T22:56:48Z]   season 2007: 150/241 games (0 failed)
+[2026-08-07T22:56:49Z]   season 2007: 200/241 games (0 failed)
+[2026-08-07T22:56:51Z] season 2007: {'season': 2007, 'status': 'built', 'games_indexed': 241, 'games_uncaptured': 0, 'games_failed': 0, 'games_processed': 241, 'games_with_lineups': 29, 'rows': {'schedule': 241, 'play_by_play': 101161, 'possessions': 38191, 'lineups': 12039}, 'secs': 7.4}
+[2026-08-07T22:56:52Z]   season 2008: 50/259 games (0 failed)
+[2026-08-07T22:56:54Z]   season 2008: 100/259 games (0 failed)
+[2026-08-07T22:56:55Z]   season 2008: 150/259 games (0 failed)
+[2026-08-07T22:56:56Z]   season 2008: 200/259 games (0 failed)
+[2026-08-07T22:57:00Z]   season 2008: 250/259 games (0 failed)
+[2026-08-07T22:57:01Z] season 2008: {'season': 2008, 'status': 'built', 'games_indexed': 259, 'games_uncaptured': 0, 'games_failed': 0, 'games_processed': 259, 'games_with_lineups': 38, 'rows': {'schedule': 259, 'play_by_play': 109761, 'possessions': 40514, 'lineups': 16643}, 'secs': 10.4}
+[2026-08-07T22:57:06Z]   season 2009: 50/241 games (0 failed)
+[2026-08-07T22:57:11Z]   season 2009: 100/241 games (0 failed)
+[2026-08-07T22:57:15Z]   season 2009: 150/241 games (0 failed)
+[2026-08-07T22:57:18Z]   season 2009: 200/241 games (0 failed)
+[2026-08-07T22:57:19Z] season 2009: {'season': 2009, 'status': 'built', 'games_indexed': 241, 'games_uncaptured': 0, 'games_failed': 0, 'games_processed': 241, 'games_with_lineups': 34, 'rows': {'schedule': 241, 'play_by_play': 101779, 'possessions': 38097, 'lineups': 14521}, 'secs': 17.9}
+[2026-08-07T22:57:19Z] season 2010: {'season': 2010, 'status': 'skipped'}
+[2026-08-07T22:57:22Z]   season 2011: 50/223 games (0 failed)
+[2026-08-07T22:57:27Z]   season 2011: 100/223 games (0 failed)
+[2026-08-07T22:57:33Z]   season 2011: 150/223 games (0 failed)
+[2026-08-07T22:57:38Z]   season 2011: 200/223 games (0 failed)
+[2026-08-07T22:57:41Z] season 2011: {'season': 2011, 'status': 'built', 'games_indexed': 223, 'games_uncaptured': 0, 'games_failed': 0, 'games_processed': 223, 'games_with_lineups': 21, 'rows': {'schedule': 223, 'play_by_play': 90663, 'possessions': 34652, 'lineups': 8314}, 'secs': 21.5}
+[2026-08-07T22:57:43Z]   season 2012: 50/223 games (0 failed)
+[2026-08-07T22:57:44Z]   season 2012: 100/223 games (0 failed)
+[2026-08-07T22:57:45Z]   season 2012: 150/223 games (0 failed)
+[2026-08-07T22:57:47Z]   season 2012: 200/223 games (0 failed)
+[2026-08-07T22:57:47Z] season 2012: {'season': 2012, 'status': 'built', 'games_indexed': 223, 'games_uncaptured': 0, 'games_failed': 0, 'games_processed': 223, 'games_with_lineups': 11, 'rows': {'schedule': 223, 'play_by_play': 91399, 'possessions': 34637, 'lineups': 4565}, 'secs': 6.7}
+[2026-08-07T22:57:48Z]   season 2013: 50/221 games (0 failed)
+[2026-08-07T22:57:50Z]   season 2013: 100/221 games (0 failed)
+[2026-08-07T22:57:51Z]   season 2013: 150/221 games (0 failed)
+[2026-08-07T22:57:52Z]   season 2013: 200/221 games (0 failed)
+[2026-08-07T22:57:53Z] season 2013: {'season': 2013, 'status': 'built', 'games_indexed': 221, 'games_uncaptured': 0, 'games_failed': 0, 'games_processed': 221, 'games_with_lineups': 26, 'rows': {'schedule': 221, 'play_by_play': 89896, 'possessions': 34012, 'lineups': 10521}, 'secs': 5.5}
+[2026-08-07T22:57:54Z]   season 2014: 50/222 games (0 failed)
+[2026-08-07T22:57:55Z]   season 2014: 100/222 games (0 failed)
+[2026-08-07T22:57:56Z]   season 2014: 150/222 games (0 failed)
+[2026-08-07T22:57:58Z]   season 2014: 200/222 games (0 failed)
+[2026-08-07T22:57:58Z] season 2014: {'season': 2014, 'status': 'built', 'games_indexed': 222, 'games_uncaptured': 0, 'games_failed': 0, 'games_processed': 222, 'games_with_lineups': 23, 'rows': {'schedule': 222, 'play_by_play': 90134, 'possessions': 34312, 'lineups': 9372}, 'secs': 5.5}
+[2026-08-07T22:57:59Z]   season 2015: 50/225 games (0 failed)
+[2026-08-07T22:58:01Z]   season 2015: 100/225 games (0 failed)
+[2026-08-07T22:58:02Z]   season 2015: 150/225 games (0 failed)
+[2026-08-07T22:58:03Z]   season 2015: 200/225 games (0 failed)
+[2026-08-07T22:58:04Z] season 2015: {'season': 2015, 'status': 'built', 'games_indexed': 225, 'games_uncaptured': 0, 'games_failed': 0, 'games_processed': 225, 'games_with_lineups': 32, 'rows': {'schedule': 225, 'play_by_play': 90972, 'possessions': 34133, 'lineups': 12724}, 'secs': 5.7}
+[2026-08-07T22:58:05Z]   season 2016: 50/220 games (0 failed)
+[2026-08-07T22:58:07Z]   season 2016: 100/220 games (0 failed)
+[2026-08-07T22:58:08Z]   season 2016: 150/220 games (0 failed)
+[2026-08-07T22:58:10Z]   season 2016: 200/220 games (0 failed)
+[2026-08-07T22:58:10Z] season 2016: {'season': 2016, 'status': 'built', 'games_indexed': 220, 'games_uncaptured': 0, 'games_failed': 0, 'games_processed': 220, 'games_with_lineups': 149, 'rows': {'schedule': 220, 'play_by_play': 91724, 'possessions': 34737, 'lineups': 62095}, 'secs': 6.5}
+[2026-08-07T22:58:12Z]   season 2017: 50/219 games (0 failed)
+[2026-08-07T22:58:13Z]   season 2017: 100/219 games (0 failed)
+[2026-08-07T22:58:15Z]   season 2017: 150/219 games (0 failed)
+[2026-08-07T22:58:16Z]   season 2017: 200/219 games (0 failed)
+[2026-08-07T22:58:17Z] season 2017: {'season': 2017, 'status': 'built', 'games_indexed': 219, 'games_uncaptured': 0, 'games_failed': 0, 'games_processed': 219, 'games_with_lineups': 156, 'rows': {'schedule': 219, 'play_by_play': 90543, 'possessions': 34392, 'lineups': 64280}, 'secs': 6.6}
+[2026-08-07T22:58:19Z]   season 2018: 50/221 games (0 failed)
+[2026-08-07T22:58:20Z]   season 2018: 100/221 games (0 failed)
+[2026-08-07T22:58:21Z]   season 2018: 150/221 games (0 failed)
+[2026-08-07T22:58:22Z]   season 2018 game 1021800162 FAILED (engine returned no pbp)
+[2026-08-07T22:58:23Z]   season 2018: 200/221 games (1 failed)
+[2026-08-07T22:58:24Z] season 2018: {'season': 2018, 'status': 'built', 'games_indexed': 221, 'games_uncaptured': 0, 'games_failed': 1, 'games_processed': 220, 'games_with_lineups': 173, 'rows': {'schedule': 221, 'play_by_play': 89269, 'possessions': 34637, 'lineups': 70040}, 'secs': 6.6}
+[2026-08-07T22:58:25Z]   season 2019: 50/220 games (0 failed)
+[2026-08-07T22:58:27Z]   season 2019: 100/220 games (0 failed)
+[2026-08-07T22:58:28Z]   season 2019: 150/220 games (0 failed)
+[2026-08-07T22:58:30Z]   season 2019: 200/220 games (0 failed)
+[2026-08-07T22:58:31Z] season 2019: {'season': 2019, 'status': 'built', 'games_indexed': 220, 'games_uncaptured': 0, 'games_failed': 0, 'games_processed': 220, 'games_with_lineups': 205, 'rows': {'schedule': 220, 'play_by_play': 89334, 'possessions': 34517, 'lineups': 83172}, 'secs': 7.1}
+[2026-08-07T22:58:32Z]   season 2020: 50/147 games (0 failed)
+[2026-08-07T22:58:34Z]   season 2020: 100/147 games (0 failed)
+[2026-08-07T22:58:35Z] season 2020: {'season': 2020, 'status': 'built', 'games_indexed': 147, 'games_uncaptured': 0, 'games_failed': 0, 'games_processed': 147, 'games_with_lineups': 129, 'rows': {'schedule': 147, 'play_by_play': 59512, 'possessions': 23501, 'lineups': 52298}, 'secs': 4.8}
+[2026-08-07T22:58:37Z]   season 2021: 50/209 games (0 failed)
+[2026-08-07T22:58:39Z]   season 2021: 100/209 games (0 failed)
+[2026-08-07T22:58:40Z]   season 2021: 150/209 games (0 failed)
+[2026-08-07T22:58:42Z]   season 2021: 200/209 games (0 failed)
+[2026-08-07T22:58:42Z] season 2021: {'season': 2021, 'status': 'built', 'games_indexed': 209, 'games_uncaptured': 0, 'games_failed': 0, 'games_processed': 209, 'games_with_lineups': 188, 'rows': {'schedule': 209, 'play_by_play': 83986, 'possessions': 33099, 'lineups': 75795}, 'secs': 6.7}
+[2026-08-07T22:58:44Z]   season 2022: 50/239 games (0 failed)
+[2026-08-07T22:58:45Z]   season 2022: 100/239 games (0 failed)
+[2026-08-07T22:58:47Z]   season 2022: 150/239 games (0 failed)
+[2026-08-07T22:58:48Z]   season 2022: 200/239 games (0 failed)
+[2026-08-07T22:58:50Z] season 2022: {'season': 2022, 'status': 'built', 'games_indexed': 239, 'games_uncaptured': 0, 'games_failed': 0, 'games_processed': 239, 'games_with_lineups': 205, 'rows': {'schedule': 239, 'play_by_play': 97050, 'possessions': 38007, 'lineups': 83240}, 'secs': 7.5}
+[2026-08-07T22:58:51Z]   season 2023: 50/260 games (0 failed)
+[2026-08-07T22:58:53Z]   season 2023: 100/260 games (0 failed)
+[2026-08-07T22:58:54Z]   season 2023: 150/260 games (0 failed)
+[2026-08-07T22:58:56Z]   season 2023: 200/260 games (0 failed)
+[2026-08-07T22:58:58Z]   season 2023: 250/260 games (0 failed)
+[2026-08-07T22:58:58Z] season 2023: {'season': 2023, 'status': 'built', 'games_indexed': 260, 'games_uncaptured': 0, 'games_failed': 0, 'games_processed': 260, 'games_with_lineups': 230, 'rows': {'schedule': 260, 'play_by_play': 106038, 'possessions': 41350, 'lineups': 93827}, 'secs': 8.3}
+[2026-08-07T22:58:58Z] season 2024: {'season': 2024, 'status': 'skipped'}
+[2026-08-07T22:59:00Z]   season 2025: 50/310 games (0 failed)
+[2026-08-07T22:59:01Z]   season 2025: 100/310 games (0 failed)
+[2026-08-07T22:59:03Z]   season 2025: 150/310 games (0 failed)
+[2026-08-07T22:59:04Z]   season 2025: 200/310 games (0 failed)
+[2026-08-07T22:59:06Z]   season 2025: 250/310 games (0 failed)
+[2026-08-07T22:59:07Z]   season 2025: 300/310 games (0 failed)
+[2026-08-07T22:59:07Z] season 2025: {'season': 2025, 'status': 'built', 'games_indexed': 310, 'games_uncaptured': 0, 'games_failed': 0, 'games_processed': 310, 'games_with_lineups': 243, 'rows': {'schedule': 310, 'play_by_play': 126330, 'possessions': 48401, 'lineups': 99114}, 'secs': 9.5}
+[2026-08-07T22:59:09Z]   season 2026: 50/202 games (0 failed)
+[2026-08-07T22:59:11Z]   season 2026: 100/202 games (0 failed)
+[2026-08-07T22:59:12Z]   season 2026: 150/202 games (0 failed)
+[2026-08-07T22:59:14Z]   season 2026: 200/202 games (0 failed)
+[2026-08-07T22:59:14Z] season 2026: {'season': 2026, 'status': 'built', 'games_indexed': 202, 'games_uncaptured': 0, 'games_failed': 0, 'games_processed': 202, 'games_with_lineups': 195, 'rows': {'schedule': 202, 'play_by_play': 86784, 'possessions': 32265, 'lineups': 83720}, 'secs': 6.6}
+[2026-08-07T22:59:14Z] done (0 season-level failures)
+EXIT=0

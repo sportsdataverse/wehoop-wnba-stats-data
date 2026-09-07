@@ -1,0 +1,5 @@
+[2026-08-12T14:43:44Z] retire (dry run): wnba_stats_pbpv3, wnba_stats_possessions_v3, wnba_stats_lineups_v3
+[2026-08-12T14:43:44Z] wnba_stats_pbpv3: 0 asset(s) -- would delete (dry run)
+[2026-08-12T14:43:45Z] wnba_stats_possessions_v3: 0 asset(s) -- would delete (dry run)
+[2026-08-12T14:43:45Z] wnba_stats_lineups_v3: 0 asset(s) -- would delete (dry run)
+EXIT=0

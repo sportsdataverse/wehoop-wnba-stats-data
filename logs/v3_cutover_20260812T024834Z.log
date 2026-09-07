@@ -1,0 +1,14 @@
+[2026-08-12T02:48:34Z] gate: seasons 1997-2026 staging=C:\Users\saiem\Documents\GitHub-Data\sdv-dev\wehoop-dev\wehoop-wnba-stats-data\v3_staging
+[2026-08-12T02:48:36Z] gate FAIL (6 blocking, 0 allowlisted)
+[2026-08-12T02:48:36Z] collecting staged parquets (size / rows / sha256)
+[2026-08-12T02:48:38Z] MANIFEST: C:\Users\saiem\Documents\GitHub-Data\sdv-dev\wehoop-dev\wehoop-wnba-stats-data\logs\v3_cutover_manifest_20260812T024838Z.md
+[2026-08-12T02:48:38Z]   NEW=120 REPLACE=0 UNCHANGED=0 upload_bytes=61.2MB shadowed=30
+[2026-08-12T02:48:38Z] GATE FAILED -- 6 unexplained finding(s). Refusing to publish.
+[2026-08-12T02:48:38Z]   1997 play_by_play DIFF staged_games=115 raw_captured=115 uncompiled=0 phantom=0 min_events=295 scores_vs_sched=115 score_mismatch=5
+[2026-08-12T02:48:38Z]   1998 play_by_play DIFF staged_games=157 raw_captured=158 uncompiled=1 phantom=0 min_events=335 scores_vs_sched=157 score_mismatch=2 uncompiled_sample=['1029800096']
+[2026-08-12T02:48:38Z]   1999 play_by_play DIFF staged_games=203 raw_captured=203 uncompiled=0 phantom=0 min_events=40 scores_vs_sched=203 score_mismatch=1
+[2026-08-12T02:48:38Z]   2000 play_by_play DIFF staged_games=272 raw_captured=272 uncompiled=0 phantom=0 min_events=44 scores_vs_sched=272 score_mismatch=2
+[2026-08-12T02:48:38Z]   2006 play_by_play DIFF staged_games=256 raw_captured=257 uncompiled=1 phantom=0 min_events=333 scores_vs_sched=256 score_mismatch=1 uncompiled_sample=['1020600130']
+[2026-08-12T02:48:38Z]   2018 play_by_play DIFF staged_games=220 raw_captured=221 uncompiled=1 phantom=0 min_events=334 scores_vs_sched=220 score_mismatch=0 uncompiled_sample=['1021800162']
+[2026-08-12T02:48:38Z] Explain each one, then re-run with --allow-diff SEASON:FAMILY per explained case.
+EXIT=1
