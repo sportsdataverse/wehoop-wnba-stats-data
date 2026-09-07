@@ -1,0 +1,16 @@
+[2026-08-12T05:30:24Z] gate: seasons 1997-2026 staging=C:\Users\saiem\Documents\GitHub-Data\sdv-dev\wehoop-dev\wehoop-wnba-stats-data\v3_staging
+[2026-08-12T05:30:24Z] gate PASS (0 blocking, 6 allowlisted)
+[2026-08-12T05:30:24Z] deriving release formats (parquet, rds, csv.gz) + hashing -- rds is verified on write
+[2026-08-12T05:30:27Z] MANIFEST: C:\Users\saiem\Documents\GitHub-Data\sdv-dev\wehoop-dev\wehoop-wnba-stats-data\logs\v3_cutover_manifest_20260812T053027Z.md
+[2026-08-12T05:30:27Z]   NEW=360 REPLACE=0 UNCHANGED=0 upload_bytes=227.8MB shadowed=22 season_label_collisions=3
+[2026-08-12T05:30:27Z] EXECUTE: 360 asset(s) (0 already verified, skipped)
+[2026-08-12T05:30:27Z] [1/360] NEW wnba_stats_schedules/wnba_schedule_1997.parquet 0.01 MB
+[2026-08-12T05:30:28Z] [2/360] NEW wnba_stats_schedules/wnba_schedule_1997.rds 0.00 MB
+[2026-08-12T05:30:30Z] [3/360] NEW wnba_stats_schedules/wnba_schedule_1997.csv.gz 0.00 MB
+[2026-08-12T05:30:31Z] [4/360] NEW wnba_stats_pbp/wnba_play_by_play_1997.parquet 0.77 MB
+[2026-08-12T05:30:35Z] [5/360] NEW wnba_stats_pbp/wnba_play_by_play_1997.rds 0.94 MB
+[2026-08-12T05:30:39Z] [6/360] NEW wnba_stats_pbp/wnba_play_by_play_1997.csv.gz 1.22 MB
+[2026-08-12T05:30:43Z] [7/360] NEW wnba_stats_possessions/wnba_possessions_1997.parquet 0.16 MB
+[2026-08-12T05:30:43Z] FAILED at wnba_stats_possessions/wnba_possessions_1997.parquet: CalledProcessError: Command '['gh', 'release', 'upload', 'wnba_stats_possessions', 'C:\\Users\\saiem\\Documents\\GitHub-Data\\sdv-dev\\wehoop-dev\\wehoop-wnba-stats-data\\v3_staging\\wnba_possessions_1997.parquet', '--repo', 'sportsdataverse/sportsdataverse-data', '--clobber']' returned non-zero exit status 1.
+[2026-08-12T05:30:43Z] Stopped. Fix, then re-run -- verified assets are skipped via the receipt file.
+EXIT=1

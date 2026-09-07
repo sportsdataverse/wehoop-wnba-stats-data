@@ -1,0 +1,6 @@
+[2026-08-12T03:57:39Z] legacy retirement (dry run): C:\Users\saiem\Documents\GitHub-Data\sdv-dev\wehoop-dev\wehoop-wnba-stats-data\v3_staging
+[2026-08-12T03:57:41Z] REFUSING wnba_stats_schedules season 2025: not verified on the release: csv.gz, parquet, rds -- keeping wnba_stats_schedule_2025.csv, wnba_stats_schedule_2025.parquet, wnba_stats_schedule_2025.rds
+[2026-08-12T03:57:41Z] REFUSING wnba_stats_schedules season 2026: not verified on the release: csv.gz, parquet, rds -- keeping wnba_stats_schedule_2026.csv, wnba_stats_schedule_2026.parquet, wnba_stats_schedule_2026.rds
+[2026-08-12T03:57:41Z] REFUSING wnba_stats_pbp season 2026: not verified on the release: csv.gz, parquet, rds -- keeping play_by_play_2026.csv, play_by_play_2026.parquet, play_by_play_2026.rds
+[2026-08-12T03:57:41Z] legacy retirement: 0 season(s) deletable (0.00 MB), 3 refused -- dry run, nothing deleted
+EXIT=1

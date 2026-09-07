@@ -1,0 +1,16 @@
+[2026-08-07T17:34:40Z] v3 backfill seasons 2010-2010 raw=C:\Users\saiem\Documents\GitHub-Data\sdv-dev\wehoop-dev\wehoop-wnba-stats-raw\wnba_stats\json staging=C:\Users\saiem\Documents\GitHub-Data\sdv-dev\wehoop-dev\wehoop-wnba-stats-data\v3_staging cache=C:\Users\saiem\Documents\GitHub-Data\sdv-dev\wehoop-dev\wehoop-wnba-stats-data\.wnba_pipeline_cache
+[2026-08-07T17:34:47Z]   season 2010: 50/220 games (0 failed)
+[2026-08-07T17:34:52Z]   season 2010: 100/220 games (0 failed)
+[2026-08-07T17:34:58Z]   season 2010: 150/220 games (0 failed)
+[2026-08-07T17:35:00Z]   season 2010: 200/220 games (0 failed)
+[2026-08-07T17:35:00Z] season 2010: {'season': 2010, 'status': 'built', 'games_indexed': 220, 'games_uncaptured': 0, 'games_failed': 0, 'games_processed': 220, 'games_with_lineups': 27, 'rows': {'schedule': 220, 'play_by_play': 91581, 'possessions': 34797, 'lineups': 11444}, 'secs': 20.9}
+[2026-08-07T17:35:00Z] done (0 season-level failures)
+[2026-08-07T17:35:01Z] v3 backfill seasons 2024-2024 raw=C:\Users\saiem\Documents\GitHub-Data\sdv-dev\wehoop-dev\wehoop-wnba-stats-raw\wnba_stats\json staging=C:\Users\saiem\Documents\GitHub-Data\sdv-dev\wehoop-dev\wehoop-wnba-stats-data\v3_staging cache=C:\Users\saiem\Documents\GitHub-Data\sdv-dev\wehoop-dev\wehoop-wnba-stats-data\.wnba_pipeline_cache
+[2026-08-07T17:35:24Z]   season 2024: 50/262 games (0 failed)
+[2026-08-07T17:35:41Z]   season 2024: 100/262 games (0 failed)
+[2026-08-07T17:35:49Z]   season 2024: 150/262 games (0 failed)
+[2026-08-07T17:35:55Z]   season 2024: 200/262 games (0 failed)
+[2026-08-07T17:36:18Z]   season 2024: 250/262 games (0 failed)
+[2026-08-07T17:36:20Z] season 2024: {'season': 2024, 'status': 'built', 'games_indexed': 262, 'games_uncaptured': 0, 'games_failed': 0, 'games_processed': 262, 'games_with_lineups': 220, 'rows': {'schedule': 262, 'play_by_play': 105797, 'possessions': 41429, 'lineups': 88832}, 'secs': 79.0}
+[2026-08-07T17:36:20Z] done (0 season-level failures)
+EXIT=0
