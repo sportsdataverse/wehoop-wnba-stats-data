@@ -28,5 +28,102 @@
       "rows": 231
     }
   ],
-  "generated_at": "2026-09-02T05:42:17+00:00"
+  "generated_at": "2026-09-09T03:54:04+00:00",
+  "publish_gates": {
+    "seasons_gated": [
+      2026
+    ],
+    "seasons": {
+      "2026": {
+        "rs_rows": 231,
+        "r_rapm_adj": 0.7727016768515818,
+        "r_spm_rapm": 0.24321252046891248,
+        "r_rapm_yoy": null,
+        "r_darko_fwd": null,
+        "n_fwd": 0
+      }
+    },
+    "summary": {
+      "rs_rows_min": 231,
+      "r_rapm_adj_min": 0.7727016768515818,
+      "r_spm_rapm_min": 0.24321252046891248,
+      "r_rapm_yoy_min": null,
+      "r_darko_fwd_min": null,
+      "r_darko_fwd_wmean": null
+    },
+    "checks": [
+      {
+        "gate": "rs_rows_min",
+        "floor": 80,
+        "observed": 231,
+        "status": "PASS"
+      },
+      {
+        "gate": "r_rapm_adj_min",
+        "floor": 0.65,
+        "observed": 0.7727016768515818,
+        "status": "PASS"
+      },
+      {
+        "gate": "r_spm_rapm_min",
+        "floor": 0.18,
+        "observed": 0.24321252046891248,
+        "status": "PASS"
+      },
+      {
+        "gate": "r_rapm_yoy_min",
+        "floor": 0.1,
+        "observed": null,
+        "status": "SKIPPED"
+      },
+      {
+        "gate": "r_darko_fwd_min",
+        "floor": 0.05,
+        "observed": null,
+        "status": "SKIPPED"
+      }
+    ],
+    "scale": [
+      {
+        "season": 2026,
+        "gate": "mean_rapm",
+        "observed": 0.009888310431499006,
+        "band": [
+          -1.0,
+          1.0
+        ],
+        "status": "PASS"
+      },
+      {
+        "season": 2026,
+        "gate": "sd_rapm",
+        "observed": 1.0133403722431962,
+        "band": [
+          0.5,
+          3.5
+        ],
+        "status": "PASS"
+      },
+      {
+        "season": 2026,
+        "gate": "mean_adj_rapm",
+        "observed": 0.15979453709475078,
+        "band": [
+          -3.0,
+          3.0
+        ],
+        "status": "PASS"
+      },
+      {
+        "season": 2026,
+        "gate": "sd_adj_rapm",
+        "observed": 4.467976040998039,
+        "band": [
+          3.0,
+          8.0
+        ],
+        "status": "PASS"
+      }
+    ]
+  }
 }
