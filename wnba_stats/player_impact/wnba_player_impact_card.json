@@ -7,7 +7,8 @@
     "season_type"
   ],
   "season_types": [
-    "Regular Season"
+    "Regular Season",
+    "Playoffs"
   ],
   "source": "stats.wnba.com (playbyplayv3 / gamerotation / boxscoretraditionalv3 / leaguegamelog / playerindex / leaguedashplayerbiostats)",
   "producer": "wehoop-wnba-stats-data/python/wnba_model_publish",
@@ -25,10 +26,10 @@
   "seasons": [
     {
       "season": 2026,
-      "rows": 238
+      "rows": 325
     }
   ],
-  "generated_at": "2026-09-27T14:30:28+00:00",
+  "generated_at": "2026-09-28T14:31:12+00:00",
   "publish_gates": {
     "seasons_gated": [
       2026
@@ -36,8 +37,8 @@
     "seasons": {
       "2026": {
         "rs_rows": 238,
-        "r_rapm_adj": 0.7736637049308738,
-        "r_spm_rapm": 0.21886649674910535,
+        "r_rapm_adj": 0.7736637049308734,
+        "r_spm_rapm": 0.21886649674910524,
         "r_rapm_yoy": null,
         "r_darko_fwd": null,
         "n_fwd": 0
@@ -45,8 +46,8 @@
     },
     "summary": {
       "rs_rows_min": 238,
-      "r_rapm_adj_min": 0.7736637049308738,
-      "r_spm_rapm_min": 0.21886649674910535,
+      "r_rapm_adj_min": 0.7736637049308734,
+      "r_spm_rapm_min": 0.21886649674910524,
       "r_rapm_yoy_min": null,
       "r_darko_fwd_min": null,
       "r_darko_fwd_wmean": null
@@ -61,13 +62,13 @@
       {
         "gate": "r_rapm_adj_min",
         "floor": 0.65,
-        "observed": 0.7736637049308738,
+        "observed": 0.7736637049308734,
         "status": "PASS"
       },
       {
         "gate": "r_spm_rapm_min",
         "floor": 0.18,
-        "observed": 0.21886649674910535,
+        "observed": 0.21886649674910524,
         "status": "PASS"
       },
       {
@@ -87,7 +88,7 @@
       {
         "season": 2026,
         "gate": "mean_rapm",
-        "observed": 0.005717131135469181,
+        "observed": 0.005717131135469147,
         "band": [
           -1.0,
           1.0
@@ -107,7 +108,7 @@
       {
         "season": 2026,
         "gate": "mean_adj_rapm",
-        "observed": 0.1683639902636947,
+        "observed": 0.16836399026369459,
         "band": [
           -3.0,
           3.0
