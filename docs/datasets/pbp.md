@@ -28,8 +28,8 @@ WNBA Stats Play-by-Play from wehoop data repository — `playbyplayv3` (game-lev
 | `person_id` | Int64 | stats.wnba.com person id of the player (or official) the row describes; the same id space as player_id. |
 | `player_name` | String | Player display name as the stats API ships it ("Breanna Stewart"). |
 | `player_name_i` | String | Abbreviated player name ("B. Stewart"). |
-| `x_legacy` | Int64 | Shot x-coordinate in the legacy stats coordinate frame (tenths of feet from the basket centerline; null for non-shots). |
-| `y_legacy` | Int64 | Shot y-coordinate in the legacy coordinate frame (tenths of feet from the basket toward half court, so 0 at the basket and negative for a shot from behind it; null for non-shots). |
+| `x_legacy` | Int64 | Shot x-coordinate in the legacy stats coordinate frame (tenths of feet from the basket centerline; 0 for non-shot actions). |
+| `y_legacy` | Int64 | Shot y-coordinate in the legacy coordinate frame (tenths of feet from the basket toward half court, so 0 at the basket and negative for a shot from behind it; 0 for non-shot actions). |
 | `shot_distance` | Int64 | Shot distance in feet (0 for non-shots). |
 | `shot_result` | String | "Made" / "Missed" for shot actions; empty otherwise. |
 | `is_field_goal` | Int64 | 1 when the action is a field-goal attempt, else 0. |
