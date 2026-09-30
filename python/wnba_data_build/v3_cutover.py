@@ -1030,6 +1030,13 @@ def main(argv: Optional[list[str]] = None) -> int:
     # DIFF is explainable, not only after it is resolved.
     _log(f"deriving release formats ({', '.join(formats)}) + hashing -- rds is verified on write")
     staged = stage_rows(staging, seasons, targets, formats=formats, force_derive=args.force_derive)
+    # A 0-row family is never a publishable season: it is a season with nothing
+    # captured yet (a nightly run before the opener) or a failed build, and the
+    # raw-store gate passes it trivially (0 staged == 0 captured).
+    empty = sorted({(r["season"], r["family"]) for r in staged if r["rows"] == 0})
+    if empty:
+        _log(f"skipping {len(empty)} empty staged family-season(s), never published: {empty}")
+        staged = [r for r in staged if r["rows"] > 0]
     if not staged:
         _log(f"no staged parquets under {staging} for those seasons -- nothing to do")
         return 1

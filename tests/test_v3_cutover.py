@@ -518,6 +518,35 @@ def test_execute_no_readme_uploads_data_only(tmp_path, monkeypatch):
     assert not any(p.endswith(vc.README_ASSET) for p in uploaded)
 
 
+def test_execute_skips_an_empty_family(tmp_path, monkeypatch):
+    """A 0-row family (nothing captured yet) passes the gate trivially; never publish it."""
+    staging = tmp_path / "v3_staging"
+    _stage(staging, 2006, families=("schedule",))
+    _stage(staging, 2006, families=("possessions",), rows=0)
+    gh = FakeGh()
+    monkeypatch.setattr(vc, "_gh_runner", gh)
+    monkeypatch.setattr(v3_gate, "run_gate", _fake_gate([]))
+    argv = [
+        "-s",
+        "2006",
+        "-e",
+        "2006",
+        "--repo-root",
+        str(tmp_path),
+        "--staging",
+        str(staging),
+        "--families",
+        "schedule,possessions",
+        "--execute",
+        "--no-readme",
+    ]
+
+    assert vc.main(argv) == 0
+    uploaded = gh.uploads()
+    assert len(uploaded) == 3  # schedule x 3 formats; possessions skipped
+    assert not any("possessions" in p for p in uploaded)
+
+
 def test_execute_stops_on_first_failure_leaving_the_rest_queued(tmp_path, monkeypatch):
     staging = tmp_path / "v3_staging"
     _stage(staging, 2006)
