@@ -963,6 +963,15 @@ def main(argv: Optional[list[str]] = None) -> int:
         action="store_true",
         help="re-derive the rds / csv.gz even when they look current",
     )
+    ap.add_argument(
+        "--no-readme",
+        action="store_true",
+        help=(
+            "skip the per-tag README upload. For the nightly current-season refresh: "
+            "the README states the published season range, so a one-season run "
+            "would shrink it to that season."
+        ),
+    )
     args = ap.parse_args(argv)
 
     if args.retire_v3_tags and args.retire_legacy_assets:
@@ -1068,6 +1077,9 @@ def main(argv: Optional[list[str]] = None) -> int:
         return 1
 
     if not args.execute:
+        if args.no_readme:
+            _log("DRY RUN -- nothing uploaded (--no-readme: no README would be sent).")
+            return 0
         _log(f"{README_ASSET} that --execute would upload to each tag (written locally, not sent):")
         upload_readmes(
             sorted({r["tag"] for r in manifest}),
@@ -1102,6 +1114,10 @@ def main(argv: Optional[list[str]] = None) -> int:
             _log("Stopped. Fix, then re-run -- verified assets are skipped via the receipt file.")
             return 1
     _log(f"done: {len(todo)} asset(s) uploaded + verified")
+
+    if args.no_readme:
+        _log(f"--no-readme: leaving each tag's {README_ASSET} as published")
+        return 0
 
     # Last, so a failed data upload never leaves a note promising assets that are
     # not there. Every touched tag gets one, not only the colliding ones: the

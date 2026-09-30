@@ -36,6 +36,8 @@ python -m wnba_data_build.leaguedash_cli --seasons 2026 --publish   # publish (d
 bash scripts/backfill_historical_seasons.sh          # raw-backed families, all seasons
 bash scripts/run_v3_backfill.sh -s 1997 -e 2026      # Program V v3 backfill (resumable)
 bash scripts/run_v3_cutover.sh -s 1997 -e 2026       # D26d cutover -- DRY RUN by default
+bash scripts/nightly_wnba_season_refresh.sh          # droplet cron: current-season v3 + leaguedash publish
+bash scripts/nightly_wnba_season_refresh.sh 2026 -n  # ...build + gate + plan, upload nothing
 python -m wnba_data_build.manifest check              # do the tags' manifests match their assets?
 python -m wnba_data_build.manifest build --tags wnba_stats_shots --publish  # refresh one
 Rscript ops/init/0000_create_wehoop_releases_init.R  # one-off: create release tags
@@ -124,7 +126,18 @@ the manifest — there is no blanket ignore switch. Uploads run one asset at a t
 with a size re-check after each and stop on the first mismatch (`gh release
 upload` with many files has silently dropped large assets). Verified uploads land
 in `v3_staging/.cutover_receipts.json`, so a re-run skips them: resumable and
-idempotent. Operator-run, not workflow-wired.
+idempotent. Multi-season runs are operator-run, not workflow-wired.
+
+**The CURRENT season is refreshed nightly** by `scripts/nightly_wnba_season_refresh.sh`
+(droplet cron `0 10 * 5-10 *` ET): v3 backfill (fresh per-game cache) -> this cutover
+for one season with `--no-readme --execute` -> `leaguedash_cli --publish`. Until
+2026-09-30 nothing did, and the 2026 `wnba_*` v3 assets plus `wnba_stats_leaguedash`
+sat frozen at Aug 12/13 while the season ran -- the v3 names are what sdv-py's
+`load_wnba_stats_{pbp,schedules,possessions,game_lineups}` read. It runs at 10:00
+because the gate diffs against the legacy tree the dispatched compile commits after
+the 09:00 raw refresh; a gate failure refuses the v3 publish and exits 1 (alerted via
+`bin/cron_alert.sh`). `--no-readme` keeps a one-season run from rewriting each tag's
+README season range.
 
 ## Inputs / Outputs
 - Artifacts land under `wnba_stats/` as rds + parquet (plus per-game JSON for PBP /
