@@ -99,12 +99,12 @@ for i in $(seq "${START_YEAR}" "${END_YEAR}"); do
         ANY_FAILED=1
         continue
     fi
-    # Sync the built artifacts into the committed R-shaped tree
-    # (wnba_stats/{key}/{parquet,rds}/): the release stays the distribution
-    # channel, but the repo keeps a committed version of every compiled
-    # dataset -- exactly the R tree's rds+parquet shape (csv is release-only).
-    # The builder's own layout ({out}/wnba_stats_{key}/file) is left untouched;
-    # this maps tag dirs onto the short tree keys.
+    # Sync the built PARQUET into the committed tree (wnba_stats/{key}/parquet/):
+    # the release is the distribution channel and carries all three formats
+    # (parquet + rds + csv); the repo keeps the parquet of every compiled
+    # dataset for every season (owner rule 2026-09-30 -- rds is no longer
+    # committed). The builder's own layout ({out}/wnba_stats_{key}/file) is left
+    # untouched; this maps tag dirs onto the short tree keys.
     for d in "${OUT_DIR}"/wnba_stats_*/; do
         [ -d "${d}" ] || continue
         key="$(basename "${d}")"
@@ -113,11 +113,6 @@ for i in $(seq "${START_YEAR}" "${END_YEAR}"); do
             [ -e "${f}" ] || continue
             mkdir -p "${REPO_DIR}/wnba_stats/${key}/parquet"
             cp -f "${f}" "${REPO_DIR}/wnba_stats/${key}/parquet/"
-        done
-        for f in "${d}"*.rds; do
-            [ -e "${f}" ] || continue
-            mkdir -p "${REPO_DIR}/wnba_stats/${key}/rds"
-            cp -f "${f}" "${REPO_DIR}/wnba_stats/${key}/rds/"
         done
     done
     # Stage 99 (spec D34), in-loop half: restamp this season's committed

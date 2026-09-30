@@ -140,9 +140,14 @@ the 09:00 raw refresh; a gate failure refuses the v3 publish and exits 1 (alerte
 README season range.
 
 ## Inputs / Outputs
-- Artifacts land under `wnba_stats/` as rds + parquet (plus per-game JSON for PBP /
-  player game logs). Anything destined for releases is uploaded via
-  `piggyback::pb_upload()` wrapped in `insistent_save()` (`purrr::insistently`).
+- **Tree rule (owner, 2026-09-30): every compiled dataset's PARQUET is committed for
+  every season** under `wnba_stats/{key}/parquet/` (key = release tag minus
+  `wnba_stats_`). Releases carry all three formats (parquet + rds + csv); the tree
+  carries parquet only — no rds, no csv. Writers: the daily processor, the nightly
+  season refresh (v3 families + leaguedash) and the impact driver (+ `*_card.json`).
+  A new dataset lands its committed parquet in the same change;
+  `/mnt/sdv_repos/bin/stats_release_audit.py` flags a released parquet with no
+  committed copy (NO-COMMIT).
 - 17 release tags on `sportsdataverse/sportsdataverse-data` (created by
   `ops/init/0000_create_wehoop_releases_init.R`): `wnba_stats_{schedules,pbp,player_game_logs,rosters,player_season_stats,lineups,team_season_stats,standings,draft,shots,game_rosters,officials,coaches,team_boxscores,player_boxscores,possessions,game_lineups}`.
   The last two are the Program V (D26d) cutover targets. **`run_v3_cutover.sh -x`

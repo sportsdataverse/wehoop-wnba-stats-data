@@ -41,7 +41,7 @@ git config --local user.name "Github Action" >/dev/null 2>&1 || true
 SEASON="${1:-$(date -u +%Y)}"
 RAW_STORE="${WNBA_RAW_STORE:-/mnt/sdv_repos/wehoop-wnba-stats-raw/wnba_stats/json}"
 # A scratch dir, never a repo path: the builder's output is an intermediate, and
-# only the parquet+rds are meant to survive into the tracked tree below.
+# only the parquet (+ card) is meant to survive into the tracked tree below.
 OUT_DIR="$(mktemp -d "/tmp/wnba_impact_${SEASON}.XXXXXX")"
 trap 'rm -rf "${OUT_DIR}"' EXIT
 
@@ -60,21 +60,18 @@ fi
 
 # Sync into the committed tree, the same contract the data processor uses for
 # every compiled dataset: the release is the distribution channel, but the repo
-# keeps a committed copy in wnba_stats/{key}/{parquet,rds}/. csv is
-# release-only (it is the largest format and adds nothing a reader of the
+# keeps a committed copy in wnba_stats/{key}/parquet/. csv and rds are
+# release-only (csv is the largest format and adds nothing a reader of the
 # parquet needs). A dry-run publishes nothing but still builds, so the commit
 # is skipped too -- only a real run should move the tracked tree.
 case " ${*:2} " in
   *" --dry-run "*) echo "dry run: not committing"; echo "EXIT=0"; exit 0 ;;
 esac
 
-mkdir -p "${REPO_DIR}/wnba_stats/player_impact/parquet" \
-         "${REPO_DIR}/wnba_stats/player_impact/rds"
+# Parquet only in the tree (owner rule 2026-09-30); the release carries rds + csv too.
+mkdir -p "${REPO_DIR}/wnba_stats/player_impact/parquet"
 for f in "${OUT_DIR}"/*.parquet; do
   [ -e "$f" ] && cp -f "$f" "${REPO_DIR}/wnba_stats/player_impact/parquet/"
-done
-for f in "${OUT_DIR}"/*.rds; do
-  [ -e "$f" ] && cp -f "$f" "${REPO_DIR}/wnba_stats/player_impact/rds/"
 done
 # The model card is the artifact that says HOW these numbers were produced;
 # committing the table without it leaves the repo copy unexplained.

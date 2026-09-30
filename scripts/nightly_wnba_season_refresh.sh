@@ -65,6 +65,22 @@ trap 'rm -rf "${CACHE_DIR}"' EXIT
 echo "=== nightly season refresh ${SEASON} started $(date -u +'%F %T')Z ==="
 git pull -q --ff-only || echo "WARN: git pull failed -- gating against the checked-out legacy tree"
 
+# Commit + push helper, shared with the processor and the impact driver.
+# shellcheck source=scripts/_commit.sh
+source "$(dirname "${BASH_SOURCE[0]}")/_commit.sh"
+git config --local user.email "action@github.com" >/dev/null 2>&1 || true
+git config --local user.name "Github Action" >/dev/null 2>&1 || true
+# Tree dir (release tag minus wnba_stats_) per staged v3 family; staged names
+# already equal the release asset names (wnba_{family}_{season}.parquet).
+declare -A V3_KEY=([schedule]=schedules [play_by_play]=pbp [possessions]=possessions [lineups]=game_lineups)
+TREE_PATHS=()
+# Copy one built parquet into the tree dir -- never in a dry run, which publishes
+# nothing and so must not move the tracked tree either.
+tree_copy() {
+  [ -n "${EXECUTE}" ] && [ -s "$1" ] || return 0
+  mkdir -p "$2" && cp -f "$1" "$2/" && TREE_PATHS+=("$2")
+}
+
 rc=0
 # Before the opener (the cron starts May 1) there is nothing to build; say so and
 # move on rather than tripping the cutover's nothing-to-publish exit 1 daily.
@@ -75,18 +91,38 @@ elif "$PY" -m wnba_data_build.v3_backfill -s "$SEASON" -e "$SEASON" \
      --raw-root "$RAW_ROOT" --cache-dir "$CACHE_DIR" --rebuild; then
   # --no-readme: each tag's README states the full published season range; a
   # one-season run would rewrite it as "${SEASON}-${SEASON}".
-  "$PY" -m wnba_data_build.v3_cutover -s "$SEASON" -e "$SEASON" \
-    --raw-root "$RAW_ROOT" --no-readme \
-    --manifest "${REPO_DIR}/build_out/v3_cutover_manifest_nightly.md" \
-    ${EXECUTE} || rc=1
+  if "$PY" -m wnba_data_build.v3_cutover -s "$SEASON" -e "$SEASON" \
+       --raw-root "$RAW_ROOT" --no-readme \
+       --manifest "${REPO_DIR}/build_out/v3_cutover_manifest_nightly.md" \
+       ${EXECUTE}; then
+    # Owner rule: the tree carries every compiled dataset's parquet (release
+    # carries all three formats). Only after a publish, so the tree never shows
+    # a season the release does not.
+    for fam in "${!V3_KEY[@]}"; do
+      tree_copy "v3_staging/wnba_${fam}_${SEASON}.parquet" "wnba_stats/${V3_KEY[$fam]}/parquet"
+    done
+  else
+    rc=1
+  fi
 else
   rc=1
 fi
 
 # Persistent out dir, not scratch: the megas assemble from on-disk tables, so a
 # variant that fails today keeps yesterday's file instead of narrowing the mega.
-"$PY" -m wnba_data_build.leaguedash_cli --seasons "$SEASON" \
-  --out build_out/leaguedash "${LD_MODE}" || rc=1
+if "$PY" -m wnba_data_build.leaguedash_cli --seasons "$SEASON" \
+     --out build_out/leaguedash "${LD_MODE}"; then
+  for src in build_out/leaguedash/wnba_stats_leaguedash/*_"${SEASON}".parquet; do
+    tree_copy "$src" wnba_stats/leaguedash/parquet
+  done
+else
+  rc=1
+fi
+
+if [ "${#TREE_PATHS[@]}" -gt 0 ]; then
+  sdv_commit_push "WNBA Stats Data Update (Start: ${SEASON} End: ${SEASON})" \
+    $(printf '%s\n' "${TREE_PATHS[@]}" | sort -u) || rc=1
+fi
 
 echo "=== nightly season refresh ${SEASON} finished $(date -u +'%F %T')Z ==="
 echo "EXIT=${rc}"
