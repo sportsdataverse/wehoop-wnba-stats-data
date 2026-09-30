@@ -66,7 +66,12 @@ echo "=== nightly season refresh ${SEASON} started $(date -u +'%F %T')Z ==="
 git pull -q --ff-only || echo "WARN: git pull failed -- gating against the checked-out legacy tree"
 
 rc=0
-if "$PY" -m wnba_data_build.v3_backfill -s "$SEASON" -e "$SEASON" \
+# Before the opener (the cron starts May 1) there is nothing to build; say so and
+# move on rather than tripping the cutover's nothing-to-publish exit 1 daily.
+captured=$(find "${RAW_ROOT}/playbyplayv3/${SEASON}" -name '*.json' 2>/dev/null | wc -l)
+if [ "${captured}" -eq 0 ]; then
+  echo "v3: no playbyplayv3 captured for ${SEASON} under ${RAW_ROOT} -- nothing to publish (not an error)"
+elif "$PY" -m wnba_data_build.v3_backfill -s "$SEASON" -e "$SEASON" \
      --raw-root "$RAW_ROOT" --cache-dir "$CACHE_DIR" --rebuild; then
   # --no-readme: each tag's README states the full published season range; a
   # one-season run would rewrite it as "${SEASON}-${SEASON}".
