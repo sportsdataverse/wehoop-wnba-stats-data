@@ -208,11 +208,13 @@ from a residential IP.
 | `wnba_player_impact` (RAPM/adj-RAPM/SPM/BPM/DARKO/WAR) | `wnba_player_impact_{season}.parquet` + `*_card.json` | `wnba_player_impact` on `sportsdataverse-data` | 1997–2026 possessions + box logs (stats.wnba.com via the raw store) | `python/wnba_model_publish/builders.py` (`build_wnba_player_impact`) | nightly (droplet cron, current season); `wnba_models.yml` dispatch for backfills |
 
 ## Workflows & commits
-- `.github/workflows/daily_wnba_stats.yml` — cron over the WNBA window (`0 14 * 5-9 *`
-  + `0 14 1-20 10 *`), one season per run, shells to the daily processor. It has **no
+- `.github/workflows/daily_wnba_stats.yml` — `repository_dispatch` (`daily_wnba_stats`)
+  from `wehoop-wnba-stats-raw`'s `wehoop_wnba_stats_data_trigger.yml`, which fires when
+  the droplet's 09:00 ET refresh pushes `wnba_stats/json/**` (no cron since 2026-09-30:
+  GitHub started the old 14:00 UTC one 4-6 h late, and it stopped Oct 20). One season
+  per run, shells to the daily processor. It has **no
   checkout of the raw store** and reads each JSON file over HTTP from
-  `WEHOOP_WNBA_STATS_RAW_ROOT`; 14:00 UTC = 10:00 ET puts it after the droplet's
-  09:00 ET stats-raw refresh (the old 07:00 UTC slot compiled yesterday's capture). Draft is **excluded**
+  `WEHOOP_WNBA_STATS_RAW_ROOT`. Draft is **excluded**
   (annual `0 8 15 4 *` / `16` in `annual_wnba_stats_draft.yml`; draft endpoint defaults to
   `most_recent_wnba_season() - 1` since `Season=current` returns 0 rows). Auth via `SDV_GH_TOKEN`.
 - Each parser tees output to `logs/wehoop_wnba_stats_*_logfile_<year>.log`; the processor emits
