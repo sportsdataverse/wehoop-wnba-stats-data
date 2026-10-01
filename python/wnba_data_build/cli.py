@@ -15,6 +15,10 @@ CLI is where that routing lives:
 * ``player_boxscores`` / ``team_boxscores`` -> :func:`~wnba_data_build.build.build_boxscores`
 * ``shots`` -> :func:`~wnba_data_build.build.build_shots`, *derived* from that
   season's pbp frame — so pbp is built once per season and reused, never twice.
+* ``metric_curves`` -> :func:`~wnba_data_build.build.build_metric_curves`, *derived*
+  from that season's ``shots`` -- the frame this run just built when ``shots`` is in
+  the run (the daily processor), else the committed
+  ``{--base}/shots/parquet/shots_{season}.parquet`` (a standalone backfill).
 
 Publish is controller-gated
 ---------------------------
@@ -34,7 +38,7 @@ from typing import Optional
 import polars as pl
 
 from . import build as _build
-from .datasets import BY_KEY, DATASETS, Dataset
+from .datasets import BY_KEY, DATASETS, RELEASE_NOTES, Dataset
 from .io import write_release_formats
 from .manifest import check_tags
 from .publish import upload_artifacts
@@ -65,6 +69,13 @@ def build_parser() -> argparse.ArgumentParser:
         "raw.githubusercontent URL; default matches sdv-py's read-through store",
     )
     ap.add_argument("--out", default="build_out", help="artifact output directory")
+    ap.add_argument(
+        "--base",
+        default="wnba_stats",
+        help="committed tree (the dir holding shots/parquet/) that metric_curves reads the "
+        "season's shots from when shots is not built in the same run; default = this "
+        "repo's tree relative to the cwd the drivers cd into",
+    )
     ap.add_argument("--repo", default=_REPO, help="release repo for --publish")
     ap.add_argument(
         "--publish",
@@ -96,17 +107,24 @@ def build_dataset(
     season: int,
     *,
     _pbp: Optional[pl.DataFrame] = None,
+    _shots: Optional[pl.DataFrame] = None,
+    base: str | Path = "wnba_stats",
 ) -> pl.DataFrame:
     """Build one dataset for one season, routing v3-nested datasets to their builders.
 
     ``_pbp`` lets the caller pass an already-built play-by-play frame so ``shots``
-    (derived from pbp) and ``pbp`` itself share one bind per season.
+    (derived from pbp) and ``pbp`` itself share one bind per season; ``_shots`` does
+    the same for ``metric_curves`` (derived from shots), which otherwise reads the
+    committed tree under ``base``.
     """
     if dataset.key == "pbp":
         return _pbp if _pbp is not None else _build.build_pbp(root, season)
     if dataset.key == "shots":
         pbp = _pbp if _pbp is not None else _build.build_pbp(root, season)
         return _build.build_shots(pbp)
+    if dataset.key == "metric_curves":
+        shots = _shots if _shots is not None else _build.committed_shots(base, season)
+        return _build.build_metric_curves(shots)
     if dataset.key == "player_boxscores":
         return _build.build_boxscores(root, season, team_level=False)
     if dataset.key == "team_boxscores":
@@ -130,6 +148,9 @@ def main(argv: Optional[list[str]] = None) -> int:
         pbp: Optional[pl.DataFrame] = None
         if {"pbp", "shots"} & want_keys:
             pbp = _build.build_pbp(root, season)
+        # metric_curves derives from THIS run's shots (registry order builds shots
+        # first), never from yesterday's committed file when both are in the run.
+        shots: Optional[pl.DataFrame] = None
         for dataset in datasets:
             if dataset.first_season is not None and season < dataset.first_season:
                 print(
@@ -137,7 +158,9 @@ def main(argv: Optional[list[str]] = None) -> int:
                     f"{dataset.first_season} (upstream coverage starts there)"
                 )
                 continue
-            df = build_dataset(root, dataset, season, _pbp=pbp)
+            df = build_dataset(root, dataset, season, _pbp=pbp, _shots=shots, base=args.base)
+            if dataset.key == "shots":
+                shots = df
             if df.is_empty():
                 print(f"skip {dataset.key} {season}: no rows")
                 continue
@@ -154,13 +177,22 @@ def main(argv: Optional[list[str]] = None) -> int:
     if args.publish or args.dry_run:
         for tag in sorted(built_tags):
             result = upload_artifacts(
-                out / tag, tag, args.repo, seasons=seasons, dry_run=args.dry_run
+                out / tag,
+                tag,
+                args.repo,
+                seasons=seasons,
+                notes=RELEASE_NOTES.get(tag),
+                dry_run=args.dry_run,
             )
             print(f"publish {tag}: {result}")
         # Uploading season assets does NOT refresh `<tag>_in_data_repo.csv`, which
         # wehoop's load_*_manifest() reads to discover published seasons. That is
         # how seven tags ended up serving full history behind a one-row manifest.
         # Publishing stays upload-only; this makes the resulting drift loud.
+        # A NEW tag trips this by design on its first --publish (assets, no manifest
+        # yet): the exit 1 makes the daily processor `continue` past the tree sync,
+        # skipping that whole season's commit, so run
+        # `manifest build --tags <tag> --publish` right after a first publish.
         if args.publish and not args.dry_run:
             if problems := check_tags(sorted(built_tags), args.repo):
                 for msg in problems:

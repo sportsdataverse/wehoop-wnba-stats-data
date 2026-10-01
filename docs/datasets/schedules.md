@@ -21,7 +21,7 @@ WNBA Stats Schedule from wehoop data repository — `leaguegamelog` (season-leve
 | col_name | type | description |
 |---|---|---|
 | `season_id` | String | stats.wnba.com composite season id: season-type digit + year ("22023" = 2023 regular season). |
-| `team_id` | Int64 | stats.wnba.com team id (Int64, e.g. 1611661313 = New York Liberty). |
+| `team_id` | Int64 | stats.wnba.com team id (e.g. 1611661313 = New York Liberty). |
 | `team_abbreviation` | String | Three-letter team code ("NYL"). |
 | `team_name` | String | Team nickname or full name as the source endpoint ships it. |
 | `game_id` | String | stats.wnba.com game id, 10-char string carrying the "10" WNBA league prefix ("1022400001"); pinned Utf8 so it never round-trips through int. |

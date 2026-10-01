@@ -178,7 +178,42 @@ DATASETS: tuple[Dataset, ...] = (
         f"WNBA Stats Shots {_R}",
         level="derived",
     ),
+    # -- derived from the committed tree (stage 17, F4-T4) --------------------------
+    #
+    # Built by sdv-py's `metric_curves` over the season's `shots` -- the frame this
+    # run just built, or the committed `wnba_stats/shots/parquet/shots_{Y}.parquet`
+    # when shots is not in the run (cli.build_dataset). Stage 16 is reserved for
+    # `rolling_windows` (F3b), which the roadmap orders before this one.
+    Dataset(
+        "metric_curves",
+        None,
+        None,
+        "metric_curves",
+        "wnba_stats_metric_curves",
+        f"WNBA Stats Metric Curves {_R}",
+        level="derived",
+    ),
 )
+
+#: Reader-facing description per release tag: the body a tag is created with
+#: (``upload_artifacts(notes=)``) and the paragraph its generated dataset page
+#: carries. A tag with no entry keeps publish.py's generic body.
+RELEASE_NOTES: dict[str, str] = {
+    "wnba_stats_metric_curves": (
+        "FG% by shot distance -- league, team and player curves per season, computed by "
+        "`sportsdataverse.metric_curves` from the committed `wnba_stats_shots`. One row per "
+        "(season, entity, bucket): 1-ft bins from 0 to 35 ft, then 35-50 and 50-95 ft "
+        "(`x_lo` inclusive, `x_hi` exclusive), each carrying `attempts`, `successes` (makes) "
+        "and `rate = successes / attempts`; an empty bucket is absent, never a zero row. "
+        "Attempts are regular-season and playoff shots only (`season_type_id` 2 and 4, read "
+        "off the game id's type digit -- the committed WNBA shots carry no other game type). "
+        'Ids are stats.wnba.com ids as text with `id_source = "wnba_stats"`: `entity_id` is '
+        "the `team_id` / `person_id` (null on the league row), `team_id` on a player row is "
+        "the team of most of that player's attempts. `down` and `epa_per_att` are null on "
+        "every row (the cross-league contract's football-only columns). Span 1997-present, "
+        "the shots' own span (seasons are calendar years)."
+    ),
+}
 
 BY_KEY: dict[str, Dataset] = {d.key: d for d in DATASETS}
 

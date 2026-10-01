@@ -22,7 +22,7 @@ WNBA Stats League Standings V3 from wehoop data repository — `leaguestandingsv
 |---|---|---|
 | `league_id` | String | stats.wnba.com league id ("10" = WNBA). |
 | `season_id` | String | stats.wnba.com composite season id: season-type digit + year ("22023" = 2023 regular season). |
-| `team_id` | Int64 | stats.wnba.com team id (Int64, e.g. 1611661313 = New York Liberty). |
+| `team_id` | Int64 | stats.wnba.com team id (e.g. 1611661313 = New York Liberty). |
 | `team_city` | String | Team city name. |
 | `team_name` | String | Team nickname or full name as the source endpoint ships it. |
 | `team_slug` | String |  |

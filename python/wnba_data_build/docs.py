@@ -48,7 +48,7 @@ from pathlib import Path
 
 import polars as pl
 
-from wnba_data_build.datasets import BY_KEY, DATASETS
+from wnba_data_build.datasets import BY_KEY, DATASETS, RELEASE_NOTES
 from wnba_data_build.models import MODELS, polars_schema
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -76,6 +76,7 @@ BUILDER = {
     "player_boxscores": "python/wnba_stats_13_player_boxscores_creation.py",
     "team_boxscores": "python/wnba_stats_14_team_boxscores_creation.py",
     "shots": "python/wnba_stats_15_shots_creation.py",
+    "metric_curves": "python/wnba_stats_17_metric_curves_creation.py",
     "schedule_master": "python/wnba_stats_99_schedule_master_creation.py",
     "games_in_data_repo": "python/wnba_stats_99_schedule_master_creation.py",
 }
@@ -304,11 +305,15 @@ def dataset_page(dataset: str, *, live: bool) -> str:
     spec = BY_KEY[dataset]
     status = release_status(spec.release_tag, live=live)
     seasons = _seasons_built(dataset)
+    # The tag's reader-facing description, where there is one (same text the
+    # release body carries).
+    notes = RELEASE_NOTES.get(spec.release_tag)
+    blurb = f"\n{notes}\n" if notes else ""
 
     return f"""# `{dataset}`
 
 {spec.wehoop_type} — `{spec.endpoint or "derived"}` ({spec.level}-level).
-
+{blurb}
 | | |
 |---|---|
 | **Builder** | [`{BUILDER[dataset]}`]({"../../" + BUILDER[dataset]}) |

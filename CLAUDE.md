@@ -72,6 +72,27 @@ from what is actually on the tag (asset list + each parquet's footer + GitHub's
 `updatedAt`), never from a local build dir, and `source_endpoint` is inherited
 verbatim from the published manifest so a rebuild never invents provenance.
 
+**`metric_curves` is stage 17, derived from the committed `shots` tree** (F4-T4,
+2026-10-01; stage 16 is reserved for `rolling_windows`). sdv-py's
+`sportsdataverse.metric_curves` over one season's shots: FG% by shot distance for
+the league, every team and every shooter, 1-ft bins to 35 ft then 35-50 and 50-95,
+regular season + playoffs (`season_type_id` 2/4). The WNBA shots carry NO
+`season_type_id` column (the NBA twin stamps one), so the builder derives it from
+the game id's type digit, exactly as the NBA builder does; every committed season
+holds only 2 and 4. Ids are TEXT with `id_source = "wnba_stats"` (the cross-league
+contract; `MetricCurves` is the one model exempt from the Int64-id test). In the
+daily run it derives from the shots frame the SAME invocation just built; a
+standalone run (`--datasets metric_curves`) reads `{--base}/shots/parquet/shots_{Y}.parquet`
+(default `wnba_stats`, relative to the repo root) and needs no raw store. Publishes
+to `wnba_stats_metric_curves` (`metric_curves_{Y}.parquet` + rds + csv; the tag body
+is `datasets.RELEASE_NOTES`) and commits `wnba_stats/metric_curves/parquet/` through
+the processor's generic sync loop -- no driver change. **The tag's manifest must be
+built right after its first publish** (`python -m wnba_data_build.manifest build
+--tags wnba_stats_metric_curves --publish`; `_NEW_TAG_ENDPOINTS` carries its
+`source_endpoint`): until it exists, every `--publish` run that touches the tag
+exits 1 on the manifest check and the daily processor skips that season's tree
+commit. No wehoop/sdv-py loader yet (`PKG_FUNCTION` unlisted).
+
 **Era floors live in the registry, not in a runbook.** A dataset whose upstream
 coverage starts late carries `first_season` in `datasets.py` (today: `officials`
 = 2004), and the CLI refuses earlier seasons. This exists because those seasons
@@ -148,8 +169,8 @@ README season range.
   A new dataset lands its committed parquet in the same change;
   `/mnt/sdv_repos/bin/stats_release_audit.py` flags a released parquet with no
   committed copy (NO-COMMIT).
-- 17 release tags on `sportsdataverse/sportsdataverse-data` (created by
-  `ops/init/0000_create_wehoop_releases_init.R`): `wnba_stats_{schedules,pbp,player_game_logs,rosters,player_season_stats,lineups,team_season_stats,standings,draft,shots,game_rosters,officials,coaches,team_boxscores,player_boxscores,possessions,game_lineups}`.
+- 18 release tags on `sportsdataverse/sportsdataverse-data` (created by
+  `ops/init/0000_create_wehoop_releases_init.R`): `wnba_stats_{schedules,pbp,player_game_logs,rosters,player_season_stats,lineups,team_season_stats,standings,draft,shots,game_rosters,officials,coaches,team_boxscores,player_boxscores,possessions,game_lineups,metric_curves}`.
   The last two are the Program V (D26d) cutover targets. **`run_v3_cutover.sh -x`
   uploads but never creates a tag** — `gh release upload` fails on a missing
   release, so run the init script first whenever the cutover gains a new target.
@@ -263,6 +284,7 @@ Upstream SDK: <https://github.com/sportsdataverse/wehoop> · ESPN sister: `wehoo
 | [`python/wnba_stats_13_player_boxscores_creation.py`](python/wnba_stats_13_player_boxscores_creation.py) | [`player_boxscores`](docs/datasets/player_boxscores.md) | [`wnba_stats_player_boxscores`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_player_boxscores) | 2026-09-02 |
 | [`python/wnba_stats_14_team_boxscores_creation.py`](python/wnba_stats_14_team_boxscores_creation.py) | [`team_boxscores`](docs/datasets/team_boxscores.md) | [`wnba_stats_team_boxscores`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_team_boxscores) | 2026-09-02 |
 | [`python/wnba_stats_15_shots_creation.py`](python/wnba_stats_15_shots_creation.py) | [`shots`](docs/datasets/shots.md) | [`wnba_stats_shots`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_shots) | 2026-09-02 |
+| [`python/wnba_stats_17_metric_curves_creation.py`](python/wnba_stats_17_metric_curves_creation.py) | [`metric_curves`](docs/datasets/metric_curves.md) | [`wnba_stats_metric_curves`](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/wnba_stats_metric_curves) | — |
 | [`python/wnba_stats_99_schedule_master_creation.py`](python/wnba_stats_99_schedule_master_creation.py) | [`schedule_master`](docs/datasets/schedule_master.md) | `wnba_stats/wnba_stats_schedule_master.parquet` (committed) | — |
 | [`python/wnba_stats_99_schedule_master_creation.py`](python/wnba_stats_99_schedule_master_creation.py) | [`games_in_data_repo`](docs/datasets/games_in_data_repo.md) | `wnba_stats/wnba_stats_games_in_data_repo.parquet` (committed) | — |
 <!-- END GENERATED: datasets -->

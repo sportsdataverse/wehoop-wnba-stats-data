@@ -24,7 +24,7 @@ WNBA Stats Game Rosters from wehoop data repository — `boxscoresummaryv2` (gam
 | `first_name` | String |  |
 | `last_name` | String |  |
 | `jersey_num` | String |  |
-| `team_id` | Int64 | stats.wnba.com team id (Int64, e.g. 1611661313 = New York Liberty). |
+| `team_id` | Int64 | stats.wnba.com team id (e.g. 1611661313 = New York Liberty). |
 | `team_city` | String | Team city name. |
 | `team_name` | String | Team nickname or full name as the source endpoint ships it. |
 | `team_abbreviation` | String | Three-letter team code ("NYL"). |

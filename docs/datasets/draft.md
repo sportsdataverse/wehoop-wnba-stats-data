@@ -27,7 +27,7 @@ WNBA Stats Draft History from wehoop data repository — `drafthistory` (season-
 | `round_pick` | Int64 |  |
 | `overall_pick` | Int64 |  |
 | `draft_type` | String |  |
-| `team_id` | Int64 | stats.wnba.com team id (Int64, e.g. 1611661313 = New York Liberty). |
+| `team_id` | Int64 | stats.wnba.com team id (e.g. 1611661313 = New York Liberty). |
 | `team_city` | String | Team city name. |
 | `team_name` | String | Team nickname or full name as the source endpoint ships it. |
 | `team_abbreviation` | String | Three-letter team code ("NYL"). |

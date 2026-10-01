@@ -20,7 +20,7 @@ WNBA Stats Team Season Stats from wehoop data repository — `leaguedashteamstat
 
 | col_name | type | description |
 |---|---|---|
-| `team_id` | Int64 | stats.wnba.com team id (Int64, e.g. 1611661313 = New York Liberty). |
+| `team_id` | Int64 | stats.wnba.com team id (e.g. 1611661313 = New York Liberty). |
 | `team_name` | String | Team nickname or full name as the source endpoint ships it. |
 | `gp` | Int64 |  |
 | `w` | Int64 |  |
