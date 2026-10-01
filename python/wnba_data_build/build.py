@@ -16,6 +16,12 @@ from pathlib import Path
 from typing import Any
 
 import polars as pl
+from sportsdataverse.metric_curves import (
+    OUTPUT_SCHEMA,
+    SHOT_ATTEMPT_COLUMNS,
+    metric_curves,
+    shot_attempts,
+)
 
 from wnba_data_build import raw
 from wnba_data_build.datasets import Dataset
@@ -216,6 +222,45 @@ def build_shots(pbp: pl.DataFrame) -> pl.DataFrame:
     shots = pbp.filter(pl.col("is_field_goal") == 1)
     keep = [c for c in _SHOT_COLUMNS if c in shots.columns]
     return shots.select(keep) if keep else shots
+
+
+#: What :func:`committed_shots` reads: the curve adapter's columns, with ``game_id``
+#: standing in for ``season_type_id`` (derived below -- the WNBA shots carry none).
+_CURVE_SHOT_COLUMNS = tuple(c for c in SHOT_ATTEMPT_COLUMNS if c != "season_type_id") + ("game_id",)
+
+
+def committed_shots(base: str | Path, season: int) -> pl.DataFrame:
+    """One season of the committed ``shots`` tree, projected to the curve adapter's columns.
+
+    Reads ``{base}/shots/parquet/shots_{season}.parquet`` -- the file the daily
+    processor commits (calendar year in the name = ``season``). An absent season is
+    an empty frame, which :func:`build_metric_curves` turns into the empty contract.
+    """
+    path = Path(base) / "shots" / "parquet" / f"shots_{season}.parquet"
+    if not path.is_file():
+        return pl.DataFrame()
+    return pl.read_parquet(path, columns=list(_CURVE_SHOT_COLUMNS))
+
+
+def build_metric_curves(shots: pl.DataFrame) -> pl.DataFrame:
+    """``metric_curves``: FG% by shot distance for the league, every team and every shooter.
+
+    ``sportsdataverse.metric_curves`` over one season's ``shots`` (this run's
+    :func:`build_shots` frame or :func:`committed_shots`). The adapter keeps
+    regular-season and playoff attempts only (``season_type_id`` ``"2"`` / ``"4"``),
+    bins by ``shot_distance`` (1-ft bins to 35 ft, then 35-50 and 50-95), and stamps
+    ``id_source = "wnba_stats"`` with every id as text. Empty shots return the
+    empty ``OUTPUT_SCHEMA`` frame.
+
+    The WNBA shots carry no ``season_type_id`` column (the NBA twin stamps one), so
+    it is derived here the way that twin derives it: the game id's type digit
+    (``"1022500001"`` -> ``"2"`` regular season, ``"4"`` playoffs).
+    """
+    if shots.is_empty():
+        return pl.DataFrame(schema=OUTPUT_SCHEMA)
+    if "season_type_id" not in shots.columns:
+        shots = shots.with_columns(season_type_id=pl.col("game_id").cast(pl.Utf8).str.slice(2, 1))
+    return metric_curves(shot_attempts(shots.select(SHOT_ATTEMPT_COLUMNS), league="wnba"), "wnba")
 
 
 # -- traditional boxscores -----------------------------------------------------

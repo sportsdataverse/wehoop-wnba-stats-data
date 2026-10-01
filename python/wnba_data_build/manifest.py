@@ -54,6 +54,8 @@ ALL_TAGS: tuple[str, ...] = RELEASE_TAGS + ("wnba_stats_leaguedash",)
 _NEW_TAG_ENDPOINTS: dict[str, str] = {
     # 24 per-season tables under one tag; row_count is the season total across them.
     "wnba_stats_leaguedash": "stats.wnba.com/leaguedash* (24 tables per season)",
+    # Stage 17 (F4-T4): derived, no endpoint of its own.
+    "wnba_stats_metric_curves": "derived from wnba_stats_shots (sportsdataverse.metric_curves)",
 }
 
 
