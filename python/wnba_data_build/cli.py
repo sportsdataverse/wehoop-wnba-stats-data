@@ -15,6 +15,9 @@ CLI is where that routing lives:
 * ``player_boxscores`` / ``team_boxscores`` -> :func:`~wnba_data_build.build.build_boxscores`
 * ``shots`` -> :func:`~wnba_data_build.build.build_shots`, *derived* from that
   season's pbp frame — so pbp is built once per season and reused, never twice.
+* ``rolling_windows`` -> :func:`~wnba_data_build.build.build_rolling_windows`,
+  *derived* the same way, plus every earlier committed ``shots`` season under
+  ``--base``, dated by the committed schedule master and this run's ``schedules``.
 * ``metric_curves`` -> :func:`~wnba_data_build.build.build_metric_curves`, *derived*
   from that season's ``shots`` -- the frame this run just built when ``shots`` is in
   the run (the daily processor), else the committed
@@ -108,20 +111,25 @@ def build_dataset(
     *,
     _pbp: Optional[pl.DataFrame] = None,
     _shots: Optional[pl.DataFrame] = None,
+    _schedule: Optional[pl.DataFrame] = None,
     base: str | Path = "wnba_stats",
 ) -> pl.DataFrame:
     """Build one dataset for one season, routing v3-nested datasets to their builders.
 
     ``_pbp`` lets the caller pass an already-built play-by-play frame so ``shots``
     (derived from pbp) and ``pbp`` itself share one bind per season; ``_shots`` does
-    the same for ``metric_curves`` (derived from shots), which otherwise reads the
-    committed tree under ``base``.
+    the same for ``rolling_windows`` and ``metric_curves`` (derived from shots), which
+    otherwise read the committed tree under ``base``, and ``_schedule`` hands
+    ``rolling_windows`` this run's ``schedules`` frame to date games the committed
+    master does not hold yet.
     """
     if dataset.key == "pbp":
         return _pbp if _pbp is not None else _build.build_pbp(root, season)
     if dataset.key == "shots":
         pbp = _pbp if _pbp is not None else _build.build_pbp(root, season)
         return _build.build_shots(pbp)
+    if dataset.key == "rolling_windows":
+        return _build.build_rolling_windows(base, season, _shots, _schedule)
     if dataset.key == "metric_curves":
         shots = _shots if _shots is not None else _build.committed_shots(base, season)
         return _build.build_metric_curves(shots)
@@ -148,9 +156,11 @@ def main(argv: Optional[list[str]] = None) -> int:
         pbp: Optional[pl.DataFrame] = None
         if {"pbp", "shots"} & want_keys:
             pbp = _build.build_pbp(root, season)
-        # metric_curves derives from THIS run's shots (registry order builds shots
-        # first), never from yesterday's committed file when both are in the run.
+        # rolling_windows / metric_curves derive from THIS run's shots and schedule
+        # (registry order builds both first), never from yesterday's committed files
+        # when they are in the run.
         shots: Optional[pl.DataFrame] = None
+        schedule: Optional[pl.DataFrame] = None
         for dataset in datasets:
             if dataset.first_season is not None and season < dataset.first_season:
                 print(
@@ -158,9 +168,13 @@ def main(argv: Optional[list[str]] = None) -> int:
                     f"{dataset.first_season} (upstream coverage starts there)"
                 )
                 continue
-            df = build_dataset(root, dataset, season, _pbp=pbp, _shots=shots, base=args.base)
+            df = build_dataset(
+                root, dataset, season, _pbp=pbp, _shots=shots, _schedule=schedule, base=args.base
+            )
             if dataset.key == "shots":
                 shots = df
+            if dataset.key == "schedules":
+                schedule = df
             if df.is_empty():
                 print(f"skip {dataset.key} {season}: no rows")
                 continue

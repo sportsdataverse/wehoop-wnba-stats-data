@@ -23,12 +23,12 @@ FG% by shot distance -- league, team and player curves per season, computed by `
 | col_name | type | description |
 |---|---|---|
 | `season` | Int64 | Season the row belongs to, as a BARE calendar year ("2023") — the WNBA season fits one calendar year, unlike the NBA span form. |
-| `entity_type` | String | Which aggregate the row is: "league" (every counted attempt that season), "team" or "player". |
+| `entity_type` | String | Which aggregate the row is: "league" (every counted attempt that season), "team" or "player" on metric_curves; always "player" on rolling_windows. |
 | `entity_id` | String | stats.wnba.com id of the entity as TEXT -- the team_id on a team row, the person_id on a player row, null on the league row. |
 | `entity_name` | String | Label for the entity: the team tricode ("NYL") on a team row, the shooter's name as the pbp ships it on a player row; null on the league row. |
 | `team_id` | String | stats.wnba.com team id (e.g. 1611661313 = New York Liberty). |
 | `id_source` | String | Namespace of `entity_id` / `team_id` on this row -- "wnba_stats" here; the cross-league contract carries "espn", "gsis" and "nba_stats" elsewhere. |
-| `metric` | String | Curve name: "fg_pct_by_shot_distance" (field-goal percentage by shot distance in feet). |
+| `metric` | String | What the row measures: "fg_pct_by_shot_distance" on metric_curves (field-goal percentage by shot distance in feet); "fg_pct" (window_unit "fga") or "fg3_pct" (window_unit "fg3a") on rolling_windows. |
 | `down` | Int64 | Null on every row: the second axis of the football-only success_by_down_distance curve, carried for the cross-league contract. |
 | `x_lo` | Float64 | Bucket lower edge in feet, inclusive: 1-ft bins from 0 to 35, then 35 and 50. |
 | `x_hi` | Float64 | Bucket upper edge in feet, exclusive: x_lo + 1 below 35 ft, then 50 and 95. |

@@ -1085,6 +1085,36 @@ class MetricCurves(WnbaStatsDataset):
     epa_per_att: Optional[float] = None
 
 
+class RollingWindows(WnbaStatsDataset):
+    """`rolling_windows` -- `sportsdataverse.rolling_windows.OUTPUT_SCHEMA` + `id_source` (F3b-T3).
+
+    Ids are TEXT, as in `MetricCurves`: the cross-league contract keys every league's
+    entities as strings, and `id_source` ("wnba_stats") names the namespace.
+    """
+
+    season: Optional[int] = None
+    entity_type: Optional[str] = None
+    entity_id: Optional[str] = None
+    entity_name: Optional[str] = None
+    team_id: Optional[str] = None
+    metric: Optional[str] = None
+    window_unit: Optional[str] = None
+    window_n: Optional[int] = None
+    cur: Optional[float] = None
+    prev: Optional[float] = None
+    season_start: Optional[float] = None
+    career_baseline: Optional[float] = None
+    delta_prev: Optional[float] = None
+    delta_season: Optional[float] = None
+    delta_career: Optional[float] = None
+    delta_prev_rank: Optional[int] = None
+    n: Optional[int] = None
+    qualified: Optional[bool] = None
+    last_event_date: Optional[date] = None
+    as_of_date: Optional[date] = None
+    id_source: Optional[str] = None
+
+
 MODELS: dict[str, type[WnbaStatsDataset]] = {
     "standings": Standings,
     "player_season_stats": PlayerSeasonStats,
@@ -1101,6 +1131,7 @@ MODELS: dict[str, type[WnbaStatsDataset]] = {
     "player_boxscores": PlayerBoxscores,
     "team_boxscores": TeamBoxscores,
     "shots": Shots,
+    "rolling_windows": RollingWindows,
     "metric_curves": MetricCurves,
     "schedule_master": ScheduleMaster,
     "games_in_data_repo": GamesInDataRepo,
