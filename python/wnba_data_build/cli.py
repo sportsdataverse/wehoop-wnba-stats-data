@@ -189,6 +189,10 @@ def main(argv: Optional[list[str]] = None) -> int:
         # wehoop's load_*_manifest() reads to discover published seasons. That is
         # how seven tags ended up serving full history behind a one-row manifest.
         # Publishing stays upload-only; this makes the resulting drift loud.
+        # A NEW tag trips this by design on its first --publish (assets, no manifest
+        # yet): the exit 1 makes the daily processor `continue` past the tree sync,
+        # skipping that whole season's commit, so run
+        # `manifest build --tags <tag> --publish` right after a first publish.
         if args.publish and not args.dry_run:
             if problems := check_tags(sorted(built_tags), args.repo):
                 for msg in problems:

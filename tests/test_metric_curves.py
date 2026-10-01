@@ -78,6 +78,26 @@ def test_league_curve_sums_to_the_core_season_shots(curves, shots):
 
 
 @real
+def test_type_digit_position_binds_the_filter(shots):
+    """The type digit is game_id[2]; a read from any other position must not pass.
+
+    Every 2021-2026 game id reads "2" at position 3 (the season digit), so the
+    real file alone cannot tell slice(2, 1) from slice(3, 1). A few REAL 2025
+    rows re-keyed to a play-in-style type-5 game id (every other column kept)
+    make the position bind: they must be excluded from the attempts.
+    """
+    real_rows = shots.select(build._CURVE_SHOT_COLUMNS)
+    extra = real_rows.head(7).with_columns(game_id=pl.lit("1052500001"))
+    frame = pl.concat([real_rows, extra])
+    typed = frame.with_columns(season_type_id=pl.col("game_id").cast(pl.Utf8).str.slice(2, 1))
+    core = typed.filter(pl.col("season_type_id").is_in(CORE))
+    assert core.height == frame.height - 7
+    league = _league(build.build_metric_curves(frame))
+    assert league["attempts"].sum() == core.height
+    assert league["attempts"].sum() == real_rows.height, "the 7 type-5 rows are not counted"
+
+
+@real
 def test_bins_are_one_foot_to_35_then_35_50_and_50_95(curves):
     edges = BUCKET_EDGES["fg_pct_by_shot_distance"]
     pairs = set(zip(curves["x_lo"], curves["x_hi"]))

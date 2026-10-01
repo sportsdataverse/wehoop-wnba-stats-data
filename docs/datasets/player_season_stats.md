@@ -23,7 +23,7 @@ WNBA Stats Player Season Stats from wehoop data repository — `leaguedashplayer
 | `player_id` | Int64 | stats.wnba.com person id of the player (Int64); joins rosters, boxscores, game logs and pbp (`person_id`). |
 | `player_name` | String | Player display name as the stats API ships it ("Breanna Stewart"). |
 | `nickname` | String |  |
-| `team_id` | Int64 | stats.wnba.com team id (Int64, e.g. 1611661313 = New York Liberty). |
+| `team_id` | Int64 | stats.wnba.com team id (e.g. 1611661313 = New York Liberty). |
 | `team_abbreviation` | String | Three-letter team code ("NYL"). |
 | `age` | Float64 |  |
 | `gp` | Int64 |  |

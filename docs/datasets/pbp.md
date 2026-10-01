@@ -23,7 +23,7 @@ WNBA Stats Play-by-Play from wehoop data repository — `playbyplayv3` (game-lev
 | `action_number` | Int64 | Ordinal of the action within the game as numbered by the stats feed; monotone but not gapless (video-only actions are skipped). |
 | `clock` | String | Game clock at the action in ISO-8601 duration form ("PT08M12.00S"). |
 | `period` | Int64 | Period number (1-4; 5+ = overtime). |
-| `team_id` | Int64 | stats.wnba.com team id (Int64, e.g. 1611661313 = New York Liberty). |
+| `team_id` | Int64 | stats.wnba.com team id (e.g. 1611661313 = New York Liberty). |
 | `team_tricode` | String | Three-letter team code as the v3 endpoints name it ("NYL"). |
 | `person_id` | Int64 | stats.wnba.com person id of the player (or official) the row describes; the same id space as player_id. |
 | `player_name` | String | Player display name as the stats API ships it ("Breanna Stewart"). |

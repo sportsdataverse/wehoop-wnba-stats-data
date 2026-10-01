@@ -24,7 +24,7 @@ WNBA Stats Shots from wehoop data repository — `derived` (derived-level).
 | `season` | Int64 | Season the row belongs to, as a BARE calendar year ("2023") — the WNBA season fits one calendar year, unlike the NBA span form. |
 | `period` | Int64 | Period number (1-4; 5+ = overtime). |
 | `clock` | String | Game clock at the action in ISO-8601 duration form ("PT08M12.00S"). |
-| `team_id` | Int64 | stats.wnba.com team id (Int64, e.g. 1611661313 = New York Liberty). |
+| `team_id` | Int64 | stats.wnba.com team id (e.g. 1611661313 = New York Liberty). |
 | `team_tricode` | String | Three-letter team code as the v3 endpoints name it ("NYL"). |
 | `person_id` | Int64 | stats.wnba.com person id of the player (or official) the row describes; the same id space as player_id. |
 | `player_name` | String | Player display name as the stats API ships it ("Breanna Stewart"). |

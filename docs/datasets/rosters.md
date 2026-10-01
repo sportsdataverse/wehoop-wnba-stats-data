@@ -24,7 +24,7 @@ WNBA Stats Rosters from wehoop data repository — `commonteamroster` (season-le
 
 | col_name | type | description |
 |---|---|---|
-| `team_id` | Int64 | stats.wnba.com team id (Int64, e.g. 1611661313 = New York Liberty). |
+| `team_id` | Int64 | stats.wnba.com team id (e.g. 1611661313 = New York Liberty). |
 | `season` | Int64 | Season the row belongs to, as a BARE calendar year ("2023") — the WNBA season fits one calendar year, unlike the NBA span form. |
 | `league_id` | String | stats.wnba.com league id ("10" = WNBA). |
 | `player` | String |  |

@@ -33,7 +33,7 @@ season_type_id: >-
 league_id: >-
   stats.wnba.com league id ("10" = WNBA).
 team_id: >-
-  stats.wnba.com team id (Int64, e.g. 1611661313 = New York Liberty).
+  stats.wnba.com team id (e.g. 1611661313 = New York Liberty).
 person_id: >-
   stats.wnba.com person id of the player (or official) the row describes; the
   same id space as player_id.

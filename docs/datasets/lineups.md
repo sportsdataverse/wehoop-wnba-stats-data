@@ -23,7 +23,7 @@ WNBA Stats Lineups from wehoop data repository — `leaguedashlineups` (season-l
 | `group_set` | String |  |
 | `group_id` | String |  |
 | `group_name` | String |  |
-| `team_id` | Int64 | stats.wnba.com team id (Int64, e.g. 1611661313 = New York Liberty). |
+| `team_id` | Int64 | stats.wnba.com team id (e.g. 1611661313 = New York Liberty). |
 | `team_abbreviation` | String | Three-letter team code ("NYL"). |
 | `gp` | Int64 |  |
 | `w` | Int64 |  |
