@@ -126,11 +126,12 @@ for i in $(seq "${START_YEAR}" "${END_YEAR}"); do
         || echo "schedule-master stamp failed for season ${i}" | tee -a "${LOGFILE}"
     rm -rf "${OUT_DIR}"
     # Mirror the R processor's run_and_commit: pull, add the tree, commit with
-    # the load-bearing message format, rebase, push. Best-effort like R.
+    # the load-bearing message format, rebase, push. The status is taken OUTSIDE
+    # the subshell: an assignment inside it never reaches this shell.
     (
         cd "${REPO_DIR}" || exit 0
-        sdv_commit_push "WNBA Stats Data Update (Start: ${i} End: ${i})" wnba_stats || PUSH_RC=1
-    )
+        sdv_commit_push "WNBA Stats Data Update (Start: ${i} End: ${i})" wnba_stats
+    ) || PUSH_RC=1
 done
 
 # Stage 99, union half: rebuild the master + games_in_data_repo manifest +
@@ -141,11 +142,12 @@ done
 "${PYBIN}" python/wnba_stats_99_schedule_master_creation.py \
     || echo "schedule-master union failed"
 
-exit "${ANY_FAILED}"
-
 # A rejected push is a FAILED run, not a green one. Release assets upload on a
-# separate path and can succeed while the repo mirror is left stale.
+# separate path and can succeed while the repo mirror is left stale. Checked
+# BEFORE the exit below: it sat after it until 2026-10-04 and never ran.
 if [ "${PUSH_RC:-0}" != "0" ]; then
   echo "::error ::At least one commit failed to reach origin; the repo mirror is stale."
   exit 1
 fi
+
+exit "${ANY_FAILED}"
