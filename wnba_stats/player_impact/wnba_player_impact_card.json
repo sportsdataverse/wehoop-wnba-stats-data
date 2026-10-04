@@ -26,10 +26,10 @@
   "seasons": [
     {
       "season": 2026,
-      "rows": 326
+      "rows": 328
     }
   ],
-  "generated_at": "2026-10-03T14:30:18+00:00",
+  "generated_at": "2026-10-04T14:31:04+00:00",
   "publish_gates": {
     "seasons_gated": [
       2026
@@ -37,8 +37,8 @@
     "seasons": {
       "2026": {
         "rs_rows": 238,
-        "r_rapm_adj": 0.7736637049308711,
-        "r_spm_rapm": 0.2188664967491051,
+        "r_rapm_adj": 0.7796091893616872,
+        "r_spm_rapm": 0.18575468210495166,
         "r_rapm_yoy": null,
         "r_darko_fwd": null,
         "n_fwd": 0
@@ -46,8 +46,8 @@
     },
     "summary": {
       "rs_rows_min": 238,
-      "r_rapm_adj_min": 0.7736637049308711,
-      "r_spm_rapm_min": 0.2188664967491051,
+      "r_rapm_adj_min": 0.7796091893616872,
+      "r_spm_rapm_min": 0.18575468210495166,
       "r_rapm_yoy_min": null,
       "r_darko_fwd_min": null,
       "r_darko_fwd_wmean": null
@@ -62,13 +62,13 @@
       {
         "gate": "r_rapm_adj_min",
         "floor": 0.65,
-        "observed": 0.7736637049308711,
+        "observed": 0.7796091893616872,
         "status": "PASS"
       },
       {
         "gate": "r_spm_rapm_min",
         "floor": 0.18,
-        "observed": 0.2188664967491051,
+        "observed": 0.18575468210495166,
         "status": "PASS"
       },
       {
@@ -88,7 +88,7 @@
       {
         "season": 2026,
         "gate": "mean_rapm",
-        "observed": 0.005717131135469335,
+        "observed": 0.009267413452281707,
         "band": [
           -1.0,
           1.0
@@ -98,7 +98,7 @@
       {
         "season": 2026,
         "gate": "sd_rapm",
-        "observed": 1.0783295676217186,
+        "observed": 1.0726996776091855,
         "band": [
           0.5,
           3.5
@@ -108,7 +108,7 @@
       {
         "season": 2026,
         "gate": "mean_adj_rapm",
-        "observed": 0.16836399026375165,
+        "observed": 0.2393507079795713,
         "band": [
           -3.0,
           3.0
@@ -118,7 +118,7 @@
       {
         "season": 2026,
         "gate": "sd_adj_rapm",
-        "observed": 4.6324459695337,
+        "observed": 4.611794322410098,
         "band": [
           3.0,
           8.0
