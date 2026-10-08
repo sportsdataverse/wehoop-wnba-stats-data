@@ -215,7 +215,9 @@ def build_manifest(
         assets = grouped[season]
         total = 0
         for name, _ in assets:
-            total += pl.scan_parquet(_asset_url(tag, name, repo)).select(pl.len()).collect().item()
+            # not scan_parquet(url): polars 2.0 asks for the footer with a suffix range, which
+            # GitHub's release CDN answers with 501. use_pyarrow reads on 1.x and 2.x.
+            total += pl.read_parquet(_asset_url(tag, name, repo), use_pyarrow=True).height
         rows.append(
             {
                 "season": season,
