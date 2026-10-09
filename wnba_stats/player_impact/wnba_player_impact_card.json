@@ -26,10 +26,10 @@
   "seasons": [
     {
       "season": 2026,
-      "rows": 328
+      "rows": 329
     }
   ],
-  "generated_at": "2026-10-08T15:06:47+00:00",
+  "generated_at": "2026-10-09T14:30:39+00:00",
   "publish_gates": {
     "seasons_gated": [
       2026
@@ -88,7 +88,7 @@
       {
         "season": 2026,
         "gate": "mean_rapm",
-        "observed": 0.009267413452281707,
+        "observed": 0.009531480462060834,
         "band": [
           -1.0,
           1.0
@@ -98,7 +98,7 @@
       {
         "season": 2026,
         "gate": "sd_rapm",
-        "observed": 1.0726996776091855,
+        "observed": 1.0583421534067314,
         "band": [
           0.5,
           3.5
@@ -108,7 +108,7 @@
       {
         "season": 2026,
         "gate": "mean_adj_rapm",
-        "observed": 0.2393507079795713,
+        "observed": 0.2609006942164416,
         "band": [
           -3.0,
           3.0
@@ -118,7 +118,7 @@
       {
         "season": 2026,
         "gate": "sd_adj_rapm",
-        "observed": 4.611794322410098,
+        "observed": 4.59373862110566,
         "band": [
           3.0,
           8.0
