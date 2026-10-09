@@ -184,3 +184,68 @@ def test_builds_from_real_captures(key: str) -> None:
     assert "season" in df.columns
     # id columns must survive naming intact -- these are join keys
     assert not [c for c in df.columns if "_i_d" in c], df.columns
+
+
+# -- shots: the masked three-point distance --------------------------------------
+
+SHOTS_FIX = Path(__file__).parent / "fixtures" / "shots"
+
+
+def _legacy_ft() -> build.pl.Expr:
+    """Exact distance in feet: legacy coordinates are tenths of a foot, hoop at the origin."""
+    pl = build.pl
+    return (
+        pl.col("x_legacy").cast(pl.Float64) ** 2 + pl.col("y_legacy").cast(pl.Float64) ** 2
+    ).sqrt() / 10
+
+
+def test_shots_restore_the_masked_three_distance_from_legacy_coordinates() -> None:
+    """playbyplayv3 ships ``shotDistance`` 0 for every three under 23.5 ft -- on the
+    WNBA's 22-ft corner and 22.15-ft arc that is most of both; shotchartdetail ships
+    the real distance for the same shots. Real 2025 slice: 30 such threes."""
+    pl = build.pl
+    raw = build.build_pbp(SHOTS_FIX, 2025, ["1022500115"])
+    raw3 = raw.filter(pl.col("is_field_goal") == 1, pl.col("shot_value") == 3)
+    assert raw3.filter(pl.col("shot_distance") == 0).height == 30, "fixture lost its masked threes"
+
+    shots = build.build_shots(raw).with_columns(loc=_legacy_ft())
+    threes = shots.filter(pl.col("shot_value") == 3)
+    assert threes.filter(pl.col("shot_distance") == 0).height == 0, "a three still reads 0 ft"
+    # The feed's own rule on every unmasked shot: whole feet, half up, from the legacy
+    # coordinates. Restored threes follow it, and unmasked shots are untouched.
+    assert (
+        shots["shot_distance"].to_list()
+        == shots.select((pl.col("loc") + 0.5).floor().cast(pl.Int64))["loc"].to_list()
+    )
+    assert shots.schema["shot_distance"] == raw.schema["shot_distance"]
+    assert sorted(set(threes.filter(pl.col("loc") < 23.5)["shot_distance"].to_list())) == [22, 23]
+
+    # Ground truth: stats.wnba.com shotchartdetail's SHOT_DISTANCE for the same events is
+    # the floor of the same coordinates (LOC_X/LOC_Y == xLegacy/yLegacy): 0 or 1 ft under ours.
+    scd = json.loads((SHOTS_FIX / "shotchartdetail_1022500115.json").read_text(encoding="utf-8"))
+    rs = scd["resultSets"][0]
+    truth = pl.DataFrame([dict(zip(rs["headers"], r)) for r in rs["rowSet"]]).select(
+        pl.col("GAME_EVENT_ID").alias("action_number"), "SHOT_DISTANCE"
+    )
+    # build_shots keeps row order, so the pbp's field-goal action numbers line up
+    events = raw.filter(pl.col("is_field_goal") == 1)["action_number"]
+    j = shots.with_columns(action_number=events).join(truth, on="action_number")
+    assert j.height == shots.height
+    assert set((j["shot_distance"] - j["SHOT_DISTANCE"]).to_list()) <= {0, 1}
+
+
+def test_shots_pre_2013_threes_restored_and_unlocated_threes_null() -> None:
+    """2000 (19.75-ft line): 18 of the game's 19 threes read 0 in the feed. The
+    located ones are restored; the 4 at legacy (0, 0) have no location and read
+    null, never an impossible 0 ft. Twos are untouched."""
+    pl = build.pl
+    raw = build.build_pbp(SHOTS_FIX, 2000, ["1020000206"])
+    shots = build.build_shots(raw)
+    threes = shots.filter(pl.col("shot_value") == 3)
+    origin = threes.filter(pl.col("x_legacy") == 0, pl.col("y_legacy") == 0)
+    assert origin.height == 4 and origin["shot_distance"].null_count() == 4
+    located = threes.filter((pl.col("x_legacy") != 0) | (pl.col("y_legacy") != 0))
+    assert located.height == 15 and located["shot_distance"].null_count() == 0
+    assert located["shot_distance"].min() >= 19
+    twos_in = raw.filter(pl.col("is_field_goal") == 1, pl.col("shot_value") == 2)["shot_distance"]
+    assert shots.filter(pl.col("shot_value") == 2)["shot_distance"].to_list() == twos_in.to_list()

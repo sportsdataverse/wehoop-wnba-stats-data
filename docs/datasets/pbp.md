@@ -30,7 +30,7 @@ WNBA Stats Play-by-Play from wehoop data repository — `playbyplayv3` (game-lev
 | `player_name_i` | String | Abbreviated player name ("B. Stewart"). |
 | `x_legacy` | Int64 | Shot x-coordinate in the legacy stats coordinate frame (tenths of feet from the basket centerline; 0 for non-shot actions). |
 | `y_legacy` | Int64 | Shot y-coordinate in the legacy coordinate frame (tenths of feet from the basket toward half court, so 0 at the basket and negative for a shot from behind it; 0 for non-shot actions). |
-| `shot_distance` | Int64 | Shot distance in feet (0 for non-shots). |
+| `shot_distance` | Int64 | Shot distance in whole feet as the stats.wnba.com play-by-play feed reports it (0 for non-shots). The feed reports every three under 23.5 ft as 0: pbp keeps that 0, while shots restores those threes as sqrt(x_legacy^2 + y_legacy^2) / 10 rounded half up, the feed's own rounding, and null when the three has no location (legacy 0, 0). |
 | `shot_result` | String | "Made" / "Missed" for shot actions; empty otherwise. |
 | `is_field_goal` | Int64 | 1 when the action is a field-goal attempt, else 0. |
 | `score_home` | String | Home score after the action (string; carried forward between scores). |

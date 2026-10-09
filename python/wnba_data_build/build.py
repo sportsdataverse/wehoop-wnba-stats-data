@@ -217,13 +217,37 @@ def build_shots(pbp: pl.DataFrame) -> pl.DataFrame:
     Derived rather than fetched: every field the shots dataset needs is already in
     the pbp capture, so this costs no request and cannot drift from the pbp it is
     built from. Selects only the shot-relevant columns, keeping whichever are
-    present -- the v3 field set varies across seasons.
+    present -- the v3 field set varies across seasons. ``shot_distance`` is the
+    feed's, except on the threes the feed reports as 0 ft: those are restored from
+    ``x_legacy``/``y_legacy`` (null when the three has no location).
     """
     if pbp.is_empty() or "is_field_goal" not in pbp.columns:
         return pl.DataFrame()
     shots = pbp.filter(pl.col("is_field_goal") == 1)
     keep = [c for c in _SHOT_COLUMNS if c in shots.columns]
-    return shots.select(keep) if keep else shots
+    shots = shots.select(keep) if keep else shots
+    if not {"shot_value", "shot_distance", "x_legacy", "y_legacy"} <= set(shots.columns):
+        return shots
+    # playbyplayv3 ships shotDistance 0 for every three under 23.5 ft -- a feed rule,
+    # not the line: the same cutoff in every season 1997-2026, so it masks most WNBA
+    # threes before the 2013 line move and the 22-ft corner and 22.15-ft arc since. Every other shot's shotDistance is exactly floor(sqrt(x^2 + y^2)/10
+    # + 0.5) of the legacy coordinates (tenths of a foot, hoop at the origin), measured
+    # on all 30 released seasons; stats.wnba.com shotchartdetail ships 22-23 ft for
+    # the same 2025 shots. So restore those threes by the feed's own rule. A three at
+    # legacy (0, 0) has no location: null, never an impossible 0 ft.
+    x, y = pl.col("x_legacy").cast(pl.Float64), pl.col("y_legacy").cast(pl.Float64)
+    masked = (pl.col("shot_value") == 3) & (pl.col("shot_distance") == 0)
+    unlocated = x.is_null() | y.is_null() | ((x == 0) & (y == 0))
+    feet = ((x**2 + y**2).sqrt() / 10 + 0.5).floor()
+    return shots.with_columns(
+        pl.when(masked & unlocated)
+        .then(None)
+        .when(masked)
+        .then(feet)
+        .otherwise(pl.col("shot_distance"))
+        .cast(shots.schema["shot_distance"])
+        .alias("shot_distance")
+    )
 
 
 #: What :func:`committed_shots` reads: the curve adapter's columns, with ``game_id``
