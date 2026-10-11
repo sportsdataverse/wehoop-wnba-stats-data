@@ -5,7 +5,17 @@
 # call (player-variant leaguegamelog) hangs on datacenter IPs, so a scheduled
 # run from a GitHub runner stalls until timeout-minutes burns. This wrapper is
 # the scheduled path instead -- it runs where the PROXY_* pool works, over the
-# sibling raw checkout, current season only. Multi-season backfills stay manual.
+# sibling raw checkout. Multi-season backfills stay manual.
+#
+# Trailing window: the build covers the last WNBA_IMPACT_WINDOW seasons (default
+# 6, e.g. 2021:2026) because adj-RAPM takes the previous season's SPM as its
+# prior and DARKO needs a >= 2-season panel -- a one-season build ships an empty
+# prior and all-null darko_* columns. Only the CURRENT season is published and
+# committed; the trailing seasons are warm-up inputs. Republishing them would
+# move numbers already on the release (the raw store has been re-scraped since
+# the July backfill). They cost no stats.wnba.com calls: every trailing season
+# is served by the committed raw store (incl. the player-variant leaguegamelog
+# *_p.json captures) and the per-game possession cache -- local compute only.
 #
 # Cron (droplet, ET): 30 10 * 5-10 *  -- after the 09:00 ET stats-raw refresh.
 set -uo pipefail
@@ -39,19 +49,31 @@ git config --local user.email "action@github.com" >/dev/null 2>&1 || true
 git config --local user.name "Github Action" >/dev/null 2>&1 || true
 
 SEASON="${1:-$(date -u +%Y)}"
+WINDOW="${WNBA_IMPACT_WINDOW:-6}"
+case "${WINDOW}" in
+  ''|*[!0-9]*) echo "FATAL: WNBA_IMPACT_WINDOW must be an integer >= 2 (got '${WINDOW}')" >&2; exit 1 ;;
+esac
+[ "${WINDOW}" -ge 2 ] || { echo "FATAL: WNBA_IMPACT_WINDOW must be >= 2: DARKO needs a 2-season panel" >&2; exit 1; }
+START=$(( SEASON - WINDOW + 1 ))
+[ "${START}" -ge 1997 ] || START=1997
 RAW_STORE="${WNBA_RAW_STORE:-/mnt/sdv_repos/wehoop-wnba-stats-raw/wnba_stats/json}"
 # A scratch dir, never a repo path: the builder's output is an intermediate, and
 # only the parquet (+ card) is meant to survive into the tracked tree below.
 OUT_DIR="$(mktemp -d "/tmp/wnba_impact_${SEASON}.XXXXXX")"
 trap 'rm -rf "${OUT_DIR}"' EXIT
 
+TAG=wnba_player_impact
+REPO=sportsdataverse/sportsdataverse-data
+echo "impact window: ${START}:${SEASON} (publishing ${SEASON} only)"
+# Build (+ publish-floor gates) the whole window, uploading nothing: the CLI
+# would otherwise publish every season it built.
 "$PY" -m wnba_model_08_impact \
-  --seasons "$SEASON" \
+  --seasons "${START}:${SEASON}" \
   --out "$OUT_DIR" \
   --raw-store-dir "$RAW_STORE" \
-  --tag wnba_player_impact \
-  --repo sportsdataverse/sportsdataverse-data \
-  "${@:2}"
+  --tag "$TAG" \
+  --repo "$REPO" \
+  "${@:2}" --dry-run
 rc=$?
 if [ "$rc" -ne 0 ]; then
   echo "EXIT=$rc"
@@ -65,14 +87,19 @@ fi
 # parquet needs). A dry-run publishes nothing but still builds, so the commit
 # is skipped too -- only a real run should move the tracked tree.
 case " ${*:2} " in
-  *" --dry-run "*) echo "dry run: not committing"; echo "EXIT=0"; exit 0 ;;
+  *" --dry-run "*) echo "dry run: not publishing or committing"; echo "EXIT=0"; exit 0 ;;
 esac
+
+# Publish the current season only (parquet + csv + rds), then the json sidecars
+# (model card + SPM coefficients). `upload` never recomputes.
+for pat in "${TAG}_${SEASON}.*" "*.json"; do
+  "$PY" -m wnba_model_publish upload --dir "$OUT_DIR" --tag "$TAG" --repo "$REPO" \
+    --pattern "$pat" || { echo "EXIT=1"; exit 1; }
+done
 
 # Parquet only in the tree (owner rule 2026-09-30); the release carries rds + csv too.
 mkdir -p "${REPO_DIR}/wnba_stats/player_impact/parquet"
-for f in "${OUT_DIR}"/*.parquet; do
-  [ -e "$f" ] && cp -f "$f" "${REPO_DIR}/wnba_stats/player_impact/parquet/"
-done
+cp -f "${OUT_DIR}/${TAG}_${SEASON}.parquet" "${REPO_DIR}/wnba_stats/player_impact/parquet/" || rc=1
 # The model card is the artifact that says HOW these numbers were produced;
 # committing the table without it leaves the repo copy unexplained.
 for f in "${OUT_DIR}"/*_card.json; do

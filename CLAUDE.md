@@ -237,9 +237,10 @@ uv run python -m wnba_model_publish upload \
   --dir out/wnba_player_impact --tag wnba_player_impact --dry-run
 
 # The SCHEDULED path (droplet cron `30 10 * 5-10 *` ET, after the 09:00 stats-raw
-# refresh): current season only, local raw store, PROXY_* lifted from ~/.Renviron.
-# Builds into a mktemp dir, publishes, then commits parquet+rds+card into
-# wnba_stats/player_impact/ -- same tracked-tree contract as the data stages.
+# refresh): builds a trailing window (WNBA_IMPACT_WINDOW, default 6 -> 2021:2026)
+# so adj-RAPM gets its prior and DARKO its panel, but publishes + commits the
+# CURRENT season only (parquet + card into wnba_stats/player_impact/). Local raw
+# store, PROXY_* lifted from ~/.Renviron.
 bash scripts/nightly_wnba_impact.sh            # defaults to the current season
 bash scripts/nightly_wnba_impact.sh 2026 --dry-run   # builds only; no publish, no commit
 ```
@@ -252,7 +253,8 @@ multi-season priors (adj-RAPM / DARKO) flow forward — for a single-season
 refresh pass a few trailing seasons (e.g. `2021:2026`).
 
 Scheduled runs live on the DROPLET, not in CI: `scripts/nightly_wnba_impact.sh`
-(cron `30 10 * 5-10 *` ET) builds the current season off the local raw store,
+(cron `30 10 * 5-10 *` ET) builds the trailing window off the local raw store
+(publishing only the current season; the trailing seasons cost no live calls),
 lifting `PROXY_*` from `~/.Renviron` — which cron does not load and only R reads.
 That placement is forced by the same caveat that keeps CI dispatch-only: the
 player-variant leaguegamelog call still goes live, and stats.wnba.com HANGS
