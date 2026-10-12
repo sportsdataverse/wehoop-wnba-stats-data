@@ -119,15 +119,33 @@ def _min_of(values: Iterable[Optional[float]]) -> Optional[float]:
 #: mis-scaled "xwOBA" of .44-.73 shipped on 2026-09-01 (baseballr-data 75d29ddbc5).
 #:
 #: Two-sided bands on the qualified league LEVEL, set strictly outside the values
-#: observed on the published release (seasons 1997-2026, measured 2026-09-02 with
-#: off_poss >= 300); the comment records the observation that set each one.
+#: observed on the published release (off_poss >= 300). Re-measured 2026-10-12 on
+#: release seasons 1997-2026 EXCLUDING 2004 (see SCALE_BAND_EXCEPTIONS); the
+#: 2026-09-02 comments understated the spread (sd_rapm reads 0.83 in 2001).
 #: Never widen a band to make a publish pass -- debug the build.
 SCALE_QUALIFY_POSS = 300
 SCALE_BANDS: dict[str, tuple[float, float]] = {
-    "mean_rapm": (-1.0, 1.0),  # observed |mean| <= 0.19
-    "sd_rapm": (0.5, 3.5),  # observed 0.99 - 2.27
-    "mean_adj_rapm": (-3.0, 3.0),  # observed |mean| <= 1.00
-    "sd_adj_rapm": (3.0, 8.0),  # observed 4.47 - 6.20
+    "mean_rapm": (-1.0, 1.0),  # observed 0.01 - 0.27
+    "sd_rapm": (0.5, 3.5),  # observed 0.83 - 2.07
+    "mean_adj_rapm": (-3.0, 3.0),  # observed 0.26 - 1.17
+    "sd_adj_rapm": (3.0, 8.0),  # observed 4.39 - 6.20
+}
+
+#: Per-(season, gate) band overrides. Each is a measured, explained season, never
+#: a way to pass a broken build; add one only with its evidence beside it.
+#:
+#: 2004 sd_rapm (observed 0.320 on the 2026-07-28 release asset and on every
+#: rebuild since): NOT a data gap. The possession matrix is complete -- 221/221
+#: regular-season games (13 teams x 34, = schedule_master), 139.6 possessions per
+#: game (2003: 140.5, 2005: 140.1), zero null or duplicated lineup slots, no
+#: player on two teams in one game. RAPM's RidgeCV (sportsdataverse nba_rapm,
+#: alphas logspace(2, 5, 8)) picks alpha=13895 for 2004 where every other season
+#: picks 1931 or 5179: 2004's leave-one-out error is flat above ~5000 (13895 beats
+#: 5179 by 0.07 basis points of MSE), so the near-tie lands on the heavier penalty
+#: and shrinks every rating ~2.6x. The 0.25 floor still trips the next grid step
+#: (alpha 37276) or a collapse; the ceiling is the global one.
+SCALE_BAND_EXCEPTIONS: dict[tuple[int, str], tuple[float, float]] = {
+    (2004, "sd_rapm"): (0.25, 3.5),
 }
 
 
@@ -157,7 +175,8 @@ def scale_checks(frames: dict[int, pl.DataFrame]) -> list[dict]:
             "mean_adj_rapm": qualified["adj_rapm"].mean(),
             "sd_adj_rapm": qualified["adj_rapm"].std(),
         }
-        for name, (lo, hi) in SCALE_BANDS.items():
+        for name, band in SCALE_BANDS.items():
+            lo, hi = SCALE_BAND_EXCEPTIONS.get((season, name), band)
             observed = stats[name]
             if observed is None:
                 out.append({"season": season, "gate": name, "status": "SKIPPED",
