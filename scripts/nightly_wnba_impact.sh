@@ -48,7 +48,9 @@ source "$(dirname "${BASH_SOURCE[0]}")/_commit.sh"
 git config --local user.email "action@github.com" >/dev/null 2>&1 || true
 git config --local user.name "Github Action" >/dev/null 2>&1 || true
 
-SEASON="${1:-$(date -u +%Y)}"
+# The season is an OPTIONAL leading 4-digit arg; everything else passes through
+# (same parse as the NBA twin: a leading flag must never become SEASON).
+if [[ "${1:-}" =~ ^[0-9]{4}$ ]]; then SEASON="$1"; shift; else SEASON="$(date -u +%Y)"; fi
 WINDOW="${WNBA_IMPACT_WINDOW:-6}"
 case "${WINDOW}" in
   ''|*[!0-9]*) echo "FATAL: WNBA_IMPACT_WINDOW must be an integer >= 2 (got '${WINDOW}')" >&2; exit 1 ;;
@@ -73,7 +75,7 @@ echo "impact window: ${START}:${SEASON} (publishing ${SEASON} only)"
   --raw-store-dir "$RAW_STORE" \
   --tag "$TAG" \
   --repo "$REPO" \
-  "${@:2}" --dry-run
+  "$@" --dry-run
 rc=$?
 if [ "$rc" -ne 0 ]; then
   echo "EXIT=$rc"
@@ -86,7 +88,7 @@ fi
 # release-only (csv is the largest format and adds nothing a reader of the
 # parquet needs). A dry-run publishes nothing but still builds, so the commit
 # is skipped too -- only a real run should move the tracked tree.
-case " ${*:2} " in
+case " $* " in
   *" --dry-run "*) echo "dry run: not publishing or committing"; echo "EXIT=0"; exit 0 ;;
 esac
 
