@@ -90,8 +90,17 @@ case " ${*:2} " in
   *" --dry-run "*) echo "dry run: not publishing or committing"; echo "EXIT=0"; exit 0 ;;
 esac
 
+# The SPM coefficient sidecar on the release is canonical: one record per
+# PUBLISHED season (1997-...). The build's own sidecar holds the whole trailing
+# window, so uploading it as-is replaced the full history with warm-up fits that
+# match nothing published. Overlay the current season onto the published sidecar
+# first -- before any upload, so a failed read blocks the publish instead of
+# half-completing it.
+"$PY" -m wnba_model_publish spm-merge --dir "$OUT_DIR" --seasons "$SEASON" \
+  --tag "$TAG" --repo "$REPO" || { echo "EXIT=1"; exit 1; }
+
 # Publish the current season only (parquet + csv + rds), then the json sidecars
-# (model card + SPM coefficients). `upload` never recomputes.
+# (model card + the merged SPM coefficients). `upload` never recomputes.
 for pat in "${TAG}_${SEASON}.*" "*.json"; do
   "$PY" -m wnba_model_publish upload --dir "$OUT_DIR" --tag "$TAG" --repo "$REPO" \
     --pattern "$pat" || { echo "EXIT=1"; exit 1; }

@@ -228,6 +228,15 @@ def build_parser() -> argparse.ArgumentParser:
     sc.add_argument("--raw-store-dir", required=True, help="Local wehoop-wnba-stats-raw checkout (offline).")
     sc.add_argument("--out", required=True, help="Directory to write the sidecar into.")
 
+    sm = sub.add_parser(
+        "spm-merge",
+        help="Make a built dir's SPM sidecar the canonical one: the release's records + --seasons from the build.",
+    )
+    sm.add_argument("--dir", required=True, help="Built artifact directory (holds the build's sidecar).")
+    sm.add_argument("--seasons", required=True, help="The seasons being PUBLISHED, e.g. 2026 or 2024:2026.")
+    sm.add_argument("--tag", default="wnba_player_impact", help="GitHub release tag.")
+    sm.add_argument("--repo", default=_REPO_DEFAULT, help="GitHub repo owning the release.")
+
     up = sub.add_parser(
         "upload",
         help="Upload an already-built artifact directory to a release (no recompute; --dry-run is fully network-free).",
@@ -326,6 +335,14 @@ def main(argv=None) -> int:
             notes=_IMPACT_RELEASE_NOTES,
             dry_run=args.dry_run,
         )
+        if not args.dry_run:
+            # The sidecar on the release is canonical (one record per published
+            # season); a partial build must overlay its seasons, not replace it.
+            from .builders import merge_spm_coefficients, published_spm_coefficients
+
+            merge_spm_coefficients(
+                Path(args.out), [b["season"] for b in built], published_spm_coefficients(args.repo, args.tag)
+            )
         card_res = upload_artifacts(
             args.out,
             args.tag,
@@ -368,6 +385,12 @@ def main(argv=None) -> int:
         out.mkdir(parents=True, exist_ok=True)
         path = write_spm_coefficients(out, records)
         print(f"spm-coefficients: {len(records)} seasons -> {path}")
+    elif args.cmd == "spm-merge":
+        from .builders import merge_spm_coefficients, published_spm_coefficients
+
+        seasons = _parse_seasons(args.seasons)
+        path = merge_spm_coefficients(Path(args.dir), seasons, published_spm_coefficients(args.repo, args.tag))
+        print(f"spm-merge: {seasons} onto the published sidecar -> {path}")
     elif args.cmd == "upload":
         res = upload_artifacts(
             args.artifacts_dir,

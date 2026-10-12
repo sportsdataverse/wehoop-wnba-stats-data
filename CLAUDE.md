@@ -245,6 +245,13 @@ bash scripts/nightly_wnba_impact.sh            # defaults to the current season
 bash scripts/nightly_wnba_impact.sh 2026 --dry-run   # builds only; no publish, no commit
 ```
 
+**`wnba_player_impact_spm_coefficients.json` on the release is canonical** — one record per
+PUBLISHED season. Never upload a build dir's sidecar as-is (a window build carries warm-up
+fits): `python -m wnba_model_publish spm-merge --dir <out> --seasons <published>` overlays
+just those seasons onto the release's copy first (the `impact` CLI and the nightly both do).
+Scale-gate exceptions are per (season, gate) in `gates.SCALE_BAND_EXCEPTIONS`, each with
+its evidence (2004 `sd_rapm`: a RidgeCV alpha near-tie, not a data gap).
+
 **Dry-run discipline:** there is no `--publish` flag — publishing is the
 *default*; `--dry-run` is the opt-out that plans the uploads without touching
 the release. Always run `--dry-run` first and inspect the plan, then rerun

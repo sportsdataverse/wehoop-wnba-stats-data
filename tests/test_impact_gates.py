@@ -157,3 +157,32 @@ def test_the_sidecar_keeps_seasons_this_run_did_not_rebuild(tmp_path):
     by_season = {r["season"]: r for r in payload["records"]}
     assert by_season[2024]["coef"] == [1.0]   # preserved
     assert by_season[2025]["coef"] == [9.9]   # current run wins
+
+
+def test_the_canonical_sidecar_takes_only_the_published_seasons(tmp_path):
+    """A trailing-window build publishes one season: only that record may move."""
+    import pytest
+    from wnba_model_publish.builders import merge_spm_coefficients
+
+    published = {"records": [{"season": s, "coef": [float(s)]} for s in range(1997, 2027)]}
+    # the nightly's build sidecar: a 2021:2026 window, every fit different
+    write_spm_coefficients(tmp_path, [{"season": s, "coef": [-1.0]} for s in range(2021, 2027)])
+
+    merge_spm_coefficients(tmp_path, [2026], published)
+
+    payload = json.loads((tmp_path / SPM_SIDECAR_NAME).read_text(encoding="utf-8"))
+    by_season = {r["season"]: r["coef"] for r in payload["records"]}
+    assert payload["seasons"] == list(range(1997, 2027))       # full history kept
+    assert by_season[2026] == [-1.0]                            # the published season moved
+    assert all(by_season[s] == [float(s)] for s in range(1997, 2026))  # warm-up fits did not
+    with pytest.raises(SystemExit):
+        merge_spm_coefficients(tmp_path, [2030], published)    # a season it never built
+
+
+def test_no_published_sidecar_yet_starts_from_the_build(tmp_path):
+    from wnba_model_publish.builders import merge_spm_coefficients
+
+    write_spm_coefficients(tmp_path, [{"season": 2025, "coef": [1.0]}, {"season": 2026, "coef": [2.0]}])
+    merge_spm_coefficients(tmp_path, [2026], None)
+    payload = json.loads((tmp_path / SPM_SIDECAR_NAME).read_text(encoding="utf-8"))
+    assert payload["seasons"] == [2026]

@@ -539,6 +539,44 @@ def write_spm_coefficients(out_dir: Path, records: Sequence[dict], *, name: str 
     return path
 
 
+def merge_spm_coefficients(out_dir: Path, seasons: Sequence[int], base: Optional[dict]) -> Path:
+    """Rewrite *out_dir*'s sidecar as the CANONICAL one: *base* + this publish's seasons.
+
+    The release asset ``wnba_player_impact_spm_coefficients.json`` holds one record
+    per PUBLISHED season -- the fit behind that season's published ``spm`` column.
+    Uploading a build's own sidecar broke that twice over: the nightly builds a
+    trailing window but publishes one season, so its sidecar carried warm-up fits
+    that match nothing on the release, and it replaced the 1997-2025 history with
+    the window. So: start from *base* (the published sidecar, ``None`` if there is
+    none yet) and overlay only *seasons* from the build; every other record stays.
+
+    Raises:
+        SystemExit: if a season to publish has no record in the build's sidecar.
+    """
+    path = Path(out_dir) / SPM_SIDECAR_NAME
+    built = {int(r["season"]): r for r in json.loads(path.read_text(encoding="utf-8"))["records"]}
+    missing = [s for s in seasons if int(s) not in built]
+    if missing:
+        raise SystemExit(f"spm-merge: no built record for season(s) {missing} in {path}")
+    path.write_text(json.dumps(base or {"records": []}), encoding="utf-8")
+    return write_spm_coefficients(out_dir, [built[int(s)] for s in seasons])
+
+
+def published_spm_coefficients(repo: str, tag: str) -> Optional[dict]:
+    """The sidecar currently on the release; ``None`` only when it does not exist.
+
+    Any other failure raises: merging onto an unreadable base would publish a
+    sidecar that silently dropped every other season.
+    """
+    import requests
+
+    r = requests.get(f"https://github.com/{repo}/releases/download/{tag}/{SPM_SIDECAR_NAME}", timeout=60)
+    if r.status_code == 404:
+        return None
+    r.raise_for_status()
+    return r.json()
+
+
 def spm_coefficients_from_frames(
     frames: dict,
     *,
