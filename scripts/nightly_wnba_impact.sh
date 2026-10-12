@@ -82,16 +82,6 @@ if [ "$rc" -ne 0 ]; then
   exit "$rc"
 fi
 
-# Sync into the committed tree, the same contract the data processor uses for
-# every compiled dataset: the release is the distribution channel, but the repo
-# keeps a committed copy in wnba_stats/{key}/parquet/. csv and rds are
-# release-only (csv is the largest format and adds nothing a reader of the
-# parquet needs). A dry-run publishes nothing but still builds, so the commit
-# is skipped too -- only a real run should move the tracked tree.
-case " $* " in
-  *" --dry-run "*) echo "dry run: not publishing or committing"; echo "EXIT=0"; exit 0 ;;
-esac
-
 # The SPM coefficient sidecar on the release is canonical: one record per
 # PUBLISHED season (1997-...). The build's own sidecar holds the whole trailing
 # window, so uploading it as-is replaced the full history with warm-up fits that
@@ -100,6 +90,23 @@ esac
 # half-completing it.
 "$PY" -m wnba_model_publish spm-merge --dir "$OUT_DIR" --seasons "$SEASON" \
   --tag "$TAG" --repo "$REPO" || { echo "EXIT=1"; exit 1; }
+# The model card likewise: the window build's card lists 2021-2026 and gates
+# computed on that window. card-merge keeps every published season and the
+# full-history gates from the release card and refreshes only this season; the
+# merged card is what gets uploaded AND committed below. Same failure rules.
+"$PY" -m wnba_model_publish card-merge --dir "$OUT_DIR" --seasons "$SEASON" \
+  --tag "$TAG" --repo "$REPO" || { echo "EXIT=1"; exit 1; }
+
+# Sync into the committed tree, the same contract the data processor uses for
+# every compiled dataset: the release is the distribution channel, but the repo
+# keeps a committed copy in wnba_stats/{key}/parquet/. csv and rds are
+# release-only (csv is the largest format and adds nothing a reader of the
+# parquet needs). A dry-run publishes nothing but still builds -- and still runs
+# both merges above, whose printed lines preview the would-be sidecars -- so the
+# commit is skipped too: only a real run should move the tracked tree.
+case " $* " in
+  *" --dry-run "*) echo "dry run: not publishing or committing"; echo "EXIT=0"; exit 0 ;;
+esac
 
 # Publish the current season only (parquet + csv + rds), then the json sidecars
 # (model card + the merged SPM coefficients). `upload` never recomputes.

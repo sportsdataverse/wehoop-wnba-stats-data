@@ -249,6 +249,16 @@ bash scripts/nightly_wnba_impact.sh 2026 --dry-run   # builds only; no publish, 
 PUBLISHED season. Never upload a build dir's sidecar as-is (a window build carries warm-up
 fits): `python -m wnba_model_publish spm-merge --dir <out> --seasons <published>` overlays
 just those seasons onto the release's copy first (the `impact` CLI and the nightly both do).
+**`wnba_player_impact_card.json` on the release is canonical too** — every published season
+(rows + per-season lineup_source / pipeline version / season_types / generated_at, its
+`publish_gates.seasons` metrics and scale checks) plus the full-history gates (seasons_gated /
+summary / checks: the cross-season yoy + DARKO floors only a full build can compute).
+`python -m wnba_model_publish card-merge --dir <out> --seasons <published>` refreshes just those
+seasons; the global gates move only when the publish covers every season on the card, and
+`publish_gates.full_history_gates_as_of` names the build behind them. Same failure rules as
+`spm-merge` (unreadable release copy fails; only a 404 starts fresh). The nightly runs both
+merges before any upload (also on `--dry-run`, whose printed lines preview the merged files) and
+commits the merged card.
 Scale-gate exceptions are per (season, gate) in `gates.SCALE_BAND_EXCEPTIONS`, each with
 its evidence (2004 `sd_rapm`: a RidgeCV alpha near-tie, not a data gap).
 

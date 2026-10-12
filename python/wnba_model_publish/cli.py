@@ -237,6 +237,15 @@ def build_parser() -> argparse.ArgumentParser:
     sm.add_argument("--tag", default="wnba_player_impact", help="GitHub release tag.")
     sm.add_argument("--repo", default=_REPO_DEFAULT, help="GitHub repo owning the release.")
 
+    cm = sub.add_parser(
+        "card-merge",
+        help="Make a built dir's model card the canonical one: the release's card + --seasons from the build.",
+    )
+    cm.add_argument("--dir", required=True, help="Built artifact directory (holds the build's card).")
+    cm.add_argument("--seasons", required=True, help="The seasons being PUBLISHED, e.g. 2026 or 2024:2026.")
+    cm.add_argument("--tag", default="wnba_player_impact", help="GitHub release tag.")
+    cm.add_argument("--repo", default=_REPO_DEFAULT, help="GitHub repo owning the release.")
+
     up = sub.add_parser(
         "upload",
         help="Upload an already-built artifact directory to a release (no recompute; --dry-run is fully network-free).",
@@ -327,6 +336,24 @@ def main(argv=None) -> int:
             # only the publishing ones: a build whose gates fail must be visible
             # in the ad-hoc run that produced it, not first at upload time.
             check_publish_floors(Path(args.out), [b["season"] for b in built])
+        if built and not args.dry_run:
+            # Both json sidecars on the release are canonical (the SPM sidecar: one
+            # record per published season; the card: every published season + the
+            # full-history gates); a partial build must overlay its seasons, not
+            # replace them. Merged before ANY upload, so an unreadable release copy
+            # blocks the publish instead of half-completing it. A --dry-run here is
+            # the nightly's build-only step, so it does not merge: preview with
+            # `card-merge --dir <out> --seasons <published>`.
+            from .builders import (
+                merge_model_card,
+                merge_spm_coefficients,
+                published_model_card,
+                published_spm_coefficients,
+            )
+
+            seasons = [b["season"] for b in built]
+            merge_spm_coefficients(Path(args.out), seasons, published_spm_coefficients(args.repo, args.tag))
+            merge_model_card(Path(args.out), seasons, published_model_card(args.repo, args.tag))
         res = upload_artifacts(
             args.out,
             args.tag,
@@ -335,14 +362,6 @@ def main(argv=None) -> int:
             notes=_IMPACT_RELEASE_NOTES,
             dry_run=args.dry_run,
         )
-        if not args.dry_run:
-            # The sidecar on the release is canonical (one record per published
-            # season); a partial build must overlay its seasons, not replace it.
-            from .builders import merge_spm_coefficients, published_spm_coefficients
-
-            merge_spm_coefficients(
-                Path(args.out), [b["season"] for b in built], published_spm_coefficients(args.repo, args.tag)
-            )
         card_res = upload_artifacts(
             args.out,
             args.tag,
@@ -391,6 +410,10 @@ def main(argv=None) -> int:
         seasons = _parse_seasons(args.seasons)
         path = merge_spm_coefficients(Path(args.dir), seasons, published_spm_coefficients(args.repo, args.tag))
         print(f"spm-merge: {seasons} onto the published sidecar -> {path}")
+    elif args.cmd == "card-merge":
+        from .builders import merge_model_card, published_model_card
+
+        merge_model_card(Path(args.dir), _parse_seasons(args.seasons), published_model_card(args.repo, args.tag))
     elif args.cmd == "upload":
         res = upload_artifacts(
             args.artifacts_dir,

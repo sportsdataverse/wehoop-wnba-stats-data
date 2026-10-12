@@ -6,6 +6,11 @@ sdv-py RAPM/adj-RAPM/DARKO machinery behind `nba_player_impact`, fed WNBA
 possessions. Each publish writes `wnba_player_impact_card.json`, the metadata
 authority. `tests/test_model_registry.py` keeps this table in lockstep.
 
+The release card is canonical: a publish MERGES onto it (`wnba_model_publish card-merge`) —
+per-season entries for the seasons it publishes, full-history gates only from a build that
+publishes every season (`publish_gates.full_history_gates_as_of`). The nightly's 2021–2026
+window build refreshes 2026 only.
+
 | model | artifact(s) | release tag | training data | fitting script | gates at publish | last publish | cadence |
 |---|---|---|---|---|---|---|---|
 | WNBA player impact (RAPM / adj-RAPM / DARKO-style engines, consolidated) | `wnba_player_impact_{season}.parquet`, 30 seasons + `wnba_player_impact_card.json` + `wnba_player_impact_spm_coefficients.json` (additive sidecar) — **91 assets published; 92 after the next publish** | `wnba_player_impact` | this repo's possessions trees (offline raw store; pre-2005 team logs repaired from player sums — see the 2026-07-28 publish notes) | `wnba_model_publish/builders.py::build_wnba_player_impact` | **five numeric floors, publish-blocking** (`wnba_model_publish/gates.py`; table below) — evaluated on every `impact` invocation, report written into the card sidecar under `publish_gates` | 2026-09-02 | Current season nightly on the droplet — `scripts/nightly_wnba_impact.sh` (parquet+rds+card also committed to `wnba_stats/player_impact/`), cron `30 10 * 5-10 *` ET, which is where the residential IP and the `PROXY_*` pool are. `wnba_models.yml` stays dispatch-only BY DESIGN for backfills (rate-budgeted; stats.wnba.com hangs on datacenter IPs; `dry_run` defaults true) |
