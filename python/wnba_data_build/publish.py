@@ -6,6 +6,7 @@ this module is fully tag/repo-agnostic (no NBA/WNBA specifics).
 
 from __future__ import annotations
 
+import hashlib
 import re
 import subprocess
 import sys
@@ -33,32 +34,36 @@ def _gh_runner(args: list[str]) -> str:
     ).stdout
 
 
-def _gh_release_exists(tag: str, repo: str) -> bool:
-    """True when ``tag`` exists on ``repo``.
+def _release_digests(tag: str, repo: str, run: Runner) -> Optional[dict[str, str]]:
+    """``{asset name: "sha256:<hex>"}`` for *tag* in ONE core API call; ``None`` = no release.
 
-    Only a genuine "not found" answer from ``gh`` counts as absence -- a rate
-    limit / auth / network failure must never be read as "release missing"
-    (that misreading is what makes the caller run ``release create`` on a tag
-    that already exists and crash the whole publish run, as happened during a
-    GitHub GraphQL rate-limit window on 2026-08-23).
+    The release object embeds its whole asset list with a server-computed
+    ``digest`` per asset, so this one call replaces both the old ``gh release
+    view`` existence probe and any per-file lookup. Only a genuine 404 counts as
+    absence -- a rate limit / auth / network failure must never be read as
+    "release missing" (that misreading ran ``release create`` on an existing tag
+    and crashed a publish during a 2026-08-23 rate-limit window).
     """
     try:
-        subprocess.run(
-            ["gh", "release", "view", tag, "--repo", repo],
-            check=True,
-            capture_output=True,
-            text=True,
-            timeout=_GH_TIMEOUT,
+        out = run(
+            [
+                "api",
+                f"repos/{repo}/releases/tags/{tag}",
+                "--jq",
+                r'.assets[] | "\(.name)\t\(.digest)"',
+            ]
         )
-        return True
     except subprocess.CalledProcessError as exc:
-        # subprocess.TimeoutExpired is intentionally NOT caught here — a spurious
-        # False would trigger a `gh release create` that then fails because the
-        # release already exists.
-        stderr = (exc.stderr or "").strip()
-        if "not found" in stderr.lower():
-            return False
-        raise RuntimeError(f"gh release view {tag} --repo {repo} failed: {stderr}") from exc
+        stderr = exc.stderr if isinstance(exc.stderr, str) else ""
+        if "404" in stderr or "not found" in stderr.lower():
+            return None
+        raise RuntimeError(f"gh api releases/tags/{tag} --repo {repo} failed: {stderr}") from exc
+    return dict(ln.split("\t", 1) for ln in (out or "").splitlines() if "\t" in ln)
+
+
+def _sha256(path: Path) -> str:
+    with open(path, "rb") as fh:
+        return "sha256:" + hashlib.file_digest(fh, "sha256").hexdigest()
 
 
 def _publishable(path: Path) -> bool:
@@ -188,15 +193,22 @@ def upload_artifacts(
     Returns:
         dict with keys:
             ``uploaded``: int count of files uploaded (0 if *dry_run* is True).
-            ``failed``: list of asset filenames whose upload raised.
+            ``failed``: list of asset filenames whose upload raised (or a parquet
+            held back because a sibling format of its stem failed).
+            ``skipped``: asset filenames already on the release unchanged.
             ``files``: list of asset filenames that were (or would be) uploaded.
     """
     run = runner or _gh_runner
-    exists = exists_check or _gh_release_exists
     files = plan_uploads(artifacts_dir, seasons, pattern=pattern, exts=exts)
     if dry_run:
         return {"uploaded": 0, "failed": [], "files": [f.name for f in files]}
-    if not exists(tag, repo):
+    # One listing per tag replaces the existence probe; an injected exists_check
+    # (tests) keeps the old probe and treats the release as empty.
+    if exists_check is not None:
+        remote: Optional[dict[str, str]] = {} if exists_check(tag, repo) else None
+    else:
+        remote = _release_digests(tag, repo, run)
+    if remote is None:
         try:
             run(
                 [
@@ -212,22 +224,51 @@ def upload_artifacts(
                 ]
             )
         except subprocess.CalledProcessError as exc:
-            # Belt-and-suspenders for the race exists() didn't catch (e.g. a
+            # Belt-and-suspenders for the race the listing didn't catch (e.g. a
             # concurrent run created the tag between the check and here).
             stderr = (exc.stderr or "").lower() if isinstance(exc.stderr, str) else ""
             if "already exists" in stderr:
                 print(f"release {tag} already exists on {repo} -- continuing", file=sys.stderr)
             else:
                 raise
+        remote = {}
+    # Skip what the release already holds (the droplet shares one 5,000/h API
+    # quota). A file is unchanged when its sha256 equals the asset digest. The
+    # rds embeds a write timestamp so it never matches itself; it and the csv
+    # are derived from the parquet, so a stem whose parquet matches and whose
+    # siblings are all on the release is skipped whole. Per stem the parquet
+    # goes LAST and is held back if a sibling failed, so a matching parquet
+    # always means the stem's last upload completed.
+    by_stem: dict[str, list[Path]] = {}
+    for f in files:
+        by_stem.setdefault(f.name[: -len(f.suffix)] if f.suffix else f.name, []).append(f)
     uploaded: list[str] = []
     failed: list[str] = []
-    for f in files:
-        try:
-            run(["release", "upload", tag, str(f), "--repo", repo, "--clobber"])
-            uploaded.append(f.name)
-        except subprocess.CalledProcessError as exc:
-            print(f"WARNING: upload failed for {f.name}: {exc}", file=sys.stderr)
-            failed.append(f.name)
+    skipped: list[str] = []
+    for group in by_stem.values():
+        group.sort(key=lambda f: f.suffix == ".parquet")
+        pq = group[-1] if group[-1].suffix == ".parquet" else None
+        if pq is not None and remote.get(pq.name) == _sha256(pq):
+            if all(f.name in remote for f in group):
+                skipped += [f.name for f in group]
+                continue
+        sibling_failed = False
+        for f in group:
+            if f is pq and sibling_failed:
+                failed.append(f.name)
+                continue
+            if f is not pq and remote.get(f.name) == _sha256(f):
+                skipped.append(f.name)
+                continue
+            try:
+                run(["release", "upload", tag, str(f), "--repo", repo, "--clobber"])
+                uploaded.append(f.name)
+            except subprocess.CalledProcessError as exc:
+                print(f"WARNING: upload failed for {f.name}: {exc}", file=sys.stderr)
+                failed.append(f.name)
+                sibling_failed = True
+    if skipped:
+        print(f"{tag}: {len(skipped)} unchanged asset(s) skipped, {len(uploaded)} uploaded")
     # stamp LAST so the timestamp describes a finished upload, and only when a DATA
     # asset actually uploaded -- a stamp on a no-op run would claim data moved when it
     # did not, and `uploaded` also counts custom-pattern artifacts (a model card is not
@@ -237,5 +278,6 @@ def upload_artifacts(
     return {
         "uploaded": len(uploaded),
         "failed": failed,
+        "skipped": skipped,
         "files": [f.name for f in files],
     }
