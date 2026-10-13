@@ -351,11 +351,11 @@
         "Regular Season",
         "Playoffs"
       ],
-      "generated_at": "2026-10-12T14:32:32+00:00",
+      "generated_at": "2026-10-13T14:31:14+00:00",
       "rows": 329
     }
   ],
-  "generated_at": "2026-10-12T14:32:32+00:00",
+  "generated_at": "2026-10-13T14:31:14+00:00",
   "publish_gates": {
     "seasons_gated": [
       1997,
@@ -1856,7 +1856,7 @@
       {
         "season": 2026,
         "gate": "mean_adj_rapm",
-        "observed": 0.9066070622514097,
+        "observed": 0.9066070622514013,
         "band": [
           -3.0,
           3.0
@@ -1866,7 +1866,7 @@
       {
         "season": 2026,
         "gate": "sd_adj_rapm",
-        "observed": 5.147735538048224,
+        "observed": 5.147735538048222,
         "band": [
           3.0,
           8.0
