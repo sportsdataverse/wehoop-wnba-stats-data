@@ -18,7 +18,7 @@ from pathlib import Path
 import polars as pl
 import pytest
 from polars.testing import assert_frame_equal
-from sportsdataverse.rolling_windows import OUTPUT_SCHEMA, rolling_windows, shot_events
+from sportsdataverse.analytics.rolling_windows import OUTPUT_SCHEMA, rolling_windows, shot_events
 from wnba_data_build import build, cli, datasets, docs
 from wnba_data_build.manifest import _NEW_TAG_ENDPOINTS
 from wnba_data_build.models import MODELS, polars_schema
