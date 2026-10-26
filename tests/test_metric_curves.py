@@ -16,7 +16,7 @@ from pathlib import Path
 
 import polars as pl
 import pytest
-from sportsdataverse.metric_curves import BUCKET_EDGES, OUTPUT_SCHEMA
+from sportsdataverse.analytics.metric_curves import BUCKET_EDGES, OUTPUT_SCHEMA
 from wnba_data_build import build, cli, datasets, docs
 from wnba_data_build.models import MODELS, polars_schema
 

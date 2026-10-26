@@ -10,7 +10,7 @@ Stage numbers follow the ``DATASETS`` registry order in
 ``rolling_windows`` (F3b), which the roadmap orders before this one; a number is
 a stable dataset identity, so the hole stays rather than being compacted.
 
-FG% by shot distance (sdv-py ``sportsdataverse.metric_curves``) for the league,
+FG% by shot distance (sdv-py ``sportsdataverse.analytics.metric_curves``) for the league,
 every team and every shooter, per season: regular-season + playoff attempts
 (``season_type_id`` 2 / 4, derived from the game id's type digit because the
 WNBA shots carry no such column), 1-ft bins to 35 ft then 35-50 and 50-95, ids

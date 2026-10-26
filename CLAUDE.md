@@ -92,7 +92,7 @@ after the first publish (`manifest build --tags wnba_stats_rolling_windows --pub
 
 **`metric_curves` is stage 17, derived from the committed `shots` tree** (F4-T4,
 2026-10-01). sdv-py's
-`sportsdataverse.metric_curves` over one season's shots: FG% by shot distance for
+`sportsdataverse.analytics.metric_curves` over one season's shots: FG% by shot distance for
 the league, every team and every shooter, 1-ft bins to 35 ft then 35-50 and 50-95,
 regular season + playoffs (`season_type_id` 2/4). The WNBA shots carry NO
 `season_type_id` column (the NBA twin stamps one), so the builder derives it from

@@ -55,8 +55,8 @@ _NEW_TAG_ENDPOINTS: dict[str, str] = {
     # 24 per-season tables under one tag; row_count is the season total across them.
     "wnba_stats_leaguedash": "stats.wnba.com/leaguedash* (24 tables per season)",
     # Stages 16-17 (F3b-T3 / F4-T4): derived, no endpoint of their own.
-    "wnba_stats_rolling_windows": "derived from wnba_stats_shots (sportsdataverse.rolling_windows)",
-    "wnba_stats_metric_curves": "derived from wnba_stats_shots (sportsdataverse.metric_curves)",
+    "wnba_stats_rolling_windows": "derived from wnba_stats_shots (sportsdataverse.analytics.rolling_windows)",
+    "wnba_stats_metric_curves": "derived from wnba_stats_shots (sportsdataverse.analytics.metric_curves)",
 }
 
 
