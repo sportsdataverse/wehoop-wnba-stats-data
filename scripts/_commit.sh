@@ -40,7 +40,7 @@ sdv_commit_push() {
     fi
     echo "push rejected (attempt $attempt); syncing with origin"
     git fetch --quiet origin main || true
-    if ! git rebase --merge origin/main >/dev/null 2>&1; then
+    if ! git rebase --merge --autostash origin/main >/dev/null 2>&1; then  # cron appends to a tracked log all run
       git rebase --abort >/dev/null 2>&1 || true
       echo "::error ::cannot rebase onto origin/main for: $msg"
       return 1
