@@ -351,11 +351,11 @@
         "Regular Season",
         "Playoffs"
       ],
-      "generated_at": "2026-10-28T14:31:04+00:00",
+      "generated_at": "2026-10-29T14:31:41+00:00",
       "rows": 329
     }
   ],
-  "generated_at": "2026-10-28T14:31:04+00:00",
+  "generated_at": "2026-10-29T14:31:41+00:00",
   "publish_gates": {
     "seasons_gated": [
       1997,
@@ -665,7 +665,7 @@
       },
       "2026": {
         "rs_rows": 238,
-        "r_rapm_adj": 0.9038360697776169,
+        "r_rapm_adj": 0.9038360697776171,
         "r_spm_rapm": 0.3549892422884366,
         "r_rapm_yoy": null,
         "r_darko_fwd": null,
@@ -1856,7 +1856,7 @@
       {
         "season": 2026,
         "gate": "mean_adj_rapm",
-        "observed": 0.9086738915540854,
+        "observed": 0.9086738915540782,
         "band": [
           -3.0,
           3.0
@@ -1866,7 +1866,7 @@
       {
         "season": 2026,
         "gate": "sd_adj_rapm",
-        "observed": 5.239876668663866,
+        "observed": 5.239876668663864,
         "band": [
           3.0,
           8.0
