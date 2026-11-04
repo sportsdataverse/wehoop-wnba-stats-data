@@ -22,6 +22,13 @@ set -uo pipefail
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_DIR" || exit 1
 
+# Sync the venv to uv.lock first: this droplet job runs .venv's python directly, so a merged
+# sportsdataverse pin bump never reached it otherwise (hoopR-nba-stats-data#51). --inexact keeps
+# anything else installed; skipped when an explicit interpreter is given.
+if [ -z "${WNBA_MODELS_PYTHON:-}" ] && command -v uv >/dev/null; then
+  uv sync -q --frozen --inexact || { echo "FATAL: uv sync --frozen failed" >&2; exit 1; }
+fi
+
 PY="${WNBA_MODELS_PYTHON:-}"
 if [ -z "${PY}" ]; then
   for cand in .venv/Scripts/python.exe .venv/bin/python; do
