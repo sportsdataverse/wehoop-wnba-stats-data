@@ -55,6 +55,29 @@ def _log(msg: str) -> None:
     print(f"[{stamp}] {msg}", flush=True)
 
 
+def with_possession_flags(poss: pl.DataFrame, pbp: pl.DataFrame) -> pl.DataFrame:
+    """BB-D7's ``seconds_to_first_shot`` / ``is_transition`` / ``is_garbage_time`` on the possessions.
+
+    sportsdataverse-py's :func:`~sportsdataverse.nba.nba_possession_flags.add_possession_flags`
+    (NBA and WNBA, the 2002-05 halves included), over the season's possessions and the play-by-play
+    they came from. Flags already on the frame are recomputed, so a rebuilt season carries the
+    installed window. A pinned sportsdataverse without the module (before BB-D7) publishes the
+    possessions unflagged and says so in the log.
+    """
+    try:
+        from sportsdataverse.nba.nba_possession_flags import (
+            POSSESSION_FLAGS_SCHEMA,
+            add_possession_flags,
+        )
+    except ImportError:
+        # ponytail: a pin-bump switch; drop the guard once uv.lock is past BB-D7 everywhere
+        _log("  WARN: the pinned sportsdataverse has no nba_possession_flags (BB-D7)")
+        return poss
+    if "possession_start_type" not in poss.columns:  # the empty-season placeholder frame
+        return poss
+    return add_possession_flags(poss.drop(*POSSESSION_FLAGS_SCHEMA, strict=False), pbp)
+
+
 def repo_root_default() -> Path:
     """Repo root inferred from this file (…/python/wnba_data_build/v3_backfill.py)."""
     return Path(__file__).resolve().parents[2]
@@ -244,6 +267,8 @@ def build_season(
     paths = season_paths(staging, season)
     Path(staging).mkdir(parents=True, exist_ok=True)
     rows: dict[str, int] = {}
+    # play_by_play is built before possessions (_FRAME_OF order): the flags read it
+    built: dict[str, pl.DataFrame] = {}
 
     sched.write_parquet(paths["schedule"])
     rows["schedule"] = sched.height
@@ -256,6 +281,9 @@ def build_season(
             df = _coerce_id_dtypes(df)
         else:
             df = pl.DataFrame({"game_id": pl.Series([], dtype=pl.Utf8)})
+        if fam == "possessions":
+            df = with_possession_flags(df, built["play_by_play"])
+        built[fam] = df
         df.write_parquet(paths[fam])
         rows[fam] = df.height
 

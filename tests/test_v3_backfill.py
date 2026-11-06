@@ -121,3 +121,35 @@ def test_coerce_id_dtypes_pins_game_id_utf8_and_id_cols_int() -> None:
     assert out.schema["game_id"] == pl.Utf8
     assert out.schema["player_id"] == pl.Int64
     assert out.schema["off_player_1"] == pl.Int64
+
+
+_TREE = Path(__file__).resolve().parents[1] / "wnba_stats"
+
+
+def test_possessions_get_bb_d7_flags() -> None:
+    """The staged possessions carry seconds_to_first_shot / is_transition / is_garbage_time, rows unchanged.
+
+    On the committed 2025 tree (the first ten games of the published possessions and play-by-play).
+    """
+    flags = pytest.importorskip("sportsdataverse.nba.nba_possession_flags")
+    poss = pl.read_parquet(_TREE / "possessions" / "parquet" / "wnba_possessions_2025.parquet")
+    games = poss.select("game_id").unique().sort("game_id").head(10)
+    poss = poss.join(games, on="game_id", how="semi").drop(*flags.POSSESSION_FLAGS_SCHEMA, strict=False)
+    pbp = pl.read_parquet(_TREE / "pbp" / "parquet" / "wnba_play_by_play_2025.parquet").join(
+        games, on="game_id", how="semi"
+    )
+    out = vb.with_possession_flags(poss, pbp)
+    assert out.columns == [*poss.columns, *flags.POSSESSION_FLAGS_SCHEMA]
+    assert out.select(poss.columns).equals(poss)
+    assert out["is_transition"].sum() > 0
+    # a rebuilt season re-flags rather than failing on the existing columns
+    assert vb.with_possession_flags(out, pbp).equals(out)
+
+
+def test_possessions_unflagged_on_a_pin_before_bb_d7(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A sportsdataverse pin without nba_possession_flags publishes the frame unchanged (and logs it)."""
+    import sys
+
+    monkeypatch.setitem(sys.modules, "sportsdataverse.nba.nba_possession_flags", None)
+    poss = pl.DataFrame({"game_id": ["1022500001"], "possession_start_type": ["OffDeadball"]})
+    assert vb.with_possession_flags(poss, pl.DataFrame()).equals(poss)
