@@ -31,6 +31,9 @@ jobs:
             CLAUDE.md
             pyproject.toml
             uv.lock
+            # test_v3_backfill::test_possessions_get_bb_d7_flags reads the first ten 2025 games
+            wnba_stats/possessions/parquet/wnba_possessions_2025.parquet
+            wnba_stats/pbp/parquet/wnba_play_by_play_2025.parquet
           sparse-checkout-cone-mode: false
 
       - name: Set up uv
