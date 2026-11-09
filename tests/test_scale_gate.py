@@ -19,7 +19,9 @@ def _season(scale: float = 1.0, n: int = 200) -> pl.DataFrame:
     return pl.DataFrame(
         {
             "rapm": rapm,
-            "adj_rapm": [v * 2.5 for v in rapm],
+            # centred adj RAPM tracks plain RAPM (sd ratio 0.82-1.23 on #1150); the old 2.5x
+            # was the uncentred pre-#1137 spread
+            "adj_rapm": [v * 1.1 for v in rapm],
             "off_poss": [_QUAL + 10] * n,
         }
     )
@@ -74,19 +76,16 @@ def test_a_frame_without_the_level_columns_is_skipped_not_passed():
     assert "off_poss" in checks[0]["reason"]
 
 
-def test_the_2004_exception_is_narrow():
-    """2004 sd_rapm (0.320, RidgeCV's alpha near-tie) passes; nothing else moves."""
+def test_no_season_band_exceptions_and_2004_is_held_to_the_global_band():
+    """The 2004 sd_rapm override was removed once #1121 fixed the penalty near-tie.
+
+    The 2004 level it excused (sd ~0.32) must now FAIL like any other season, so the
+    collapse cannot come back unnoticed.
+    """
     from wnba_model_publish.gates import SCALE_BAND_EXCEPTIONS
 
-    assert set(SCALE_BAND_EXCEPTIONS) == {(2004, "sd_rapm")}
-    shrunk = _season(scale=0.32 / 1.75)  # sd ~0.32, the published 2004 level
-
+    assert SCALE_BAND_EXCEPTIONS == {}
+    shrunk = _season(scale=0.32 / 1.75)  # sd ~0.32, the old published 2004 level
     by_gate = {c["gate"]: c for c in scale_checks({2004: shrunk})}
-    assert by_gate["sd_rapm"]["status"] == "PASS"
-    assert by_gate["sd_rapm"]["band"] == [0.25, 3.5]
-    # the same level in any other season is still a rescale
-    other = {c["gate"]: c for c in scale_checks({2005: shrunk})}
-    assert other["sd_rapm"]["status"] == "FAIL"
-    # and 2004 still catches the next grid step / a collapse
-    collapsed = {c["gate"]: c for c in scale_checks({2004: _season(scale=0.1)})}
-    assert collapsed["sd_rapm"]["status"] == "FAIL"
+    assert by_gate["sd_rapm"]["status"] == "FAIL"
+    assert by_gate["sd_rapm"]["band"] == list(SCALE_BANDS["sd_rapm"])
