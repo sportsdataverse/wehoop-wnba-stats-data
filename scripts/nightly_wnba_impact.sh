@@ -115,9 +115,10 @@ case " $* " in
   *" --dry-run "*) echo "dry run: not publishing or committing"; echo "EXIT=0"; exit 0 ;;
 esac
 
-# Publish the current season only (parquet + csv + rds), then the json sidecars
-# (model card + the merged SPM coefficients). `upload` never recomputes.
-for pat in "${TAG}_${SEASON}.*" "*.json"; do
+# Publish the current season only (parquet + csv + rds) and its league-average rows,
+# then the json sidecars (model card + the merged SPM coefficients). `upload` never
+# recomputes.
+for pat in "${TAG}_${SEASON}.*" "${TAG}_league_averages_${SEASON}.*" "*.json"; do
   "$PY" -m wnba_model_publish upload --dir "$OUT_DIR" --tag "$TAG" --repo "$REPO" \
     --pattern "$pat" || { echo "EXIT=1"; exit 1; }
 done
