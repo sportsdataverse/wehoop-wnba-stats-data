@@ -222,9 +222,10 @@ def build_season(
     if not rebuild and season_done(staging, season):
         return {"season": season, "status": "skipped"}
 
-    # Drop the checkpoint first: a rebuild that fails part-way (after the schedule and pbp are
-    # rewritten) must not leave four parquets that mark the mixed old/new season done.
-    season_paths(staging, season)["possessions"].unlink(missing_ok=True)
+    # Drop the checkpoint first: a rebuild that fails part-way must not leave four parquets that mark
+    # the mixed old/new season done. Lineups is the last file written, so all four exist again only
+    # once every write has landed.
+    season_paths(staging, season)["lineups"].unlink(missing_ok=True)
     t0 = time.time()
     sched = schedule_from_gamelog(raw_root, season)
     game_ids = sched["game_id"].to_list()
