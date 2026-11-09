@@ -5,8 +5,8 @@ player-season-season_type (Regular Season + Playoffs), joining the sdv-py
 model-zoo outputs on ``player_id``. The model suite is the league-agnostic
 ``sportsdataverse.nba`` zoo — the same RAPM / adj-RAPM / SPM / BPM / WAR /
 DARKO engines behind ``nba_player_impact`` — fed WNBA possessions
-(``nba_possessions(game_id, league_id="10")``) and WNBA box logs
-(``nba_box_logs(..., league_id="10")`` through the ``wnba_stats_*`` wrappers):
+(``nba_possessions(game_id, league_id=_WNBA_LEAGUE_ID)``) and WNBA box logs
+(``nba_box_logs(..., league_id=_WNBA_LEAGUE_ID)`` through the ``wnba_stats_*`` wrappers):
 
 * RAPM (``nba_rapm``) — the anchor population: every player with possession
   lineup data that season.
@@ -70,6 +70,8 @@ from sportsdataverse.nba import (
     nba_darko,
     nba_player_ages,
     nba_player_identity,
+    nba_player_impact_context,
+    nba_player_impact_league_averages,
     nba_player_positions,
     nba_raw_store_season_frame,
     nba_spm,
@@ -1129,6 +1131,8 @@ def build_wnba_player_impact(
                 f = f.with_columns([pl.lit(None, dtype=pl.Float64).alias(c) for c in _BOBAN_COLS])
             out_frames.append(f)
         impact = pl.concat(out_frames, how="vertical")
+        # <metric>_n / _rank / _pct per (season, season_type), gated on each metric's sample.
+        impact = nba_player_impact_context(impact, league_id=_WNBA_LEAGUE_ID)
 
         # Track what was ACTUALLY built (not merely requested) for the model
         # card: a season with no playoffs must not have the card claim a
@@ -1148,6 +1152,13 @@ def build_wnba_player_impact(
             out_dir / f"wnba_player_impact_{season}.rds",
             cls=list(RDS_CLASS),
         )
+        # League-average rows (one per season type and metric), same three formats and tag:
+        # the ``_{season}`` suffix puts them in the season-scoped upload set.
+        averages = nba_player_impact_league_averages(impact, league_id=_WNBA_LEAGUE_ID)
+        avg_stem = out_dir / f"wnba_player_impact_league_averages_{season}"
+        averages.write_parquet(avg_stem.with_suffix(".parquet"))
+        averages.write_csv(avg_stem.with_suffix(".csv"))
+        write_rds(averages, avg_stem.with_suffix(".rds"), cls=list(RDS_CLASS))
         results.append({"season": season, "rows": impact.height, "path": str(path)})
         print(
             f"impact: season={season} rows={impact.height} types={impact['season_type'].unique().to_list()} -> {path}"

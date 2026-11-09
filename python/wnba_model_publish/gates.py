@@ -120,33 +120,36 @@ def _min_of(values: Iterable[Optional[float]]) -> Optional[float]:
 #:
 #: Two-sided bands on the qualified league LEVEL, set strictly outside the values
 #: observed on the published release (off_poss >= 300). Re-measured 2026-10-12 on
-#: release seasons 1997-2026 EXCLUDING 2004 (see SCALE_BAND_EXCEPTIONS); the
+#: release seasons 1997-2026 EXCLUDING 2004 (then an sd_rapm exception, since removed); the
 #: 2026-09-02 comments understated the spread (sd_rapm reads 0.83 in 2001).
 #: Never widen a band to make a publish pass -- debug the build.
+#:
+#: sd_adj_rapm re-derived 2026-11-09 on sportsdataverse-py 8b0448546d (#1150) over
+#: 1997-2026, same method as the 2026-09-02 band (floor ~0.68x the observed minimum,
+#: ceiling ~1.3x the observed maximum, on round values). The old (3.0, 8.0) was fit
+#: on the UNCENTRED scale: before #1137 the adj-RAPM ridge had no intercept, so the
+#: league's points per possession sat in every o/d coefficient (means ~+10 / -9) and
+#: inflated the net spread to 4.4-6.2. #1137 centred it; #1150 then fixed the per-season
+#: RidgeCV penalty pick that collapsed 2001/2002/2004/2011/2014/2016/2023 (sd_adj_rapm /
+#: sd_rapm 0.44-0.80) to one penalty per league. Observed now: 1.41 (1997) - 2.28 (2018),
+#: sd_adj_rapm / sd_rapm 0.82 - 1.23, no 4-MAD outlier. There is no external WNBA
+#: rating oracle to anchor it (the NBA sibling compares EPM / DARKO).
 SCALE_QUALIFY_POSS = 300
 SCALE_BANDS: dict[str, tuple[float, float]] = {
     "mean_rapm": (-1.0, 1.0),  # observed 0.01 - 0.27
     "sd_rapm": (0.5, 3.5),  # observed 0.83 - 2.07
     "mean_adj_rapm": (-3.0, 3.0),  # observed 0.26 - 1.17
-    "sd_adj_rapm": (3.0, 8.0),  # observed 4.39 - 6.20
+    "sd_adj_rapm": (1.0, 3.0),  # observed 1.41 - 2.28 (2026-11-09, #1150; see above)
 }
 
 #: Per-(season, gate) band overrides. Each is a measured, explained season, never
 #: a way to pass a broken build; add one only with its evidence beside it.
 #:
-#: 2004 sd_rapm (observed 0.320 on the 2026-07-28 release asset and on every
-#: rebuild since): NOT a data gap. The possession matrix is complete -- 221/221
-#: regular-season games (13 teams x 34, = schedule_master), 139.6 possessions per
-#: game (2003: 140.5, 2005: 140.1), zero null or duplicated lineup slots, no
-#: player on two teams in one game. RAPM's RidgeCV (sportsdataverse nba_rapm,
-#: alphas logspace(2, 5, 8)) picks alpha=13895 for 2004 where every other season
-#: picks 1931 or 5179: 2004's leave-one-out error is flat above ~5000 (13895 beats
-#: 5179 by 0.07 basis points of MSE), so the near-tie lands on the heavier penalty
-#: and shrinks every rating ~2.6x. The 0.25 floor still trips the next grid step
-#: (alpha 37276) or a collapse; the ceiling is the global one.
-SCALE_BAND_EXCEPTIONS: dict[tuple[int, str], tuple[float, float]] = {
-    (2004, "sd_rapm"): (0.25, 3.5),
-}
+#: None today. The (2004, "sd_rapm") override (0.25, 3.5) was removed 2026-11-09: it covered
+#: RidgeCV's per-season alpha near-tie that shrank 2004 RAPM to sd 0.320, and since
+#: sportsdataverse-py #1121 fits plain RAPM at one penalty per league 2004 reads 1.47
+#: inside the global band. Left in, it would hide that collapse if it ever came back.
+SCALE_BAND_EXCEPTIONS: dict[tuple[int, str], tuple[float, float]] = {}
 
 
 def scale_checks(frames: dict[int, pl.DataFrame]) -> list[dict]:
