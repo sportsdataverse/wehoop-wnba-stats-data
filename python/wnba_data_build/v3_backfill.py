@@ -61,18 +61,13 @@ def with_possession_flags(poss: pl.DataFrame, pbp: pl.DataFrame) -> pl.DataFrame
     sportsdataverse-py's :func:`~sportsdataverse.nba.nba_possession_flags.add_possession_flags`
     (NBA and WNBA, the 2002-05 halves included), over the season's possessions and the play-by-play
     they came from. Flags already on the frame are recomputed, so a rebuilt season carries the
-    installed window. A pinned sportsdataverse without the module (before BB-D7) publishes the
-    possessions unflagged and says so in the log.
+    installed window.
     """
-    try:
-        from sportsdataverse.nba.nba_possession_flags import (
-            POSSESSION_FLAGS_SCHEMA,
-            add_possession_flags,
-        )
-    except ImportError:
-        # ponytail: a pin-bump switch; drop the guard once uv.lock is past BB-D7 everywhere
-        _log("  WARN: the pinned sportsdataverse has no nba_possession_flags (BB-D7)")
-        return poss
+    from sportsdataverse.nba.nba_possession_flags import (
+        POSSESSION_FLAGS_SCHEMA,
+        add_possession_flags,
+    )
+
     if "possession_start_type" not in poss.columns:  # the empty-season placeholder frame
         return poss
     return add_possession_flags(poss.drop(*POSSESSION_FLAGS_SCHEMA, strict=False), pbp)
@@ -227,6 +222,10 @@ def build_season(
     if not rebuild and season_done(staging, season):
         return {"season": season, "status": "skipped"}
 
+    # Drop the checkpoint first: a rebuild that fails part-way must not leave four parquets that mark
+    # the mixed old/new season done. Lineups is the last file written, so all four exist again only
+    # once every write has landed.
+    season_paths(staging, season)["lineups"].unlink(missing_ok=True)
     t0 = time.time()
     sched = schedule_from_gamelog(raw_root, season)
     game_ids = sched["game_id"].to_list()
