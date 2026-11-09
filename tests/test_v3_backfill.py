@@ -131,7 +131,9 @@ def test_possessions_get_bb_d7_flags() -> None:
 
     On the committed 2025 tree (the first ten games of the published possessions and play-by-play).
     """
-    flags = pytest.importorskip("sportsdataverse.nba.nba_possession_flags")
+    from sportsdataverse.nba import nba_possession_flags as flags
+
+    assert flags.TRANSITION_SECONDS == 8.0  # the pin must be past sportsdataverse-py BB-D7 decision 2
     poss = pl.read_parquet(_TREE / "possessions" / "parquet" / "wnba_possessions_2025.parquet")
     games = poss.select("game_id").unique().sort("game_id").head(10)
     poss = poss.join(games, on="game_id", how="semi").drop(*flags.POSSESSION_FLAGS_SCHEMA, strict=False)
@@ -145,11 +147,3 @@ def test_possessions_get_bb_d7_flags() -> None:
     # a rebuilt season re-flags rather than failing on the existing columns
     assert vb.with_possession_flags(out, pbp).equals(out)
 
-
-def test_possessions_unflagged_on_a_pin_before_bb_d7(monkeypatch: pytest.MonkeyPatch) -> None:
-    """A sportsdataverse pin without nba_possession_flags publishes the frame unchanged (and logs it)."""
-    import sys
-
-    monkeypatch.setitem(sys.modules, "sportsdataverse.nba.nba_possession_flags", None)
-    poss = pl.DataFrame({"game_id": ["1022500001"], "possession_start_type": ["OffDeadball"]})
-    assert vb.with_possession_flags(poss, pl.DataFrame()).equals(poss)

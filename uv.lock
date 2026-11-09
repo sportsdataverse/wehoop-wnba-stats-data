@@ -2453,7 +2453,7 @@ wheels = [
 [[package]]
 name = "sportsdataverse"
 version = "0.2.0b1"
-source = { git = "https://github.com/sportsdataverse/sportsdataverse-py?rev=main#f54d9aa09085d46fc5a62a62fa3b9c7b103f4a0a" }
+source = { git = "https://github.com/sportsdataverse/sportsdataverse-py?rev=65e8c620b691596ce1a8c13679e79947b724c42c#65e8c620b691596ce1a8c13679e79947b724c42c" }
 dependencies = [
     { name = "beautifulsoup4" },
     { name = "cyclopts" },
@@ -2869,7 +2869,7 @@ requires-dist = [
     { name = "pyarrow", specifier = ">=15.0" },
     { name = "pydantic", specifier = ">=2" },
     { name = "pyyaml", specifier = ">=6" },
-    { name = "sportsdataverse", git = "https://github.com/sportsdataverse/sportsdataverse-py?rev=main" },
+    { name = "sportsdataverse", git = "https://github.com/sportsdataverse/sportsdataverse-py?rev=65e8c620b691596ce1a8c13679e79947b724c42c" },
 ]
 
 [package.metadata.requires-dev]
