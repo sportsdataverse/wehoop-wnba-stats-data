@@ -57,6 +57,8 @@ _NEW_TAG_ENDPOINTS: dict[str, str] = {
     # Stages 16-17 (F3b-T3 / F4-T4): derived, no endpoint of their own.
     "wnba_stats_rolling_windows": "derived from wnba_stats_shots (sportsdataverse.analytics.rolling_windows)",
     "wnba_stats_metric_curves": "derived from wnba_stats_shots (sportsdataverse.analytics.metric_curves)",
+    # playoffs_* derived from boxscorematchupsv3 (see matchups_cli)
+    "wnba_stats_matchups": "stats.wnba.com/leagueseasonmatchups + boxscorematchupsv3",
 }
 
 
