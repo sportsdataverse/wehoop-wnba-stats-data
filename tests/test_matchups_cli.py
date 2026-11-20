@@ -99,6 +99,51 @@ def test_an_empty_payload_writes_nothing_and_a_stale_asset_is_cleared(tmp_path: 
     assert list((out / _TAG).glob("*_2025.*")) == []
 
 
+def test_derived_frames_take_the_regular_season_columns_and_dtypes(tmp_path: Path) -> None:
+    """Derived playoffs must concatenate with the season's regular-season assets."""
+    raw, out = tmp_path / "raw", tmp_path / "out"
+    # real headers, so the cast path runs against the published schema
+    headers = [
+        "SEASON_ID", "OFF_PLAYER_ID", "OFF_PLAYER_NAME", "DEF_PLAYER_ID", "DEF_PLAYER_NAME",
+        "GP", "MATCHUP_MIN", "PARTIAL_POSS", "PLAYER_PTS", "TEAM_PTS", "MATCHUP_AST",
+        "MATCHUP_TOV", "MATCHUP_BLK", "MATCHUP_FGM", "MATCHUP_FGA", "MATCHUP_FG_PCT",
+        "MATCHUP_FG3M", "MATCHUP_FG3A", "MATCHUP_FG3_PCT", "HELP_BLK", "HELP_FGM", "HELP_FGA",
+        "HELP_FG_PERC", "MATCHUP_FTM", "MATCHUP_FTA", "SFL", "MATCHUP_TIME_SEC",
+    ]  # fmt: skip
+    totals = ["22025", 1, "A B", 2, "C D", 6, "37:36", 180.6, 31, 181, 12, 6, 1, 11, 34]
+    totals += [0.324, 1, 4, 0.25, 0, 0, 0, 0, 8, 10, 5, 2255.6]
+    pergame = ["22025", 1, "A B", 2, "C D", 1, 13.2, 53.9, 3.0, 50.0, 1.0, 1.0, 0.0, 1.0]
+    pergame += [9.0, 0.111, 1.0, 7.0, 0.143, 0, 0, 0, 0, 0.0, 0.0, 0.0]
+    d = raw / "leagueseasonmatchups" / "2025"
+    d.mkdir(parents=True)
+    for stem, row, h in (
+        ("regular-season_totals", totals, headers),
+        ("regular-season_pergame", pergame, headers[:-1]),
+    ):
+        body = {"resultSets": [{"name": "SeasonMatchups", "headers": h, "rowSet": [row]}]}
+        (d / f"{stem}.json").write_text(json.dumps(body), encoding="utf-8")
+    _games(raw, ["1042500101"])
+
+    matchups_cli.build([2025], out, root=raw)
+
+    for pm in ("totals", "pergame"):
+        reg = pl.read_parquet(out / _TAG / f"leagueseasonmatchups_regular-season_{pm}_2025.parquet")
+        po = pl.read_parquet(out / _TAG / f"leagueseasonmatchups_playoffs_{pm}_2025.parquet")
+        assert po.schema == reg.schema
+        assert po.height > 0
+
+
+def test_dry_run_prints_the_upload_plan(tmp_path: Path, capsys) -> None:
+    raw = tmp_path / "raw"
+    _payload(raw, 2025, "regular-season_totals", [["22025", 1, 2, 3]])
+    argv = ["--seasons", "2025", "--root", str(raw), "--out", str(tmp_path / "out"), "--dry-run"]
+    assert matchups_cli.main(argv) == 0
+    assert (
+        f"would upload {_TAG}/leagueseasonmatchups_regular-season_totals_2025.parquet"
+        in capsys.readouterr().out
+    )
+
+
 def test_main_does_not_publish_an_empty_build(tmp_path: Path, capsys) -> None:
     raw = tmp_path / "raw"
     _payload(raw, 2025, "regular-season_totals", [])

@@ -112,6 +112,11 @@ def _stamp(frame: pl.DataFrame, season: int, stem: str) -> pl.DataFrame:
     )
 
 
+def _name(person: dict) -> str | None:
+    """``firstName familyName``, skipping a missing part (never ``"None Smith"``)."""
+    return " ".join(p for p in (person.get("firstName"), person.get("familyName")) if p) or None
+
+
 def game_matchups(root: Path, season: int, season_type: str) -> pl.DataFrame:
     """One row per (game, offensive player, defender) from the season's
     ``boxscorematchupsv3`` games of ``season_type``; empty when none carry players."""
@@ -132,9 +137,9 @@ def game_matchups(root: Path, season: int, season_type: str) -> pl.DataFrame:
                         {
                             "game_id": gid,
                             "off_player_id": off.get("personId"),
-                            "off_player_name": f"{off.get('firstName')} {off.get('familyName')}",
+                            "off_player_name": _name(off),
                             "def_player_id": d.get("personId"),
-                            "def_player_name": f"{d.get('firstName')} {d.get('familyName')}",
+                            "def_player_name": _name(d),
                             **{k: stats.get(v) for k, v in _SUMS.items()},
                         }
                     )
@@ -298,6 +303,9 @@ def main(argv: Optional[list[str]] = None) -> int:
         result = upload_artifacts(
             out / _TAG, _TAG, args.repo, seasons=args.seasons, dry_run=args.dry_run
         )
+        if args.dry_run:
+            for name in result["files"]:
+                print(f"would upload {_TAG}/{name}")
         if result["failed"]:
             print(f"WARNING: {len(result['failed'])} file(s) failed to publish: {result['failed']}")
             return 1
