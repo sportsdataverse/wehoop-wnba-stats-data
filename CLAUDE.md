@@ -33,6 +33,7 @@ python -m wnba_data_build --root <...> --seasons 2025 --out wnba_stats
 bash scripts/leaguedash_backfill.sh                  # league-dash cube, BUILD-ONLY
 bash scripts/leaguedash_backfill.sh -s 2026 -e 2026 -n   # ...plan uploads, upload nothing
 python -m wnba_data_build.leaguedash_cli --seasons 2026 --publish   # publish (deliberate)
+python -m wnba_data_build.matchups_cli --root <raw json>     # wnba_stats_matchups, BUILD-ONLY
 bash scripts/backfill_historical_seasons.sh          # raw-backed families, all seasons
 bash scripts/run_v3_backfill.sh -s 1997 -e 2026      # Program V v3 backfill (resumable)
 bash scripts/run_v3_cutover.sh -s 1997 -e 2026       # D26d cutover -- DRY RUN by default
@@ -110,6 +111,19 @@ built right after its first publish** (`python -m wnba_data_build.manifest build
 `source_endpoint`): until it exists, every `--publish` run that touches the tag
 exits 1 on the manifest check and the daily processor skips that season's tree
 commit. No wehoop/sdv-py loader yet (`PKG_FUNCTION` unlisted).
+
+**`matchups_cli` compiles `wnba_stats_matchups`** (`leagueseasonmatchups`, the
+player-vs-player season pair table; port of the NBA sibling's `matchups_cli`, same
+endpoint-prefixed asset names). Standalone like `leaguedash_cli`: builds into
+`build_out/matchups/` and uploads only with `--publish`; needs a LOCAL `--root`.
+**Its `leagueseasonmatchups_playoffs_*` assets are DERIVED** from the season's playoff
+`boxscorematchupsv3` games (`104…`): stats.wnba.com returns no playoff rows for that
+endpoint, and summing the `102…` games reproduces the official regular-season pair
+table (exact 2025-2026; 2024 one pair short; 2023 30 pairs short, where a few tracked
+games are empty in the raw capture). A real non-empty playoffs payload always wins.
+Rows exist 2023-2026 only. The raw store has no `matchupsrollup`. The 2026 playoff
+games are empty envelopes in the raw store (captured 2026-10-18), so 2026 has no
+playoffs asset until they are re-captured.
 
 **Era floors live in the registry, not in a runbook.** A dataset whose upstream
 coverage starts late carries `first_season` in `datasets.py` (today: `officials`
