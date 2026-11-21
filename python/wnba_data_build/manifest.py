@@ -44,9 +44,10 @@ _DOWNLOAD = "https://github.com/{repo}/releases/download/{tag}/{asset}"
 #: Column contract read by wehoop's ``load_wnba_stats_*_manifest()``. Order matters.
 MANIFEST_COLUMNS: tuple[str, ...] = ("season", "row_count", "generated_at_utc", "source_endpoint")
 
-#: Every tag this repo publishes to. ``leaguedash`` is not in ``DATASETS`` (it has
-#: its own builder + CLI) but it is a published tag and needs the same guarantee.
-ALL_TAGS: tuple[str, ...] = RELEASE_TAGS + ("wnba_stats_leaguedash",)
+#: Every tag this repo publishes to. ``leaguedash`` and ``matchups`` are not in
+#: ``DATASETS`` (each has its own builder + CLI) but they are published tags and need
+#: the same guarantee.
+ALL_TAGS: tuple[str, ...] = RELEASE_TAGS + ("wnba_stats_leaguedash", "wnba_stats_matchups")
 
 #: ``source_endpoint`` for a tag that has no manifest yet to inherit it from. Only
 #: leaguedash is in this position; every other tag's value is preserved verbatim
