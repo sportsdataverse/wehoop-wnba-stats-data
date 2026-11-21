@@ -121,9 +121,15 @@ endpoint-prefixed asset names). Standalone like `leaguedash_cli`: builds into
 endpoint, and summing the `102…` games reproduces the official regular-season pair
 table (exact 2025-2026; 2024 one pair short; 2023 30 pairs short, where a few tracked
 games are empty in the raw capture). A real non-empty playoffs payload always wins.
-Rows exist 2023-2026 only. The raw store has no `matchupsrollup`. The 2026 playoff
-games are empty envelopes in the raw store (captured 2026-10-18), so 2026 has no
-playoffs asset until they are re-captured.
+Rows exist 2023-2026 only. The raw store has no `matchupsrollup`.
+**2026 is partial upstream, not a capture bug.** Every 2026 playoff game and 111 of 330
+regular-season games (`1022600077`, `1022600154`, and every game from `1022600222` to
+`1022600330`) are empty envelopes. A fresh fetch on 2026-11-20 was still empty, while
+`1022600221` and 2025 games return players. So 2026 has no playoffs asset, and its
+regular-season asset covers only about the first two-thirds of the season. The official
+season table lacks the same games, which is why parity is still exact. Re-capturing
+rewrites identical empties: probe first without persisting (the raw repo's stage-02
+transport), and refill with `--game-ids` only once players come back.
 
 **Era floors live in the registry, not in a runbook.** A dataset whose upstream
 coverage starts late carries `first_season` in `datasets.py` (today: `officials`
