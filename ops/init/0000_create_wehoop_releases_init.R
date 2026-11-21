@@ -67,3 +67,7 @@ create_release("wnba_stats_metric_curves",       "WNBA Metric Curves Data (FG% b
 # not an older version of this one.
 create_release("wnba_stats_possessions",         "WNBA Possessions Data (from stats.wnba.com)")
 create_release("wnba_stats_game_lineups",        "WNBA Per-Game Lineups Data (from stats.wnba.com)")
+
+# matchups_cli (leagueseasonmatchups; playoffs derived from boxscorematchupsv3).
+# Created 2026-11-21 with this body by `gh release create`, ahead of the first publish.
+create_release("wnba_stats_matchups",            "WNBA Player Matchups Data (from stats.wnba.com leagueseasonmatchups; playoffs derived from boxscorematchupsv3)")

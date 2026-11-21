@@ -207,8 +207,8 @@ README season range.
   A new dataset lands its committed parquet in the same change;
   `/mnt/sdv_repos/bin/stats_release_audit.py` flags a released parquet with no
   committed copy (NO-COMMIT).
-- 19 release tags on `sportsdataverse/sportsdataverse-data` (created by
-  `ops/init/0000_create_wehoop_releases_init.R`): `wnba_stats_{schedules,pbp,player_game_logs,rosters,player_season_stats,lineups,team_season_stats,standings,draft,shots,game_rosters,officials,coaches,team_boxscores,player_boxscores,possessions,game_lineups,rolling_windows,metric_curves}`.
+- 20 release tags on `sportsdataverse/sportsdataverse-data` (created by
+  `ops/init/0000_create_wehoop_releases_init.R`): `wnba_stats_{schedules,pbp,player_game_logs,rosters,player_season_stats,lineups,team_season_stats,standings,draft,shots,game_rosters,officials,coaches,team_boxscores,player_boxscores,possessions,game_lineups,rolling_windows,metric_curves,matchups}`.
   The last two are the Program V (D26d) cutover targets. **`run_v3_cutover.sh -x`
   uploads but never creates a tag** — `gh release upload` fails on a missing
   release, so run the init script first whenever the cutover gains a new target.
