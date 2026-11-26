@@ -23,6 +23,18 @@ logs — don't rename one without the other), CC BY 4.0. Vestigial: not a CRAN
 package and no longer an R pipeline; treat it as a dependency manifest for the
 remaining helpers.
 
+## sportsdataverse pin: hold at d192fe2 (SPM decision, 2026-11-26)
+
+`uv.lock` pins `sportsdataverse` (git `main`) to commit `d192fe2`. **Do not move the lock past d192fe2**
+(`uv lock --upgrade-package sportsdataverse`, or any `uv lock` that re-resolves it) until the owner revisits the
+SPM decision. sdv-py main from #1309 (`7515943`) trains a minute-weighted SPM (prior scale 1.5) that is merged
+but unshipped: rebuilt on it, the NBA history fails the `r_rapm_adj_min` publish floor (0.75) in 11 seasons
+(minimum 0.477, 2019). The owner chose to keep the published equal-weight SPM, to republish neither league, and not
+to lower the floor after a failed check. A lock bump would make the nightly publish the current season on the new
+SPM over old history. Record and evidence: ClaudeCowork `notes/2026-11-25-spm-retrain.md` (ACC-2026-0001). To
+take a later sdv-py fix, revisit the decision first, then bump and republish every season
+together.
+
 ## Commands
 ```sh
 bash scripts/daily_wnba_stats_python_processor.sh -s 2025 -e 2025   # daily entry
