@@ -39,7 +39,11 @@ RELEASE_BASE = f"https://github.com/sportsdataverse/sportsdataverse-data/release
 FLOORS: dict[str, Optional[float]] = {
     "rs_rows_min": 80,  # observed min 98 (1997, the inaugural 28-game season); 221 in 2026
     "r_rapm_adj_min": 0.65,  # observed min 0.751 (2023)
-    "r_spm_rapm_min": 0.18,  # observed min 0.237 (2026); median ~0.43
+    # Possession-weighted (off_poss + def_poss) since 2026-11-25 (owner), as the NBA twin: the SPM is
+    # fit minute-weighted (sportsdataverse-py #1309). Re-derived on the release it replaces, weighted:
+    # observed min 0.392 (2004), median 0.525 (unweighted there: min 0.339, 2004); the floor keeps the
+    # old floor/min ratio (0.18 / 0.237). The weighted refit reads min 0.466 (2002), median 0.575.
+    "r_spm_rapm_min": 0.30,
     "r_rapm_yoy_min": 0.10,  # observed min 0.146 (2004)
     "r_darko_fwd_min": 0.05,  # observed min 0.080 (2004); n-weighted mean 0.284
 }
@@ -62,6 +66,33 @@ def _pearson(df: pl.DataFrame, a: str, b: str) -> Optional[float]:
     return float("nan") if r is None else float(r)
 
 
+def _poss_weighted_pearson(df: pl.DataFrame, a: str, b: str) -> Optional[float]:
+    """``_pearson`` with each row weighted by its on-court possessions (``off_poss + def_poss``).
+
+    A player's ``spm`` and ``rapm`` are both noisiest when he played little, and the SPM is fit
+    with that weighting, so the gate scores it the same way. ``None`` / NaN as in ``_pearson``.
+    Every scored row must carry a positive weight (all do on the published releases, 2026-11-26). A
+    frame with any missing, blank or zero possessions is scored by the plain Pearson instead, so the
+    season stays gated. That number is not the one the floor was drawn from and sits below it on a
+    minute-weighted build, so such a build fails here: read the failure as lost possessions, not a
+    degraded SPM.
+    """
+    if not {"off_poss", "def_poss"} <= set(df.columns):
+        return _pearson(df, a, b)
+    sub = df.select(
+        a, b, (pl.col("off_poss") + pl.col("def_poss")).cast(pl.Float64).alias("_w")
+    ).drop_nulls([a, b])
+    if sub.height < 3 or not (sub["_w"].fill_null(0.0) > 0).all():
+        return _pearson(df, a, b)
+    w = pl.col("_w") / pl.col("_w").sum()
+    ma, mb = (pl.col(a) * w).sum(), (pl.col(b) * w).sum()
+    cov = (w * (pl.col(a) - ma) * (pl.col(b) - mb)).sum()
+    va, vb = (w * (pl.col(a) - ma) ** 2).sum(), (w * (pl.col(b) - mb) ** 2).sum()
+    va_, vb_, cov_ = sub.select(va.alias("va"), vb.alias("vb"), cov.alias("cov")).row(0)
+    r = None if not (va_ > 0 and vb_ > 0) else cov_ / math.sqrt(va_ * vb_)
+    return float("nan") if r is None else float(r)
+
+
 def _rs(frame: pl.DataFrame) -> pl.DataFrame:
     return frame.filter(pl.col("season_type") == "Regular Season")
 
@@ -80,7 +111,7 @@ def internal_metrics(frames: dict[int, pl.DataFrame]) -> dict[str, dict]:
         row = {
             "rs_rows": rs.height,
             "r_rapm_adj": _pearson(rs, "rapm", "adj_rapm"),
-            "r_spm_rapm": _pearson(rs, "spm", "rapm"),
+            "r_spm_rapm": _poss_weighted_pearson(rs, "spm", "rapm"),
             "r_rapm_yoy": None,
             "r_darko_fwd": None,
             "n_fwd": 0,

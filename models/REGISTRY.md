@@ -40,7 +40,7 @@ build, and a re-derivation must record the new observation beside the constant.
 |---|---:|---:|---:|---|
 | `rs_rows_min` | 80 | 98 (1997, the 28-game inaugural season) | 400 | a season that silently lost its population |
 | `r_rapm_adj_min` | 0.65 | 0.751 (2023) | 0.75 | the SPM prior overwriting RAPM instead of shrinking it |
-| `r_spm_rapm_min` | 0.18 | 0.237 (2026) | 0.22 | SPM no longer fitting the target it was trained on |
+| `r_spm_rapm_min` | 0.30 (possession-weighted Pearson, `off_poss + def_poss`, since 2026-11-25; 0.18 unweighted before) | 0.392 weighted (2004) on the release it replaced; 0.237 (2026) unweighted | 0.35 | SPM no longer fitting the target it was trained on |
 | `r_rapm_yoy_min` | 0.10 | 0.146 (2004) | 0.24 | the panel losing player-level persistence |
 | `r_darko_fwd_min` | 0.05 | 0.080 (2004) | 0.20 | the projection decoupling from next-season RAPM |
 
