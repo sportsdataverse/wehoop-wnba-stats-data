@@ -141,9 +141,10 @@ def test_possessions_get_bb_d7_flags() -> None:
         games, on="game_id", how="semi"
     )
     out = vb.with_possession_flags(poss, pbp)
-    assert out.columns == [*poss.columns, *flags.POSSESSION_FLAGS_SCHEMA]
+    assert out.columns == [*poss.columns, *flags.POSSESSION_FLAGS_SCHEMA, *flags.TWO_FOR_ONE_SCHEMA]
     assert out.select(poss.columns).equals(poss)
     assert out["is_transition"].sum() > 0
+    assert out["two_for_one"].is_not_null().sum() > 0  # BB-D44: the pin must be past sdv-py #1346
     # a rebuilt season re-flags rather than failing on the existing columns
     assert vb.with_possession_flags(out, pbp).equals(out)
 
